@@ -2,6 +2,8 @@
 // Tier patterns use TRaSH Guides release group standard (filename-based)
 // All lookahead patterns use ^ anchor for mutual exclusion
 const fs=require('fs'),path=require('path');
+
+// 【修改确认】此处已换成你的专属图片库路径
 const I='https://raw.githubusercontent.com/6otho/Epx-Badge/main/Badges/';
 
 const ST={
@@ -85,7 +87,6 @@ function gen(C){
     T.push(mk('q-ob','OK BluRay','(?i)^(?=.*[\u25b3\u2205])(?=.*(?:bluray|blu-ray))(?!.*remux)','mono-ok-bluray.png',ST.res,'gq'));
     T.push(mk('q-ow','OK WebDL','(?i)^(?=.*[\u25b3\u2205])(?=.*(?:web[-_. ]?dl|webdl|webrip))','mono-ok-webdl.png',ST.res,'gq'));
   }else if(C.qual==='tier'){
-    // TRaSH Guides filename-based tier detection with label fallback
     const tiers=[
       {n:'T1',rmx:RMX_T1,blu:BLU_T1,web:WEB_T1,sub:'\u2081'},
       {n:'T2',rmx:RMX_T2,blu:BLU_T2,web:WEB_T2,sub:'\u2082'},
@@ -98,7 +99,6 @@ function gen(C){
       T.push(mk('q-blu-'+t.n.toLowerCase(),'BluRay '+t.n,tierPat('bluray',t.blu),p+'-icon-bluray-'+t.n.toLowerCase()+'.png',qs('best'),'gq'));
       T.push(mk('q-web-'+t.n.toLowerCase(),'Web '+t.n,tierPat('web',t.web),p+'-icon-webdl-'+t.n.toLowerCase()+'.png',qs('best'),'gq'));
     }
-    // Unranked fallbacks
     T.push(mk('q-rmx-u','Remux',unrankedPat('remux',RMX_ALL),p+'-remux.png',ST.res,'gq'));
     T.push(mk('q-blu-u','BluRay',unrankedPat('bluray',BLU_ALL),p+'-bluray.png',ST.res,'gq'));
     T.push(mk('q-web-u','Web',unrankedPat('web',WEB_ALL),p+'-webdl.png',ST.res,'gq'));
@@ -113,31 +113,24 @@ function gen(C){
     T.push(mk('q-w','WebDL','(?i)\\b(?:web[-_. ]?dl|webdl|webrip|web-rip)\\b',p+'-webdl.png',qs('best'),'gq'));
   }
 
-  // SeaDex — right after quality (from AIOStreams formatter output)
   T.push(mk('v-seadex','SeaDex','(?i)\\b(?:seadex|best[\\s._-]?release|alt[\\s._-]?(?:best[\\s._-]?)?release)\\b|\u1d00\u029f\u1d1b \u0280\u1d07\u029f\u1d07\u1d00s\u1d07|\u0299\u1d07s\u1d1b \u0280\u1d07\u029f\u1d07\u1d00s\u1d07',p+'-SeaDex.png',mono?ST.res:ST.best,'gv'));
-
-  // Resolution
   T.push(mk('r-4k','4K','(?i)^(?=.*(?:2160[pi]?|4k|uhd))(?!.*(?:1080[pi]?|720[pi]?))','4k.png',ST.res,'gr'));
   T.push(mk('r-1080','1080p','(?i)\\b1080[pi]?\\b','1080p.png',ST.res,'gr'));
   T.push(mk('r-720','720p','(?i)\\b720[pi]?\\b','720p.png',ST.res,'gr'));
 
-  // DTS (before ALL Dolby — HDR, IMAX, DV, Atmos)
   T.push(mk('a-dtsx','DTS:X','(?i)\\bdts[-_.: ]?x\\b','dtsx.png',ST.res,'ga'));
   T.push(mk('a-dtsma','DTS-HD MA','(?i)^(?=.*\\bdts[-_. ]?(?:hd[-_. ]?)?ma\\b)(?!.*\\bdts[-_.: ]?x\\b)','dtshdma.png',ST.res,'ga'));
   T.push(mk('a-dtshd','DTS-HD','(?i)^(?=.*\\bdts[-_. ]?hd\\b)(?!.*\\bdts[-_. ]?(?:hd[-_. ]?)?ma\\b)(?!.*\\bdts[-_.: ]?x\\b)','dtshd.png',ST.res,'ga'));
   T.push(mk('a-dts','DTS','(?i)^(?=.*\\bDTS\\b)(?!.*\\bdts[-_. ]?(?:hd|ma|xll|x)\\b)','dts.png',ST.res,'ga'));
 
-  // HDR (Dolby-related visual)
   const dvBlock=C.hdr==='nodv'?'(?!.*'+DV+')':'';
   T.push(mk('v-hdr10p','HDR10+','(?i)^'+dvBlock+'(?=.*hdr[\\s._-]?10[\\s._-]?(?:\\\\+|plus|p))','HDR10Plus.png',ST.res,'gv'));
   T.push(mk('v-hdr10','HDR10','(?i)^'+dvBlock+'(?=.*hdr[\\s._-]?10)(?!.*hdr[\\s._-]?10[\\s._-]?(?:\\\\+|plus|p))','HDR10.png',ST.res,'gv'));
   T.push(mk('v-hdr','HDR','(?i)^'+dvBlock+'(?=.*\\bHDR\\b)(?!.*hdr[\\s._-]?10)','HDR.png',ST.res,'gv'));
 
-  // IMAX
   T.push(mk('v-imax-e','IMAX Enhanced','(?i)\\bimax[\\s._-]?enhanced\\b','IMAX-enhanced.png',ST.res,'gv'));
   T.push(mk('v-imax','IMAX','(?i)^(?=.*\\bIMAX\\b)(?!.*enhanced)','IMAX.png',ST.res,'gv'));
 
-  // Dolby Audio + DV (after DTS + HDR + IMAX)
   if(C.dv==='combo'){
     T.push(mk('a-at-dv','Atmos+DV','(?i)^(?=.*'+ATMOS+')(?=.*'+DV+')','atmos-vision.png',ST.tr,'ga'));
     T.push(mk('a-at','Atmos','(?i)^(?=.*'+ATMOS+')(?!.*'+DV+')','atmos.png',ST.tr,'ga'));
@@ -156,15 +149,12 @@ function gen(C){
     T.push(mk('a-dd','DD','(?i)^(?=.*'+DD+')(?!.*'+DDP+')(?!.*'+TH+')(?!.*'+ATMOS+')','digital.png',ST.tr,'ga'));
   }
 
-  // Surround — require no digit after channel number to avoid matching file sizes like "7.02 GB"
   T.push(mk('ch-71','7.1','[^0-9][7-8][. ][01](?![0-9])','7dot1.png',ST.tr,'gc'));
   T.push(mk('ch-51','5.1','^(?=.*[^0-9]5[. ][01](?![0-9]))(?!.*[^0-9][7-8][. ][01](?![0-9]))','5dot1.png',ST.tr,'gc'));
 
-  // Languages
   const L=[['en','\ud83c\uddec\ud83c\udde7','(?i)\\benglish\\b|\\beng\\b'],['es','\ud83c\uddea\ud83c\uddf8','(?i)\\bspanish\\b|\\bspa\\b'],['fr','\ud83c\uddeb\ud83c\uddf7','(?i)\\bfrench\\b|\\bfra\\b|\\bfr\\b|\\bvff\\b|\\bvfq\\b'],['de','\ud83c\udde9\ud83c\uddea','(?i)\\bgerman\\b|\\bdeu\\b'],['it','\ud83c\uddee\ud83c\uddf9','(?i)\\bitalian\\b|\\bita\\b'],['pt','\ud83c\udde7\ud83c\uddf7','(?i)\\bportuguese\\b|\\bpor\\b'],['ja','\ud83c\uddef\ud83c\uddf5','(?i)\\bjapanese\\b|\\bjpn\\b|[\u3040-\u309F\u30A0-\u30FF]{3,}'],['ko','\ud83c\uddf0\ud83c\uddf7','(?i)\\bkorean\\b|\\bkor\\b|[\uAC00-\uD7AF]{3,}'],['zh','\ud83c\udde8\ud83c\uddf3','(?i)\\bchinese\\b|\\bchi\\b|[\u4E00-\u9FFF]{3,}'],['hi','\ud83c\uddee\ud83c\uddf3','(?i)\\bhindi\\b|\\bhin\\b|[\u0900-\u097F]{3,}'],['ar','\ud83c\uddf8\ud83c\udde6','(?i)\\barabic\\b|\\bara\\b|[\u0600-\u06FF]{3,}'],['ru','\ud83c\uddf7\ud83c\uddfa','(?i)\\brussian\\b|\\brus\\b|[\u0400-\u04FF]{3,}'],['mu','\ud83c\udf10','(?i)\\bmulti\\b|\\bdual[\\s._-]?audio\\b']];
   for(const[c,f,pt] of L)T.push(mk('l-'+c,f,pt,'',ST.dim,'gl'));
 
-  // Groups
   if(C.qual==='pct')G.push({borderColor:'#66009900',color:'#27C04F',id:'gp',isExpanded:true,name:'Score'});
   G.push({borderColor:ST.best.bc,color:'#27C04F',id:'gq',isExpanded:true,name:'Quality'});
   G.push({borderColor:ST.res.bc,color:'#FFBE01',id:'gr',isExpanded:true,name:'Resolution'});
