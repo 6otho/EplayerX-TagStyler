@@ -3,7 +3,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh}
-.wrap{max-width:640px;margin:0 auto;padding:1.5rem 1rem 4rem}
+.wrap{max-width:680px;margin:0 auto;padding:1.5rem 1rem 4rem}
 h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 .sub{color:#888;font-size:.82rem;margin-bottom:1.8rem}
 .sec{margin-bottom:.9rem;background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:.9rem 1rem}
@@ -40,6 +40,13 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 .abtn:hover{background:#333;border-color:#444}
 #guide .note{font-size:.7rem;color:#999;margin-bottom:.8rem;line-height:1.5}
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#4ade80;padding:.5rem 1rem;border-radius:8px;font-size:.78rem;display:none;z-index:99;border:1px solid #2a2a2a}
+
+/* 【全徽章展柜样式】 */
+.gallery-grid{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.5rem}
+.gallery-card{display:inline-flex;align-items:center;gap:.4rem;padding:5px 10px;background:#181818;border:1px solid #2a2a2a;border-radius:8px;font-size:.72rem;color:#ddd;line-height:1}
+.gallery-card img{height:18px;width:auto}
+.chip-btn{padding:.35rem .65rem;border:1px solid #2a2a2a;border-radius:6px;font-size:.7rem;cursor:pointer;background:#0a0a0a;color:#777;transition:all .15s}
+.chip-btn.on{border-color:#4ade80;color:#4ade80;background:#142918}
 </style></head><body>
 <div class="wrap">
 <h1>EplayerX TagStyler</h1>
@@ -60,13 +67,34 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 <div class="o" data-v="fn">Filename Only</div>
 </div></div>
 
-<h2 class="pvh">Preview</h2>
+<!-- 【功能 1：全徽章大图展柜】 -->
+<div class="sec">
+  <h2>All Active Badges Gallery (全徽章展示大图鉴)</h2>
+  <div class="sub" style="margin-bottom:.5rem">这里展现了当前已启用的所有 SVG/PNG 徽章。</div>
+  <div id="badge-gallery" class="gallery-grid"></div>
+</div>
+
+<!-- 【功能 2：导入自定义 JSON 并动态选择显示】 -->
+<div class="sec">
+  <h2>Import Custom Badges JSON (导入自定义 JSON 徽章)</h2>
+  <div class="sub" style="margin-bottom:.5rem">把您自己的 JSON 粘贴在下方，点击解析即可混合预览并勾选显示。</div>
+  <textarea id="custom-json-input" placeholder="请在这里粘贴包含 filters 的 JSON 内容..." style="width:100%;height:80px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
+  <div style="display:flex;gap:.4rem;margin-top:.45rem">
+    <button class="abtn" style="background:#1e3a29;border-color:#22c55e;color:#4ade80" onclick="loadCustomJson()">加载并解析 JSON 徽章</button>
+    <button class="abtn" style="color:#f87171" onclick="clearCustomJson()">清空自定义徽章</button>
+  </div>
+  <div id="custom-badges-selector" style="margin-top:.8rem;display:none">
+    <h3 style="font-size:.7rem;color:#888;margin-bottom:.4rem;text-transform:uppercase">勾选要生效的自定义徽章 (Toggle Badges):</h3>
+    <div id="custom-chips" class="opts"></div>
+  </div>
+</div>
+
+<h2 class="pvh">Preview (视频流动态匹配预览)</h2>
 <div id="pv"></div>
 
 <h2 class="oph">Setup Guide</h2>
 <div id="guide"></div>
 
-<!-- 将 JSON 文本域保留以供 JavaScript 提取 -->
 <div style="display:none"><textarea id="ou" readonly></textarea><textarea id="oj" readonly></textarea></div>
 
 <h2 class="oph" style="margin-top:1.5rem">Setup</h2>
@@ -87,7 +115,6 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 <div class="gc">
 <div class="gt">Fusion Filters</div>
 <div class="gd">Fusion → Settings → Filters → Import Filters → paste URL</div>
-<!-- 【已更新布局】新增复制原始 JSON 功能，一键直连根目录 fusion-tags.json 文件 -->
 <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.45rem;width:100%">
   <button class="abtn" style="flex:1;min-width:180px" onclick="cc('oj')">Copy Filters JSON (Paste to GitHub)</button>
   <button class="cbtn" style="flex:1.2;min-width:180px" onclick="cc('ou')">Copy Import URL</button>
@@ -97,15 +124,19 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 <div class="toast" id="toast">Copied!</div>
 
 <script>
-// 【纯净版】全面使用您自己的自定义 SVG 仓库，解决任何第三方图片阻碍
 const I_EPX='https://cdn.jsdelivr.net/gh/6otho/Epx-Badge@main/Badges/';
 
 function getBadgeUrl(img) {
   if (!img) return '';
+  if (img.startsWith('http://') || img.startsWith('https://')) return img;
   return I_EPX + img;
 }
 
 let C={icon:'colored',hdr:'nodv',desc:'short'};
+
+// 动态自定义 JSON 状态管理
+let customFilters = [];
+let selectedCustomFilterIds = new Set();
 
 const ST={
   res:{bc:'#FF858283',bg:'#33FFFFFF',tc:'#FFFFFF'},
@@ -113,11 +144,6 @@ const ST={
   dim:{bc:'#00000000',bg:'#00000000',tc:'#80FFFFFF'},
 };
 
-function hsl(h,s,l){const a=s*Math.min(l,1-l),f=n=>{const k=(n+h/30)%12;return l-a*Math.max(Math.min(k-3,9-k,1),-1)};return[Math.round(f(0)*255),Math.round(f(8)*255),Math.round(f(4)*255)]}
-function hx(r,g,b){return((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1).toUpperCase()}
-function pctS(p){const c=hsl((p/100)*120,1,.45),h=hx(...c);return{bc:'#66'+h,bg:'#33'+h,tc:'#FF'+h}}
-
-// 4 diverse streams covering key tag combinations
 const STREAMS=[
   {qual:'Bluray Remux',title:'Avatar Fire and Ash (2025)',size:'76 GB',fn:'Avatar.Fire.and.Ash.2025.2160p.BluRay.REMUX.IMAX.DV.TrueHD.7.1.Atmos-FraMeSToR.mkv',pct:99,res:'4K',hdr:null,dv:true,aud:'atmos',ch:'7.1',src:'remux',q:'best',tier:'t1',imax:'IMAX',seadex:false},
   {qual:'Bluray',title:'Avatar Fire and Ash (2025)',size:'18 GB',fn:'Avatar.Fire.and.Ash.2025.2160p.BluRay.x265.HDR10.DTS-X.7.1-CtrlHD.mkv',pct:90,res:'4K',hdr:'HDR10',dv:false,aud:'dtsx',ch:'7.1',src:'bluray',q:'good',tier:'t1',imax:null,seadex:false},
@@ -139,18 +165,100 @@ function thtml(label,img,st,lg){
   return'<span class="'+cls+'" style="'+s+'">'+label+'</span>';
 }
 
-function fmtName(s){
-  return s.qual;
+function fmtName(s){ return s.qual; }
+
+// 正则测试器（用于动态计算自定义徽章是否匹配视频流）
+function matchFilterPattern(pattern, text) {
+  if (!pattern || !text) return false;
+  try {
+    let pat = pattern;
+    if (pat.startsWith('(?i)')) pat = pat.slice(4);
+    return new RegExp(pat, 'i').test(text);
+  } catch(e) {
+    return false;
+  }
+}
+
+// 解析并加载用户粘贴的自定义 JSON
+function loadCustomJson() {
+  const text = document.getElementById('custom-json-input').value.trim();
+  if (!text) { alert('请先在文本框中粘贴 JSON 内容！'); return; }
+  try {
+    const data = JSON.parse(text);
+    if (!data.filters || !Array.isArray(data.filters)) {
+      alert('解析失败：JSON 必须包含 "filters" 数组！');
+      return;
+    }
+    customFilters = data.filters.filter(f => f && f.imageURL);
+    selectedCustomFilterIds = new Set(customFilters.map(f => f.id || f.name));
+    renderCustomChips();
+    upd();
+  } catch (e) {
+    alert('JSON 格式错误：' + e.message);
+  }
+}
+
+function clearCustomJson() {
+  document.getElementById('custom-json-input').value = '';
+  customFilters = [];
+  selectedCustomFilterIds.clear();
+  document.getElementById('custom-badges-selector').style.display = 'none';
+  upd();
+}
+
+// 渲染可勾选的自定义徽章芯片按钮
+function renderCustomChips() {
+  const box = document.getElementById('custom-badges-selector');
+  const container = document.getElementById('custom-chips');
+  if (customFilters.length === 0) {
+    box.style.display = 'none';
+    return;
+  }
+  box.style.display = 'block';
+  let h = '';
+  customFilters.forEach(f => {
+    const fid = f.id || f.name;
+    const isOn = selectedCustomFilterIds.has(fid);
+    h += `<div class="o ${isOn ? 'on' : ''}" onclick="toggleCustomFilter('${fid}')">${f.name || fid}</div>`;
+  });
+  container.innerHTML = h;
+}
+
+function toggleCustomFilter(fid) {
+  if (selectedCustomFilterIds.has(fid)) selectedCustomFilterIds.delete(fid);
+  else selectedCustomFilterIds.add(fid);
+  renderCustomChips();
+  upd();
+}
+
+// 渲染全徽章展示展柜
+function renderBadgeGallery(allFilters) {
+  const container = document.getElementById('badge-gallery');
+  let h = '';
+  const seenUrls = new Set();
+
+  allFilters.forEach(f => {
+    if (f.imageURL && !seenUrls.has(f.imageURL)) {
+      seenUrls.add(f.imageURL);
+      const url = getBadgeUrl(f.imageURL);
+      h += `<div class="gallery-card">
+              <img src="${url}" alt="${f.name}">
+              <span>${f.name || f.id}</span>
+            </div>`;
+    }
+  });
+  container.innerHTML = h || '<span style="color:#666;font-size:.7rem">暂无生效的徽章图片</span>';
 }
 
 function preview(){
-  const p=C.icon,mono=p==='mono';
   let h='';
+  const activeCustom = customFilters.filter(f => selectedCustomFilterIds.has(f.id || f.name));
+
   for(const s of STREAMS){
     const st=(s.type||'debrid');const stCap=st==='p2p'?'P2P':st[0].toUpperCase()+st.slice(1);const descTxt=C.desc==='fn'?s.fn:s.fn+'\n'+(s.svc||'RD')+' \xb7 '+stCap+' \xb7 '+s.size;
     h+='<div class="cd"><div class="cn">'+fmtName(s)+'</div><div class="cs">'+descTxt+'</div><div class="tr">';
 
-    // 1) SOURCE (解析您仓库对应的 4 种来源)
+    // 1) SOURCE
     if(s.src==='remux' || s.src==='bluray'){
       if(s.fn.toLowerCase().includes('uhd') || s.fn.toLowerCase().includes('2160p')){
         h+=thtml(null,'u-hd-blu-ray.svg',ST.res);
@@ -177,33 +285,18 @@ function preview(){
     if(s.imax==='IMAX Enhanced')h+=thtml(null,'imax-e.svg',ST.res);
     else if(s.imax==='IMAX')h+=thtml(null,'imax.svg',ST.res);
 
-    // 4) AUDIO & VIDEO TECH (采取并行判断，并排渲染)
+    // 4) AUDIO & VIDEO TECH
     const isDTS=s.aud&&s.aud.startsWith('dts');
-    
-    // a. Dolby Vision
-    if(s.dv) {
-      h+=thtml(null,'dolby-vision-x.svg',ST.tr,true);
-    }
-    // b. Dolby Atmos
-    if(s.aud==='atmos' || s.fn.toLowerCase().includes('atmos')) {
-      h+=thtml(null,'dolby-atmos-x.svg',ST.tr,true);
-    }
-    // c. Dolby TrueHD
-    if(s.aud==='truehd' || s.fn.toLowerCase().includes('truehd') || s.fn.toLowerCase().includes('true-hd')) {
-      h+=thtml(null,'true-hd-1.svg',ST.tr,true);
-    }
-    // d. Dolby Digital Plus (DDP)
-    if(s.aud==='ddp' || s.fn.toLowerCase().includes('ddp') || s.fn.toLowerCase().includes('dd+') || s.fn.toLowerCase().includes('eac3')) {
-      h+=thtml(null,'dolby-digitalplus-x.svg',ST.tr,true);
-    }
-    // e. Dolby Digital (DD)
+    if(s.dv) h+=thtml(null,'dolby-vision-x.svg',ST.tr,true);
+    if(s.aud==='atmos' || s.fn.toLowerCase().includes('atmos')) h+=thtml(null,'dolby-atmos-x.svg',ST.tr,true);
+    if(s.aud==='truehd' || s.fn.toLowerCase().includes('truehd') || s.fn.toLowerCase().includes('true-hd')) h+=thtml(null,'true-hd-1.svg',ST.tr,true);
+    if(s.aud==='ddp' || s.fn.toLowerCase().includes('ddp') || s.fn.toLowerCase().includes('dd+') || s.fn.toLowerCase().includes('eac3')) h+=thtml(null,'dolby-digitalplus-x.svg',ST.tr,true);
     if(s.aud==='dd' || s.fn.toLowerCase().includes('dd') || s.fn.toLowerCase().includes('ac3')) {
       const fLower = s.fn.toLowerCase();
       if (!fLower.includes('ddp') && !fLower.includes('dd+') && !fLower.includes('eac3')) {
         h+=thtml(null,'dolby-digital-x.svg',ST.tr,true);
       }
     }
-    // f. DTS 系列
     if(isDTS){
       const dtsImg = s.aud==='dtsx'?'dts-x.svg':s.aud==='dtshdma'?'dts-hd-ma.svg':s.aud==='dtshd'?'dts-hd.svg':'dts.svg';
       h+=thtml(null,dtsImg,ST.res);
@@ -211,6 +304,13 @@ function preview(){
 
     // 5) SURROUND
     h+=thtml(null,s.ch==='7.1'?'7.1-6.svg':'5.1-6.svg',ST.tr);
+
+    // 6) 动态匹配并渲染用户导入的自定义 JSON 徽章
+    activeCustom.forEach(cf => {
+      if (cf.pattern && cf.imageURL && matchFilterPattern(cf.pattern, s.fn)) {
+        h += thtml(cf.name || '', cf.imageURL, ST.res);
+      }
+    });
 
     h+='</div></div>';
   }
@@ -227,7 +327,6 @@ function gen(){
   const qs=k=>mono?ST.res:ST[k];
 
   const dvR='\\b(?:dv|dovi|dolby[\\s._-]?vision)\\b';
-  const dvY='(?=.*(?i)'+dvR+')';
   const dvN='(?!.*(?i)'+dvR+')';
   const atmosR='(?i)\\batmos\\b';
   const thR='(?i)true[\\s._-]?hd';
@@ -246,7 +345,6 @@ function gen(){
   T.push(mk('r7','720p','(?i)\\b720[pi]?\\b','720p-b.svg',ST.res,'gr'));
 
   // 3) HDR
-  const hp=C.hdr==='nodv'?dvN:'';
   T.push(mk('h+','HDR10+','hp+\'(?=.*(?i)hdr\\\\s*10\\\\s*(?:\\\\\\\\+|plus|p))\'','hdr10p-xx.svg',ST.res,'gv'));
   T.push(mk('h1','HDR10','hp+\'(?=.*(?i)hdr\\\\s*10)(?!.*(?i)hdr\\\\s*10\\\\s*(?:\\\\\\\\+|plus|p))\'','hdr10-x.svg',ST.res,'gv'));
   T.push(mk('hh','HDR','hp+\'(?=.*(?i)\\\\bHDR\\\\b)(?!.*(?i)hdr\\\\s*10)\'','hdr-x.svg',ST.res,'gv'));
@@ -272,6 +370,13 @@ function gen(){
   const L=[['en','\ud83c\uddec\ud83c\udde7','(?i)\\benglish\\b|\\beng\\b'],['es','\ud83c\uddea\ud83c\uddf8','(?i)\\bspanish\\b|\\bspa\\b'],['fr','\ud83c\uddeb\ud83c\uddf7','(?i)\\bfrench\\b|\\bfra\\b'],['de','\ud83c\udde9\ud83c\uddea','(?i)\\bgerman\\b|\\bdeu\\b'],['it','\ud83c\uddee\ud83c\uddf9','(?i)\\bitalian\\b|\\bita\\b'],['pt','\ud83c\udde7\ud83c\uddf7','(?i)\\bportuguese\\b|\\bpor\\b'],['ja','\ud83c\uddef\ud83c\uddf5','(?i)\\bjapanese\\b|\\bjpn\\b'],['ko','\ud83c\uddf0\ud83c\uddf7','(?i)\\bkorean\\b|\\bkor\\b'],['zh','\ud83c\udde8\ud83c\uddf3','(?i)\\bchinese\\b|\\bchi\\b'],['hi','\ud83c\uddee\ud83c\uddf3','(?i)\\bhindi\\b|\\bhin\\b'],['ar','\ud83c\uddf8\ud83c\dde6','(?i)\\barabic\\b|\\bara\\b'],['ru','\ud83c\uddf7\ud83c\uddfa','(?i)\\brussian\\b|\\brus\\b'],['mu','\ud83c\udf10','(?i)\\bmulti\\b|\\bdual[\\s._-]?audio\\b']];
   for(const[c,f,pt] of L)T.push(mk('l-'+c,f,pt,'',ST.dim,'gl'));
 
+  // 合并用户勾选的自定义 JSON 徽章
+  customFilters.forEach(cf => {
+    if (selectedCustomFilterIds.has(cf.id || cf.name)) {
+      T.push(cf);
+    }
+  });
+
   // Groups
   G.push({borderColor:'#00000000',color:'#27C04F',id:'gs',isExpanded:true,name:'Source'});
   G.push({borderColor:ST.res.bc,color:'#FFBE01',id:'gr',isExpanded:true,name:'Resolution'});
@@ -291,17 +396,17 @@ function fmt(){
 }
 
 function upd(){
-  preview();
   const j=gen();
+  preview();
+  renderBadgeGallery(j.filters);
+  
   document.getElementById('oj').value=JSON.stringify(j,null,2);
   const f=fmt();
   document.getElementById('on').value=f.n;
   document.getElementById('od').value=f.d;
-  // 【直连静态路径】锁定并直接指向您仓库根目录下的 fusion-tags.json 文件
   const url='https://raw.githubusercontent.com/6otho/EplayerX-TagStyler/main/fusion-tags.json';
   document.getElementById('ou').value=url;
   
-  // AIOStreams 轻量向导设置说明
   const g=document.getElementById('guide');
   g.innerHTML='<div class="note">您的自定义预设已完全基于文件名匹配，无需导入任何评分（Scoring）模板，享受超轻量化运行。</div>';
 }
