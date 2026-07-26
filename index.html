@@ -4,8 +4,14 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh}
 .wrap{max-width:680px;margin:0 auto;padding:1.5rem 1rem 4rem}
-h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
-.sub{color:#888;font-size:.82rem;margin-bottom:1.8rem}
+
+/* 顶栏与设置按钮布局 */
+.top-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.8rem}
+.top-header h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
+.top-header .sub{color:#888;font-size:.82rem;margin-bottom:0}
+.settings-btn{display:inline-flex;align-items:center;gap:5px;padding:.45rem .8rem;background:#181818;border:1px solid #2a2a2a;border-radius:8px;color:#ccc;font-size:.75rem;cursor:pointer;transition:all .15s;flex-shrink:0;margin-top:.2rem}
+.settings-btn:hover{color:#fff;border-color:#444;background:#222}
+
 .sec{margin-bottom:.9rem;background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:.9rem 1rem}
 .sec h2{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:#555;margin-bottom:.6rem}
 .opts{display:flex;flex-wrap:wrap;gap:.35rem}
@@ -48,10 +54,56 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 .gallery-card{display:inline-flex;align-items:center;gap:.4rem;padding:5px 10px;background:#181818;border:1px solid #2a2a2a;border-radius:8px;font-size:.72rem;color:#ddd;line-height:1}
 .gallery-card img{height:18px;width:auto}
 .badge-group-title{font-size:.68rem;color:#888;text-transform:uppercase;letter-spacing:.05em;margin:.8rem 0 .3rem;padding-bottom:.2rem;border-bottom:1px solid #1a1a1a}
+
+/* 【二级设置弹窗 Modal 样式】 */
+.modal-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:1000}
+.modal-overlay.open{display:flex}
+.modal-card{background:#111;border:1px solid #2a2a2a;border-radius:14px;padding:1.4rem 1.5rem;width:92%;max-width:440px;box-shadow:0 12px 40px rgba(0,0,0,.9)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;padding-bottom:.6rem;border-bottom:1px solid #222}
+.modal-title{font-size:.9rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
+.modal-close{background:none;border:none;color:#666;font-size:1.2rem;cursor:pointer;padding:.2rem .4rem;line-height:1}
+.modal-close:hover{color:#fff}
+.modal-field{margin-bottom:1rem}
+.modal-field label{font-size:.68rem;color:#888;display:block;margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.05em}
+.modal-field input{width:100%;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#fff;padding:.55rem .75rem;font-size:.75rem;font-family:ui-monospace,monospace}
+.modal-field input:focus{border-color:#22c55e;outline:none}
 </style></head><body>
 <div class="wrap">
-<h1>EplayerX TagStyler</h1>
-<p class="sub">Configure your Fusion stream tags, preview, and export.</p>
+
+<!-- 顶部标头与右上角设置按钮 -->
+<div class="top-header">
+  <div>
+    <h1>EplayerX TagStyler</h1>
+    <p class="sub">Configure your Fusion stream tags, preview, and export.</p>
+  </div>
+  <button class="settings-btn" onclick="openSettingsModal()">⚙️ GitHub 设置</button>
+</div>
+
+<!-- 【右上角二级设置弹窗】 -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">⚙️ GitHub 自动同步设置</div>
+      <button class="modal-close" onclick="closeSettingsModal()">✕</button>
+    </div>
+    <div class="modal-field">
+      <label>GitHub Personal Access Token</label>
+      <input type="password" id="gh-token-input" placeholder="粘贴 Token (github_pat_...)">
+    </div>
+    <div class="modal-field">
+      <label>GitHub 仓库路径 (Owner/Repo)</label>
+      <input type="text" id="gh-repo-input" value="6otho/EplayerX-TagStyler">
+    </div>
+    <div class="modal-field">
+      <label>分支名称 (Branch)</label>
+      <input type="text" id="gh-branch-input" value="main">
+    </div>
+    <div style="display:flex;gap:.5rem;margin-top:1.2rem">
+      <button class="cbtn" style="flex:1;padding:.65rem" onclick="saveSettingsModal()">保存配置</button>
+      <button class="abtn" style="color:#888" onclick="closeSettingsModal()">取消</button>
+    </div>
+  </div>
+</div>
 
 <div class="sec"><h2>1. Icon Style (图标风格)</h2><div class="opts" data-g="icon">
 <div class="o on" data-v="colored">Colored (彩色彩色)</div>
@@ -91,16 +143,7 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
   <div id="badge-manager-container"></div>
 </div>
 
-<!-- 【新增：GitHub Token 自动同步配置卡片】 -->
-<div class="sec" style="border-color:#22c55e">
-  <h2 style="color:#4ade80">6. GitHub Auto-Sync (一键自动同步到 GitHub)</h2>
-  <div class="sub" style="margin-bottom:.5rem">在下面粘贴您的 GitHub Personal Access Token，填一次后会自动保存在本地浏览器中。</div>
-  <div style="display:flex;gap:.4rem">
-    <input type="password" id="gh-token-input" placeholder="粘贴您的 GitHub Token (github_pat_...)" style="flex:1;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#fff;padding:.4rem .6rem;font-size:.72rem">
-    <button class="abtn" onclick="saveTokenToLocal()">保存 Token</button>
-  </div>
-</div>
-
+<!-- 确认生成按键 -->
 <button class="cbtn" style="margin:1.2rem 0;font-size:.9rem" onclick="confirmAndSyncToGitHub()">🚀 确认生成并一键自动同步到 GitHub (Sync to GitHub)</button>
 
 <div class="sec">
@@ -136,8 +179,8 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 <div class="gt">Fusion Filters</div>
 <div class="gd">Fusion → Settings → Filters → Import Filters → paste URL</div>
 <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.45rem;width:100%">
-  <button class="abtn" style="flex:1;min-width:180px" onclick="cc('oj')">Copy Filters JSON (手动复制)</button>
-  <button class="cbtn" style="flex:1.2;min-width:180px" onclick="cc('ou')">Copy Import URL (客户端导入)</button>
+  <button class="abtn" style="flex:1;min-width:180px;background:#1e3a29;border-color:#22c55e;color:#4ade80" onclick="cc('oj')">Step 1: Copy Filters JSON (手动复制)</button>
+  <button class="cbtn" style="flex:1.2;min-width:180px" onclick="cc('ou')">Step 2: Copy Import URL (客户端导入)</button>
 </div>
 </div></div>
 </div>
@@ -236,31 +279,55 @@ function matchFilterPattern(pattern, text) {
   }
 }
 
-// UTF-8 安全转 Base64（支持中文与 Emoji）
 function utf8ToBase64(str) {
   return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {
     return String.fromCharCode('0x' + p1);
   }));
 }
 
-function saveTokenToLocal() {
-  const token = document.getElementById('gh-token-input').value.trim();
-  if (!token) { alert('请输入有效的 Token！'); return; }
-  localStorage.setItem('epx_gh_token', token);
-  showToast('🔑 Token 已保存到本地浏览器！');
+// 【二级弹窗 Modal 控制逻辑】
+function openSettingsModal() {
+  const token = localStorage.getItem('epx_gh_token') || '';
+  const repo = localStorage.getItem('epx_gh_repo') || '6otho/EplayerX-TagStyler';
+  const branch = localStorage.getItem('epx_gh_branch') || 'main';
+
+  document.getElementById('gh-token-input').value = token;
+  document.getElementById('gh-repo-input').value = repo;
+  document.getElementById('gh-branch-input').value = branch;
+
+  document.getElementById('settings-modal').classList.add('open');
 }
 
-// 【自动同步 GitHub 主逻辑】
+function closeSettingsModal() {
+  document.getElementById('settings-modal').classList.remove('open');
+}
+
+function saveSettingsModal() {
+  const token = document.getElementById('gh-token-input').value.trim();
+  const repo = document.getElementById('gh-repo-input').value.trim() || '6otho/EplayerX-TagStyler';
+  const branch = document.getElementById('gh-branch-input').value.trim() || 'main';
+
+  localStorage.setItem('epx_gh_token', token);
+  localStorage.setItem('epx_gh_repo', repo);
+  localStorage.setItem('epx_gh_branch', branch);
+
+  closeSettingsModal();
+  showToast('🔑 GitHub 设置已成功保存！');
+}
+
+// 【自动同步主逻辑】
 async function confirmAndSyncToGitHub() {
-  upd(); // 先更新页面本地渲染
+  upd();
 
-  const token = document.getElementById('gh-token-input').value.trim() || localStorage.getItem('epx_gh_token');
-  const repo = '6otho/EplayerX-TagStyler';
+  const token = localStorage.getItem('epx_gh_token');
+  const repo = localStorage.getItem('epx_gh_repo') || '6otho/EplayerX-TagStyler';
+  const branch = localStorage.getItem('epx_gh_branch') || 'main';
   const path = 'fusion-tags.json';
-  const branch = 'main';
 
+  // 如果还没设置 Token，自动帮用户平滑拉起右上角的弹窗！
   if (!token) {
-    showToast('⚠️ 未检测到 Token，已生成本地 JSON。填写 Token 可自动上传！');
+    openSettingsModal();
+    showToast('💡 请先配置 GitHub Token 即可启用一键自动同步！');
     return;
   }
 
@@ -270,7 +337,6 @@ async function confirmAndSyncToGitHub() {
   showToast('⏳ 正在通过 GitHub API 自动提交更新文件...');
 
   try {
-    // 1. 先获取该文件当前的 sha（GitHub 要求更新时必须带 sha）
     const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -284,10 +350,8 @@ async function confirmAndSyncToGitHub() {
       sha = fileData.sha;
     }
 
-    // 2. 将新的 JSON 转为 Base64 编码
     const contentBase64 = utf8ToBase64(jsonString);
 
-    // 3. 提交 PUT 请求保存文件到 GitHub 仓库
     const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
       method: 'PUT',
       headers: {
@@ -308,9 +372,9 @@ async function confirmAndSyncToGitHub() {
       throw new Error(errData.message || `HTTP ${putRes.status}`);
     }
 
-    showToast('🎉 成功！最新 JSON 已自动更新提交至 GitHub！客户端现在刷新即可生效。');
+    showToast('🎉 成功！最新 JSON 已自动同步写入 GitHub！客户端刷新即可生效。');
   } catch (err) {
-    alert('自动提交失败：' + err.message + '\n提示：请检查 Token 权限或 GitHub 仓库名。');
+    alert('自动提交失败：' + err.message + '\n提示：请点击右上角⚙️检查 Token 或仓库名称。');
   }
 }
 
@@ -368,7 +432,7 @@ async function loadCustomJson() {
 
     customFilters.forEach(f => activeFilterIds.add(f.id));
     renderBadgeManager();
-    showToast(`成功合并了 ${customFilters.length} 个自定义徽章！点击【确认生成并自动同步】可上传。`);
+    showToast(`成功合并了 ${customFilters.length} 个自定义徽章！点击【确认生成】应用。`);
   } catch (e) {
     alert('JSON 解析失败：' + e.message);
   }
@@ -565,12 +629,6 @@ function upd(){
 function cc(id){navigator.clipboard.writeText(document.getElementById(id).value).then(()=>{showToast('已复制到剪贴板！')})}
 
 document.querySelectorAll('.opts').forEach(g=>{g.querySelectorAll('.o').forEach(o=>{o.onclick=()=>{g.querySelectorAll('.o').forEach(x=>x.classList.remove('on'));o.classList.add('on');C[g.dataset.g]=o.dataset.v;}})});
-
-// 页面加载时自动读取本地保存的 Token
-const savedToken = localStorage.getItem('epx_gh_token');
-if (savedToken) {
-  document.getElementById('gh-token-input').value = savedToken;
-}
 
 renderBadgeManager();
 upd();
