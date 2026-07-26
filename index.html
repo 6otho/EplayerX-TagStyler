@@ -78,21 +78,20 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
   </div>
 </div>
 
-<!-- 【全新功能：全量徽章选择与管理】 -->
 <div class="sec">
   <div style="display:flex;justify-content:space-between;align-items:center">
     <h2>5. Badge Manager (徽章勾选与管理面板)</h2>
     <div style="display:flex;gap:.3rem">
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="toggleAllFilters(true)">全选</button>
-      <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="toggleAllFilters(false)">全不选</button>      <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem;color:#60a5fa" onclick="resetDefaultFilters()">重置为默认</button>
+      <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="toggleAllFilters(false)">全不选</button>
+      <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem;color:#60a5fa" onclick="resetDefaultFilters()">重置为默认</button>
     </div>
   </div>
-  <div class="sub" style="margin-bottom:.5rem">可以自由点击取消您不需要的原版徽章（如 HDTV、DVD 等），或者保留您喜欢的徽章组合。</div>
+  <div class="sub" style="margin-bottom:.5rem">自由取消勾选不需要的徽章，保留您喜爱的组合。</div>
   
   <div id="badge-manager-container"></div>
 </div>
 
-<!-- 适配整体设计的【确认生成】按钮 -->
 <button class="cbtn" style="margin:1.2rem 0;font-size:.9rem" onclick="confirmAndGenerate()">确认生成并导出 JSON (Generate Final JSON)</button>
 
 <div class="sec">
@@ -128,8 +127,8 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 <div class="gt">Fusion Filters</div>
 <div class="gd">Fusion → Settings → Filters → Import Filters → paste URL</div>
 <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.45rem;width:100%">
-  <button class="abtn" style="flex:1;min-width:180px" onclick="cc('oj')">Copy Filters JSON (Paste to GitHub)</button>
-  <button class="cbtn" style="flex:1.2;min-width:180px" onclick="cc('ou')">Copy Import URL</button>
+  <button class="abtn" style="flex:1;min-width:180px;background:#1e3a29;border-color:#22c55e;color:#4ade80" onclick="cc('oj')">Step 1: Copy Filters JSON (贴入 GitHub 保存)</button>
+  <button class="cbtn" style="flex:1.2;min-width:180px" onclick="cc('ou')">Step 2: Copy Import URL</button>
 </div>
 </div></div>
 </div>
@@ -146,7 +145,6 @@ function getBadgeUrl(img) {
 
 let C={icon:'colored',hdr:'nodv',desc:'short'};
 
-// 系统默认徽章全量注册表
 const SYSTEM_FILTERS = [
   // Source
   { id: 's-uhdbd', name: 'Ultra HD Blu-ray', pattern: '(?i)\\b(uhd|ultra[\\s._-]?hd)[\\s._-]*(blu[\\s._-]?ray|bluray|bd)\\b', imageURL: 'u-hd-blu-ray.svg', gid: 'gs', groupName: 'Source (来源)' },
@@ -197,7 +195,6 @@ const SYSTEM_FILTERS = [
   { id: 'l-mu', name: '🌐 Multi Audio', pattern: '(?i)\\bmulti\\b|\\bdual[\\s._-]?audio\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' }
 ];
 
-// 全局勾选状态注册表 Set
 let activeFilterIds = new Set(SYSTEM_FILTERS.map(f => f.id));
 let customFilters = [];
 
@@ -293,10 +290,9 @@ async function loadCustomJson() {
       return;
     }
 
-    // 默认勾选导入的自定义徽章
     customFilters.forEach(f => activeFilterIds.add(f.id));
     renderBadgeManager();
-    showToast(`成功解析并加进了 ${customFilters.length} 个自定义徽章！点击【确认生成】应用更新。`);
+    showToast(`成功合并了 ${customFilters.length} 个自定义徽章！点击【确认生成】应用。`);
   } catch (e) {
     alert('JSON 解析失败：' + e.message);
   }
@@ -307,15 +303,13 @@ function clearCustomJson() {
   customFilters.forEach(f => activeFilterIds.delete(f.id));
   customFilters = [];
   renderBadgeManager();
-  showToast('已清空所有导入的自定义徽章！');
+  showToast('已清空导入的自定义徽章！');
 }
 
-// 渲染管理面板（将系统默认徽章与自定义徽章合并放进勾选管理区）
 function renderBadgeManager() {
   const container = document.getElementById('badge-manager-container');
   const allList = [...SYSTEM_FILTERS, ...customFilters];
   
-  // 按 Group 分组
   const groupsMap = {};
   allList.forEach(f => {
     const gName = f.groupName || 'Other Badges';
@@ -355,20 +349,19 @@ function resetDefaultFilters() {
   activeFilterIds.clear();
   SYSTEM_FILTERS.forEach(f => activeFilterIds.add(f.id));
   renderBadgeManager();
-  showToast('已重置为系统默认徽章！');
+  showToast('已重置为默认系统徽章！');
 }
 
-// 确认生成点击事件（主按键，不再显眼突兀，完全适配项目纯白简约风格）
 function confirmAndGenerate() {
   upd();
-  showToast('✅ 成功整合并生成最新的自定义 JSON 和预览！');
+  showToast('✅ 已成功生成！请将新 JSON 粘贴更新至 GitHub 以在客户端生效。');
 }
 
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.style.display = 'block';
-  setTimeout(() => t.style.display = 'none', 2000);
+  setTimeout(() => t.style.display = 'none', 3000);
 }
 
 function renderBadgeGallery(allFilters) {
@@ -386,7 +379,7 @@ function renderBadgeGallery(allFilters) {
             </div>`;
     }
   });
-  container.innerHTML = h || '<span style="color:#666;font-size:.7rem">当前未勾选任何含图片的生效徽章</span>';
+  container.innerHTML = h || '<span style="color:#666;font-size:.7rem">当前未勾选任何生效徽章</span>';
 }
 
 function preview(){
@@ -410,10 +403,8 @@ function preview(){
 
     h+='<div class="cd"><div class="cn">'+fmtName(s)+'</div><div class="cs">'+descTxt+'</div><div class="tr">';
 
-    // 遍历所有当前勾选生效的徽章进行动态匹配渲染（支持用户删除原版徽章）
     activeFilters.forEach(f => {
       if (f.pattern && f.imageURL && matchFilterPattern(f.pattern, s.fn)) {
-        // 如果开启了 "Only when no DV"，且当前文件含 DV 且本徽章是 HDR 徽章，则跳过
         if (C.hdr === 'nodv' && s.dv && (f.id === 'h+' || f.id === 'h1' || f.id === 'hh')) {
           return;
         }
@@ -426,42 +417,53 @@ function preview(){
   pvBox.innerHTML=h;
 }
 
-function mk(id,name,pat,img,st,gid){
-  return{borderColor:st.bc,groupId:gid,id:id,imageURL:getBadgeUrl(img),isEnabled:true,name:name,pattern:pat,tagColor:st.bg,tagStyle:'filled',textColor:st.tc,type:'filter'};
-}
-
 function gen(){
   const T=[],G=[];
   const dvN='(?!.*(?i)\\b(?:dv|dovi|dolby[\\s._-]?vision)\\b)';
 
   const allList = [...SYSTEM_FILTERS, ...customFilters];
   const activeFilters = allList.filter(f => activeFilterIds.has(f.id));
+  const usedGroupIds = new Set();
 
   activeFilters.forEach(f => {
     let pat = f.pattern;
-    // 处理 HDR 选项排他策略
     if (C.hdr === 'nodv' && (f.id === 'h+' || f.id === 'h1' || f.id === 'hh')) {
       pat = '(?i)^' + dvN + pat.replace('(?i)', '');
     }
-    
-    // 如果是自定义过滤规则，保持其原始格式，否则通过 mk 格式化
-    if (f.gid === 'gcustom') {
-      T.push(f);
-    } else {
-      T.push(mk(f.id, f.name, pat, f.imageURL, ST.res, f.gid));
-    }
+
+    const gid = f.gid || f.groupId || 'gs';
+    usedGroupIds.add(gid);
+
+    T.push({
+      borderColor: f.borderColor || '#00000000',
+      groupId: gid,
+      id: f.id,
+      imageURL: getBadgeUrl(f.imageURL),
+      isEnabled: true,
+      name: f.name,
+      pattern: pat,
+      tagColor: f.tagColor || '#00000000',
+      tagStyle: 'filled',
+      textColor: f.textColor || '#FFFFFF',
+      type: 'filter'
+    });
   });
 
-  // Groups
-  G.push({borderColor:'#00000000',color:'#27C04F',id:'gs',isExpanded:true,name:'Source'});
-  G.push({borderColor:ST.res.bc,color:'#FFBE01',id:'gr',isExpanded:true,name:'Resolution'});
-  G.push({borderColor:ST.res.bc,color:'#FF6B6B',id:'gv',isExpanded:true,name:'Visual'});
-  G.push({borderColor:'#00000000',color:'#45B7D1',id:'ga',isExpanded:true,name:'Audio'});
-  G.push({borderColor:'#00000000',color:'#FFD700',id:'gc',isExpanded:true,name:'Channels'});
-  G.push({borderColor:'#00000000',color:'#4ECDC4',id:'gl',isExpanded:true,name:'Language'});
-  if (customFilters.length > 0) {
-    G.push({borderColor:'#00000000',color:'#a855f7',id:'gcustom',isExpanded:true,name:'Custom Badges'});
-  }
+  const ALL_GROUPS = [
+    {borderColor:'#00000000',color:'#27C04F',id:'gs',isExpanded:true,name:'Source'},
+    {borderColor:ST.res.bc,color:'#FFBE01',id:'gr',isExpanded:true,name:'Resolution'},
+    {borderColor:ST.res.bc,color:'#FF6B6B',id:'gv',isExpanded:true,name:'Visual'},
+    {borderColor:'#00000000',color:'#45B7D1',id:'ga',isExpanded:true,name:'Audio'},
+    {borderColor:'#00000000',color:'#FFD700',id:'gc',isExpanded:true,name:'Channels'},
+    {borderColor:'#00000000',color:'#4ECDC4',id:'gl',isExpanded:true,name:'Language'},
+    {borderColor:'#00000000',color:'#a855f7',id:'gcustom',isExpanded:true,name:'Custom Badges'}
+  ];
+
+  ALL_GROUPS.forEach(g => {
+    if (usedGroupIds.has(g.id)) {
+      G.push(g);
+    }
+  });
 
   return{filters:T,groups:G};
 }
@@ -493,7 +495,6 @@ function cc(id){navigator.clipboard.writeText(document.getElementById(id).value)
 
 document.querySelectorAll('.opts').forEach(g=>{g.querySelectorAll('.o').forEach(o=>{o.onclick=()=>{g.querySelectorAll('.o').forEach(x=>x.classList.remove('on'));o.classList.add('on');C[g.dataset.g]=o.dataset.v;}})});
 
-// 初始化渲染
 renderBadgeManager();
 upd();
 </script></body></html>
