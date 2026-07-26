@@ -5,7 +5,6 @@
 body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh}
 .wrap{max-width:680px;margin:0 auto;padding:1.5rem 1rem 4rem}
 
-/* 顶栏与设置按钮布局 */
 .top-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.8rem}
 .top-header h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 .top-header .sub{color:#888;font-size:.82rem;margin-bottom:0}
@@ -24,7 +23,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 .cd{background:#222;border:1px solid #2a2a2a;border-radius:12px;padding:.7rem .85rem;margin-bottom:.45rem;overflow:hidden}
 .cn{font-size:.88rem;font-weight:600;margin-bottom:.12rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cs{font-size:.65rem;color:#999;margin-bottom:.5rem;overflow:hidden;text-overflow:ellipsis;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
-.tr{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.tr{display:flex;flex-wrap:wrap;gap:5px;align-items:center;transition:gap .15s}
 .tg{display:inline-flex;align-items:center;padding:4px 9px;border-radius:7px;font-size:.73rem;font-weight:600;gap:3px;border:1px solid transparent;white-space:nowrap;min-height:26px;line-height:1}
 .tg img{height:17px;width:auto}
 .tg.lg img{height:24px}
@@ -50,12 +49,11 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 #guide .note{font-size:.7rem;color:#999;margin-bottom:.8rem;line-height:1.5}
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#4ade80;padding:.6rem 1.2rem;border-radius:8px;font-size:.82rem;display:none;z-index:99;border:1px solid #22c55e;box-shadow:0 4px 12px rgba(0,0,0,.5)}
 
-.gallery-grid{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.5rem}
+.gallery-grid{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-top:.5rem;transition:gap .15s}
 .gallery-card{display:inline-flex;align-items:center;gap:.4rem;padding:5px 10px;background:#181818;border:1px solid #2a2a2a;border-radius:8px;font-size:.72rem;color:#ddd;line-height:1}
 .gallery-card img{height:18px;width:auto}
 .badge-group-title{font-size:.68rem;color:#888;text-transform:uppercase;letter-spacing:.05em;margin:.8rem 0 .3rem;padding-bottom:.2rem;border-bottom:1px solid #1a1a1a}
 
-/* 【二级设置弹窗 Modal 样式】 */
 .modal-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:1000}
 .modal-overlay.open{display:flex}
 .modal-card{background:#111;border:1px solid #2a2a2a;border-radius:14px;padding:1.4rem 1.5rem;width:92%;max-width:440px;box-shadow:0 12px 40px rgba(0,0,0,.9)}
@@ -70,7 +68,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 </style></head><body>
 <div class="wrap">
 
-<!-- 顶部标头与右上角设置按钮 -->
 <div class="top-header">
   <div>
     <h1>EplayerX TagStyler</h1>
@@ -79,7 +76,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
   <button class="settings-btn" onclick="openSettingsModal()">⚙️ GitHub 设置</button>
 </div>
 
-<!-- 【右上角二级设置弹窗】 -->
 <div class="modal-overlay" id="settings-modal">
   <div class="modal-card">
     <div class="modal-header">
@@ -115,13 +111,21 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 <div class="o" data-v="always">Always (总是显示 HDR)</div>
 </div></div>
 
-<div class="sec"><h2>3. Description (描述栏排版)</h2><div class="opts" data-g="desc">
+<!-- 【新增功能：徽章间距微调】 -->
+<div class="sec"><h2>3. Badge Spacing (徽章排列间距)</h2><div class="opts" data-g="gap">
+<div class="o" data-v="2px">Tight (极窄 2px)</div>
+<div class="o on" data-v="5px">Standard (标准 5px)</div>
+<div class="o" data-v="8px">Relaxed (宽松 8px)</div>
+<div class="o" data-v="12px">Wide (宽距 12px)</div>
+</div></div>
+
+<div class="sec"><h2>4. Description (描述栏排版)</h2><div class="opts" data-g="desc">
 <div class="o on" data-v="short">Service + Filename (服务商 + 文件名)</div>
 <div class="o" data-v="fn">Filename Only (仅显示文件名)</div>
 </div></div>
 
 <div class="sec">
-  <h2>4. Import Custom Badges JSON (导入自定义 JSON / 网址)</h2>
+  <h2>5. Import Custom Badges JSON (导入自定义 JSON / 网址)</h2>
   <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址（如 xperience-app 链接）或您的 JSON 代码，将其合并入图库。</div>
   <textarea id="custom-json-input" placeholder="输入或粘贴网址 (例如 https://xperience-app.com/badges/....json) 或 JSON 内容..." style="width:100%;height:75px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
   <div style="display:flex;gap:.4rem;margin-top:.45rem">
@@ -132,7 +136,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 
 <div class="sec">
   <div style="display:flex;justify-content:space-between;align-items:center">
-    <h2>5. Badge Manager (徽章勾选与管理面板)</h2>
+    <h2>6. Badge Manager (徽章勾选与管理面板)</h2>
     <div style="display:flex;gap:.3rem">
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="toggleAllFilters(true)">全选</button>
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="toggleAllFilters(false)">全不选</button>
@@ -143,7 +147,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
   <div id="badge-manager-container"></div>
 </div>
 
-<!-- 确认生成按键 -->
 <button class="cbtn" style="margin:1.2rem 0;font-size:.9rem" onclick="confirmAndSyncToGitHub()">🚀 确认生成并一键自动同步到 GitHub (Sync to GitHub)</button>
 
 <div class="sec">
@@ -195,7 +198,7 @@ function getBadgeUrl(img) {
   return I_EPX + img;
 }
 
-let C={icon:'colored',hdr:'nodv',desc:'short'};
+let C={icon:'colored',hdr:'nodv',gap:'5px',desc:'short'};
 
 const SYSTEM_FILTERS = [
   { id: 's-uhdbd', name: 'Ultra HD Blu-ray', pattern: '(?i)\\b(uhd|ultra[\\s._-]?hd)[\\s._-]*(blu[\\s._-]?ray|bluray|bd)\\b', imageURL: 'u-hd-blu-ray.svg', gid: 'gs', groupName: 'Source (来源)' },
@@ -285,7 +288,6 @@ function utf8ToBase64(str) {
   }));
 }
 
-// 【二级弹窗 Modal 控制逻辑】
 function openSettingsModal() {
   const token = localStorage.getItem('epx_gh_token') || '';
   const repo = localStorage.getItem('epx_gh_repo') || '6otho/EplayerX-TagStyler';
@@ -315,7 +317,6 @@ function saveSettingsModal() {
   showToast('🔑 GitHub 设置已成功保存！');
 }
 
-// 【自动同步主逻辑】
 async function confirmAndSyncToGitHub() {
   upd();
 
@@ -324,7 +325,6 @@ async function confirmAndSyncToGitHub() {
   const branch = localStorage.getItem('epx_gh_branch') || 'main';
   const path = 'fusion-tags.json';
 
-  // 如果还没设置 Token，自动帮用户平滑拉起右上角的弹窗！
   if (!token) {
     openSettingsModal();
     showToast('💡 请先配置 GitHub Token 即可启用一键自动同步！');
@@ -372,9 +372,37 @@ async function confirmAndSyncToGitHub() {
       throw new Error(errData.message || `HTTP ${putRes.status}`);
     }
 
-    showToast('🎉 成功！最新 JSON 已自动同步写入 GitHub！客户端刷新即可生效。');
+    showToast('🎉 成功！最新 JSON 已自动同步写入 GitHub！');
   } catch (err) {
     alert('自动提交失败：' + err.message + '\n提示：请点击右上角⚙️检查 Token 或仓库名称。');
+  }
+}
+
+// 【带有 CORS 跨域代理 Fallback 的网络抓取逻辑】
+async function fetchJsonWithFallback(url) {
+  // 1. 尝试直接抓取
+  try {
+    const res = await fetch(url);
+    if (res.ok) return await res.text();
+  } catch(e) {
+    console.warn('Direct fetch blocked by CORS, trying proxy...', e);
+  }
+
+  // 2. 尝试第三方跨域代理站点拉取
+  try {
+    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
+    const res = await fetch(proxyUrl);
+    if (res.ok) return await res.text();
+  } catch(e) {
+    console.warn('Proxy 1 failed, trying proxy 2...', e);
+  }
+
+  try {
+    const proxyUrl2 = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+    const res = await fetch(proxyUrl2);
+    if (res.ok) return await res.text();
+  } catch(e) {
+    throw new Error('网络抓取被目标服务器 CORS 跨域拦截，请手动打开该链接复制 JSON 代码粘贴！');
   }
 }
 
@@ -383,12 +411,11 @@ async function loadCustomJson() {
   if (!text) { alert('请先输入或粘贴 JSON 代码 / URL 网址！'); return; }
 
   if (text.startsWith('http://') || text.startsWith('https://')) {
+    showToast('⏳ 正在跨域抓取该网址的内容...');
     try {
-      const res = await fetch(text);
-      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
-      text = await res.text();
+      text = await fetchJsonWithFallback(text);
     } catch(err) {
-      alert('从网址拉取失败：' + err.message);
+      alert('拉取失败：' + err.message);
       return;
     }
   }
@@ -501,6 +528,9 @@ function showToast(msg) {
 
 function renderBadgeGallery(allFilters) {
   const container = document.getElementById('badge-gallery');
+  // 【动态设置微调间距】
+  container.style.gap = C.gap || '5px';
+
   let h = '';
   const seenUrls = new Set();
 
@@ -536,7 +566,8 @@ function preview(){
     const st=(s.type||'debrid');const stCap=st==='p2p'?'P2P':st[0].toUpperCase()+st.slice(1);
     const descTxt = C.desc === 'fn' ? s.fn : s.fn + '\n' + (s.svc || 'RD') + ' \xb7 ' + stCap + ' \xb7 ' + s.size;
 
-    h+='<div class="cd"><div class="cn">'+fmtName(s)+'</div><div class="cs">'+descTxt+'</div><div class="tr">';
+    // 【动态设置微调间距 style="gap: ${C.gap}"】
+    h+='<div class="cd"><div class="cn">'+fmtName(s)+'</div><div class="cs">'+descTxt+'</div><div class="tr" style="gap:'+(C.gap||'5px')+'">';
 
     activeFilters.forEach(f => {
       if (f.pattern && f.imageURL && matchFilterPattern(f.pattern, s.fn)) {
@@ -606,7 +637,7 @@ function gen(){
 function fmt(){
   const d=C.desc==='fn'
     ?'{stream.filename::exists["{stream.filename}"||""]}'
-    :'{stream.filename::exists["{stream.filename}"||""]}\\n{service.shortName::exists["{service.shortName}"||""]}{stream.type::exists[" \xb7 {stream.type::title::replace(\'P2p\',\'P2P\')}"||""]}{stream.size::>0[" \xb7 {stream.size::bytes}"||""]}';
+    :'{stream.filename::exists["{stream.filename}"||""]}\\n{service.shortName::exists["{service.shortName}"||""]}{stream.type::exists[" \xb7 {stream.type::title::replace(\'P2p\',\'P2P\')}"||""]}';
   return{n:'{stream.quality::exists["{stream.quality::title}"||""]}',d};
 }
 
@@ -628,7 +659,12 @@ function upd(){
 
 function cc(id){navigator.clipboard.writeText(document.getElementById(id).value).then(()=>{showToast('已复制到剪贴板！')})}
 
-document.querySelectorAll('.opts').forEach(g=>{g.querySelectorAll('.o').forEach(o=>{o.onclick=()=>{g.querySelectorAll('.o').forEach(x=>x.classList.remove('on'));o.classList.add('on');C[g.dataset.g]=o.dataset.v;}})});
+document.querySelectorAll('.opts').forEach(g=>{g.querySelectorAll('.o').forEach(o=>{o.onclick=()=>{g.querySelectorAll('.o').forEach(x=>x.classList.remove('on'));o.classList.add('on');C[g.dataset.g]=o.dataset.v;upd();}})});
+
+const savedToken = localStorage.getItem('epx_gh_token');
+if (savedToken) {
+  document.getElementById('gh-token-input').value = savedToken;
+}
 
 renderBadgeManager();
 upd();
