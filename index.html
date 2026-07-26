@@ -52,7 +52,12 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 .gallery-grid{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-top:.5rem;transition:gap .15s}
 .gallery-card{display:inline-flex;align-items:center;gap:.4rem;padding:5px 10px;background:#181818;border:1px solid #2a2a2a;border-radius:8px;font-size:.72rem;color:#ddd;line-height:1}
 .gallery-card img{height:18px;width:auto}
-.badge-group-title{font-size:.68rem;color:#888;text-transform:uppercase;letter-spacing:.05em;margin:.8rem 0 .3rem;padding-bottom:.2rem;border-bottom:1px solid #1a1a1a}
+
+/* 【分组标头与组控按钮样式】 */
+.badge-group-header{display:flex;justify-content:space-between;align-items:center;margin:1rem 0 .35rem;padding-bottom:.3rem;border-bottom:1px solid #1a1a1a}
+.badge-group-title-text{font-size:.68rem;color:#aaa;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.mini-btn{padding:.18rem .45rem;font-size:.62rem;background:#181818;border:1px solid #2a2a2a;border-radius:5px;color:#888;cursor:pointer;transition:all .15s}
+.mini-btn:hover{color:#fff;border-color:#444;background:#222}
 
 .modal-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:1000}
 .modal-overlay.open{display:flex}
@@ -111,7 +116,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 <div class="o" data-v="always">Always (总是显示 HDR)</div>
 </div></div>
 
-<!-- 【新增功能：徽章间距微调】 -->
 <div class="sec"><h2>3. Badge Spacing (徽章排列间距)</h2><div class="opts" data-g="gap">
 <div class="o" data-v="2px">Tight (极窄 2px)</div>
 <div class="o on" data-v="5px">Standard (标准 5px)</div>
@@ -138,12 +142,12 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
   <div style="display:flex;justify-content:space-between;align-items:center">
     <h2>6. Badge Manager (徽章勾选与管理面板)</h2>
     <div style="display:flex;gap:.3rem">
-      <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="toggleAllFilters(true)">全选</button>
-      <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="toggleAllFilters(false)">全不选</button>
+      <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="toggleAllFilters(true)">全局全选</button>
+      <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="toggleAllFilters(false)">全局全不选</button>
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem;color:#60a5fa" onclick="resetDefaultFilters()">重置为默认</button>
     </div>
   </div>
-  <div class="sub" style="margin-bottom:.5rem">自由取消勾选不需要的徽章，保留您喜爱的组合。</div>
+  <div class="sub" style="margin-bottom:.5rem">每个分组标题右侧均有【全选本组 / 清空本组】按钮，支持极速自由组合。</div>
   <div id="badge-manager-container"></div>
 </div>
 
@@ -378,17 +382,14 @@ async function confirmAndSyncToGitHub() {
   }
 }
 
-// 【带有 CORS 跨域代理 Fallback 的网络抓取逻辑】
 async function fetchJsonWithFallback(url) {
-  // 1. 尝试直接抓取
   try {
     const res = await fetch(url);
     if (res.ok) return await res.text();
   } catch(e) {
-    console.warn('Direct fetch blocked by CORS, trying proxy...', e);
+    console.warn('Direct fetch blocked, trying proxy 1...', e);
   }
 
-  // 2. 尝试第三方跨域代理站点拉取
   try {
     const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
     const res = await fetch(proxyUrl);
@@ -473,6 +474,7 @@ function clearCustomJson() {
   showToast('已清空导入的自定义徽章！');
 }
 
+// 【新增：支持组级独立全选/清空功能】
 function renderBadgeManager() {
   const container = document.getElementById('badge-manager-container');
   const allList = [...SYSTEM_FILTERS, ...customFilters];
@@ -486,7 +488,16 @@ function renderBadgeManager() {
 
   let h = '';
   for (const [gName, filters] of Object.entries(groupsMap)) {
-    h += `<div class="badge-group-title">${gName}</div><div class="opts">`;
+    const safeGName = gName.replace(/'/g, "\\'");
+    h += `<div class="badge-group-header">
+            <span class="badge-group-title-text">${gName}</span>
+            <div style="display:flex;gap:.3rem">
+              <button class="mini-btn" onclick="toggleGroupFilters('${safeGName}', true)">全选本组</button>
+              <button class="mini-btn" onclick="toggleGroupFilters('${safeGName}', false)">清空本组</button>
+            </div>
+          </div>
+          <div class="opts">`;
+
     filters.forEach(f => {
       const isOn = activeFilterIds.has(f.id);
       h += `<div class="o ${isOn ? 'on' : ''}" onclick="toggleFilter('${f.id}')">${f.name}</div>`;
@@ -494,6 +505,17 @@ function renderBadgeManager() {
     h += `</div>`;
   }
   container.innerHTML = h;
+}
+
+function toggleGroupFilters(gName, enable) {
+  const allList = [...SYSTEM_FILTERS, ...customFilters];
+  allList.forEach(f => {
+    if ((f.groupName || 'Other Badges') === gName) {
+      if (enable) activeFilterIds.add(f.id);
+      else activeFilterIds.delete(f.id);
+    }
+  });
+  renderBadgeManager();
 }
 
 function toggleFilter(fid) {
@@ -528,7 +550,6 @@ function showToast(msg) {
 
 function renderBadgeGallery(allFilters) {
   const container = document.getElementById('badge-gallery');
-  // 【动态设置微调间距】
   container.style.gap = C.gap || '5px';
 
   let h = '';
@@ -566,7 +587,6 @@ function preview(){
     const st=(s.type||'debrid');const stCap=st==='p2p'?'P2P':st[0].toUpperCase()+st.slice(1);
     const descTxt = C.desc === 'fn' ? s.fn : s.fn + '\n' + (s.svc || 'RD') + ' \xb7 ' + stCap + ' \xb7 ' + s.size;
 
-    // 【动态设置微调间距 style="gap: ${C.gap}"】
     h+='<div class="cd"><div class="cn">'+fmtName(s)+'</div><div class="cs">'+descTxt+'</div><div class="tr" style="gap:'+(C.gap||'5px')+'">';
 
     activeFilters.forEach(f => {
