@@ -22,6 +22,10 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 .tg{display:inline-flex;align-items:center;padding:4px 9px;border-radius:7px;font-size:.73rem;font-weight:600;gap:3px;border:1px solid transparent;white-space:nowrap;min-height:26px;line-height:1}
 .tg img{height:17px;width:auto}
 .tg.lg img{height:24px}
+
+/* 【单色 Mono 风格滤镜渲染】 */
+.mono-style img { filter: grayscale(100%) contrast(1.2) brightness(1.2); }
+
 .oph{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:#555;margin:1.8rem 0 .6rem}
 .ob{position:relative;margin-bottom:.9rem}
 .ob label{font-size:.65rem;color:#555;margin-bottom:.25rem;display:block}
@@ -30,61 +34,73 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 .ob .cp:hover{color:#fff}
 .cbtn{width:100%;padding:.7rem;background:#fff;color:#111;border:none;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;transition:opacity .15s}
 .cbtn:hover{opacity:.9}
+.confirm-btn{width:100%;padding:.85rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:10px;font-size:.92rem;font-weight:800;cursor:pointer;margin:1.2rem 0;box-shadow:0 4px 14px rgba(34,197,94,.3);transition:transform .1s,opacity .15s}
+.confirm-btn:active{transform:scale(.98)}
 .gs{display:flex;gap:.65rem;margin-bottom:.65rem}
 .gn{width:22px;height:22px;border-radius:50%;background:#222;color:#aaa;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0;margin-top:.1rem}
 .gc{flex:1}
 .gt{font-size:.88rem;font-weight:600;color:#ddd;margin-bottom:.25rem}
 .gd{font-size:.8rem;color:#888;line-height:1.5}
 .gd.sub{font-size:.7rem;color:#666;margin-top:.3rem}
-.abtn{padding:.5rem .9rem;background:#222;color:#fff;border:1px solid #333;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;margin-top:.45rem;transition:all .15s}
+.abtn{padding:.5rem .9rem;background:#222;color:#fff;border:1px solid #333;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s}
 .abtn:hover{background:#333;border-color:#444}
 #guide .note{font-size:.7rem;color:#999;margin-bottom:.8rem;line-height:1.5}
-.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#4ade80;padding:.5rem 1rem;border-radius:8px;font-size:.78rem;display:none;z-index:99;border:1px solid #2a2a2a}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#4ade80;padding:.6rem 1.2rem;border-radius:8px;font-size:.82rem;display:none;z-index:99;border:1px solid #22c55e}
 
 .gallery-grid{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.5rem}
 .gallery-card{display:inline-flex;align-items:center;gap:.4rem;padding:5px 10px;background:#181818;border:1px solid #2a2a2a;border-radius:8px;font-size:.72rem;color:#ddd;line-height:1}
 .gallery-card img{height:18px;width:auto}
-.chip-btn{padding:.35rem .65rem;border:1px solid #2a2a2a;border-radius:6px;font-size:.7rem;cursor:pointer;background:#0a0a0a;color:#777;transition:all .15s}
-.chip-btn.on{border-color:#4ade80;color:#4ade80;background:#142918}
 </style></head><body>
 <div class="wrap">
 <h1>EplayerX TagStyler</h1>
 <p class="sub">Configure your Fusion stream tags, preview, and export.</p>
 
-<div class="sec"><h2>Icon Style</h2><div class="opts" data-g="icon">
-<div class="o on" data-v="colored">Colored</div>
-<div class="o" data-v="mono">Mono</div>
+<!-- 前三个功能全面激活 -->
+<div class="sec"><h2>1. Icon Style (图标风格)</h2><div class="opts" data-g="icon">
+<div class="o on" data-v="colored">Colored (彩色彩色)</div>
+<div class="o" data-v="mono">Mono (单色黑白)</div>
 </div></div>
 
-<div class="sec"><h2>HDR Display</h2><div class="opts" data-g="hdr">
-<div class="o on" data-v="nodv">Only when no DV</div>
-<div class="o" data-v="always">Always (hybrids)</div>
+<div class="sec"><h2>2. HDR Display (HDR 显示策略)</h2><div class="opts" data-g="hdr">
+<div class="o on" data-v="nodv">Only when no DV (无 DV 时才显示 HDR)</div>
+<div class="o" data-v="always">Always (总是显示 HDR)</div>
 </div></div>
 
-<div class="sec"><h2>Description</h2><div class="opts" data-g="desc">
-<div class="o on" data-v="short">Service + Filename</div>
-<div class="o" data-v="fn">Filename Only</div>
+<div class="sec"><h2>3. Description (描述栏排版)</h2><div class="opts" data-g="desc">
+<div class="o on" data-v="short">Service + Filename (服务商 + 文件名)</div>
+<div class="o" data-v="fn">Filename Only (仅显示文件名)</div>
 </div></div>
+
+<!-- 导入自定义 JSON 模块 -->
+<div class="sec">
+  <h2>4. Import Custom Badges JSON (导入自定义 JSON / 网址)</h2>
+  <div class="sub" style="margin-bottom:.5rem">可以粘贴第三方 URL 网址（如 xperience-app 链接）或您自己的 JSON 代码。</div>
+  <textarea id="custom-json-input" placeholder="输入或粘贴网址 (例如 https://xperience-app.com/badges/....json) 或 JSON 内容..." style="width:100%;height:80px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
+  
+  <div style="display:flex;gap:.4rem;margin-top:.45rem">
+    <button class="abtn" style="background:#1e3a29;border-color:#22c55e;color:#4ade80" onclick="loadCustomJson()">加载解析 JSON 徽章</button>
+    <button class="abtn" style="color:#f87171" onclick="clearCustomJson()">清空自定义徽章</button>
+  </div>
+
+  <div id="custom-badges-selector" style="margin-top:.8rem;display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem">
+      <h3 style="font-size:.7rem;color:#888;text-transform:uppercase">快捷选择自定义徽章 (Toggle Badges):</h3>
+      <div style="display:flex;gap:.3rem">
+        <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="selectAllCustom(true)">全选</button>
+        <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="selectAllCustom(false)">全不选</button>
+      </div>
+    </div>
+    <div id="custom-chips" class="opts"></div>
+  </div>
+</div>
+
+<!-- 新增：确认生成按钮 -->
+<button class="confirm-btn" onclick="confirmAndGenerate()">🚀 确认生成自定义 JSON (Confirm & Generate)</button>
 
 <div class="sec">
   <h2>All Active Badges Gallery (全徽章展示大图鉴)</h2>
-  <div class="sub" style="margin-bottom:.5rem">展现了当前已启用的所有 SVG/PNG 徽章。</div>
+  <div class="sub" style="margin-bottom:.5rem">展现当前生效的所有徽章样式。</div>
   <div id="badge-gallery" class="gallery-grid"></div>
-</div>
-
-<!-- 【增强版：支持直接粘贴 URL 网址或原始代码】 -->
-<div class="sec">
-  <h2>Import Custom Badges JSON (导入自定义 JSON / 网址)</h2>
-  <div class="sub" style="margin-bottom:.5rem">支持直接粘贴第三方 URL 网址（如 xperience-app.com 链接）或原始 JSON 代码。</div>
-  <textarea id="custom-json-input" placeholder="输入或粘贴网址 (例如 https://xperience-app.com/badges/....json) 或 JSON 内容..." style="width:100%;height:80px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
-  <div style="display:flex;gap:.4rem;margin-top:.45rem">
-    <button class="abtn" style="background:#1e3a29;border-color:#22c55e;color:#4ade80" onclick="loadCustomJson()">加载并解析 JSON 徽章</button>
-    <button class="abtn" style="color:#f87171" onclick="clearCustomJson()">清空自定义徽章</button>
-  </div>
-  <div id="custom-badges-selector" style="margin-top:.8rem;display:none">
-    <h3 style="font-size:.7rem;color:#888;margin-bottom:.4rem;text-transform:uppercase">勾选要生效的自定义徽章 (Toggle Badges):</h3>
-    <div id="custom-chips" class="opts"></div>
-  </div>
 </div>
 
 <h2 class="pvh">Preview (视频流动态匹配预览)</h2>
@@ -175,40 +191,33 @@ function matchFilterPattern(pattern, text) {
   }
 }
 
-// 【全面升级】：支持 URL 网络抓取 + 自动归一化兼容各种第三方 JSON 结构
 async function loadCustomJson() {
   let text = document.getElementById('custom-json-input').value.trim();
   if (!text) { alert('请先输入或粘贴 JSON 代码 / URL 网址！'); return; }
 
-  // 1. 如果用户输入的是 URL 网址（如 xperience-app.com 链接），异步 fetch 抓取内容
   if (text.startsWith('http://') || text.startsWith('https://')) {
     try {
       const res = await fetch(text);
       if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
       text = await res.text();
     } catch(err) {
-      alert('从网址拉取失败（可能存在跨域拦截或链接无效）：' + err.message);
+      alert('从网址拉取失败：' + err.message);
       return;
     }
   }
 
-  // 2. 兼容各种 JSON 结构与字段别名
   try {
     const data = JSON.parse(text);
     let rawList = [];
 
-    if (Array.isArray(data)) {
-      rawList = data;
-    } else if (data && typeof data === 'object') {
-      rawList = data.filters || data.badges || data.rules || data.items || data.data || [];
-    }
+    if (Array.isArray(data)) rawList = data;
+    else if (data && typeof data === 'object') rawList = data.filters || data.badges || data.rules || data.items || data.data || [];
 
     if (!Array.isArray(rawList) || rawList.length === 0) {
-      alert('解析失败：未找到有效的徽章数组列表，请检查内容。');
+      alert('解析失败：未找到有效的徽章数组列表。');
       return;
     }
 
-    // 3. 字段自动归一化 (兼容 imageUrl, url, image, regex, match 等不同命名)
     customFilters = rawList.map((f, idx) => {
       const img = f.imageURL || f.imageUrl || f.url || f.image || f.icon || '';
       const name = f.name || f.label || f.title || f.id || `Badge-${idx+1}`;
@@ -225,17 +234,18 @@ async function loadCustomJson() {
         textColor: f.textColor || '#FFFFFF',
         type: 'filter'
       };
-    }).filter(f => f.imageURL); // 过滤掉无图片项
+    }).filter(f => f.imageURL);
 
     if (customFilters.length === 0) {
-      alert('未找到任何包含有效图片地址 (imageURL / url) 的徽章！');
+      alert('未找到任何包含有效图片地址的徽章！');
       return;
     }
 
+    // 默认全选
     selectedCustomFilterIds = new Set(customFilters.map(f => f.id));
     renderCustomChips();
     upd();
-    alert(`成功加载并适配了 ${customFilters.length} 个自定义徽章！`);
+    showToast(`成功加载并解析了 ${customFilters.length} 个徽章！点击确认按键同步生成。`);
   } catch (e) {
     alert('JSON 解析失败：' + e.message);
   }
@@ -270,7 +280,28 @@ function toggleCustomFilter(fid) {
   if (selectedCustomFilterIds.has(fid)) selectedCustomFilterIds.delete(fid);
   else selectedCustomFilterIds.add(fid);
   renderCustomChips();
+}
+
+function selectAllCustom(enable) {
+  if (enable) {
+    selectedCustomFilterIds = new Set(customFilters.map(f => f.id));
+  } else {
+    selectedCustomFilterIds.clear();
+  }
+  renderCustomChips();
+}
+
+// 确认生成点击事件
+function confirmAndGenerate() {
   upd();
+  showToast('✅ 已成功为您生成最新的自定义 JSON 与预览！');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2000);
 }
 
 function renderBadgeGallery(allFilters) {
@@ -295,11 +326,28 @@ function preview(){
   let h='';
   const activeCustom = customFilters.filter(f => selectedCustomFilterIds.has(f.id));
 
+  // 1. 根据 Icon Style 选择性开启网页灰度黑白效果
+  const galleryBox = document.getElementById('badge-gallery');
+  const pvBox = document.getElementById('pv');
+  if (C.icon === 'mono') {
+    galleryBox.classList.add('mono-style');
+    pvBox.classList.add('mono-style');
+  } else {
+    galleryBox.classList.remove('mono-style');
+    pvBox.classList.remove('mono-style');
+  }
+
   for(const s of STREAMS){
-    const st=(s.type||'debrid');const stCap=st==='p2p'?'P2P':st[0].toUpperCase()+st.slice(1);const descTxt=C.desc==='fn'?s.fn:s.fn+'\n'+(s.svc||'RD')+' \xb7 '+stCap+' \xb7 '+s.size;
+    const st=(s.type||'debrid');const stCap=st==='p2p'?'P2P':st[0].toUpperCase()+st.slice(1);
+    
+    // 3. 根据 Description 选择控制预览文字
+    const descTxt = C.desc === 'fn' 
+      ? s.fn 
+      : s.fn + '\n' + (s.svc || 'RD') + ' \xb7 ' + stCap + ' \xb7 ' + s.size;
+
     h+='<div class="cd"><div class="cn">'+fmtName(s)+'</div><div class="cs">'+descTxt+'</div><div class="tr">';
 
-    // 1) SOURCE
+    // SOURCE
     if(s.src==='remux' || s.src==='bluray'){
       if(s.fn.toLowerCase().includes('uhd') || s.fn.toLowerCase().includes('2160p')){
         h+=thtml(null,'u-hd-blu-ray.svg',ST.res);
@@ -312,21 +360,21 @@ function preview(){
       h+=thtml(null,'dvd.svg',ST.res);
     }
 
-    // 2) RESOLUTION
+    // RESOLUTION
     const ri=s.res==='4K'?'4Kx-1.svg':s.res==='1080p'?'1080p-a.svg':s.res==='720p'?'720p-b.svg':s.res.toLowerCase()+'.png';
     h+=thtml(null,ri,ST.res);
 
-    // 3) HDR
-    if(s.hdr&&(C.hdr==='always'||!s.dv)){
+    // 2. 根据 HDR Display 控制 HDR 的逻辑触发
+    if(s.hdr && (C.hdr==='always' || !s.dv)){
       const hi=s.hdr==='HDR10+'?'hdr10p-xx.svg':s.hdr==='HDR10'?'hdr10-x.svg':'hdr-x.svg';
       h+=thtml(null,hi,ST.res);
     }
 
-    // 3b) IMAX
+    // IMAX
     if(s.imax==='IMAX Enhanced')h+=thtml(null,'imax-e.svg',ST.res);
     else if(s.imax==='IMAX')h+=thtml(null,'imax.svg',ST.res);
 
-    // 4) AUDIO & VIDEO TECH
+    // AUDIO & VIDEO TECH
     const isDTS=s.aud&&s.aud.startsWith('dts');
     if(s.dv) h+=thtml(null,'dolby-vision-x.svg',ST.tr,true);
     if(s.aud==='atmos' || s.fn.toLowerCase().includes('atmos')) h+=thtml(null,'dolby-atmos-x.svg',ST.tr,true);
@@ -343,10 +391,10 @@ function preview(){
       h+=thtml(null,dtsImg,ST.res);
     }
 
-    // 5) SURROUND
+    // SURROUND
     h+=thtml(null,s.ch==='7.1'?'7.1-6.svg':'5.1-6.svg',ST.tr);
 
-    // 6) 动态匹配第三方/自定义 JSON 徽章
+    // 自定义 JSON 徽章
     activeCustom.forEach(cf => {
       if (cf.pattern && cf.imageURL && matchFilterPattern(cf.pattern, s.fn)) {
         h += thtml(cf.name || '', cf.imageURL, ST.res);
@@ -355,7 +403,7 @@ function preview(){
 
     h+='</div></div>';
   }
-  document.getElementById('pv').innerHTML=h;
+  pvBox.innerHTML=h;
 }
 
 function mk(id,name,pat,img,st,gid){
@@ -363,8 +411,7 @@ function mk(id,name,pat,img,st,gid){
 }
 
 function gen(){
-  const p=C.icon,mono=p==='mono',T=[],G=[];
-  const qs=k=>mono?ST.res:ST[k];
+  const T=[],G=[];
 
   const dvR='\\b(?:dv|dovi|dolby[\\s._-]?vision)\\b';
   const dvN='(?!.*(?i)'+dvR+')';
@@ -411,7 +458,7 @@ function gen(){
   const L=[['en','\ud83c\uddec\ud83c\udde7','(?i)\\benglish\\b|\\beng\\b'],['es','\ud83c\uddea\ud83c\uddf8','(?i)\\bspanish\\b|\\bspa\\b'],['fr','\ud83c\uddeb\ud83c\uddf7','(?i)\\bfrench\\b|\\bfra\\b'],['de','\ud83c\udde9\ud83c\uddea','(?i)\\bgerman\\b|\\bdeu\\b'],['it','\ud83c\uddee\ud83c\uddf9','(?i)\\bitalian\\b|\\bita\\b'],['pt','\ud83c\udde7\ud83c\uddf7','(?i)\\bportuguese\\b|\\bpor\\b'],['ja','\ud83c\uddef\ud83c\uddf5','(?i)\\bjapanese\\b|\\bjpn\\b'],['ko','\ud83c\uddf0\ud83c\uddf7','(?i)\\bkorean\\b|\\bkor\\b'],['zh','\ud83c\udde8\ud83c\uddf3','(?i)\\bchinese\\b|\\bchi\\b'],['hi','\ud83c\uddee\ud83c\uddf3','(?i)\\bhindi\\b|\\bhin\\b'],['ar','\ud83c\uddf8\ud83c\dde6','(?i)\\barabic\\b|\\bara\\b'],['ru','\ud83c\uddf7\ud83c\uddfa','(?i)\\brussian\\b|\\brus\\b'],['mu','\ud83c\udf10','(?i)\\bmulti\\b|\\bdual[\\s._-]?audio\\b']];
   for(const[c,f,pt] of L)T.push(mk('l-'+c,f,pt,'',ST.dim,'gl'));
 
-  // 合并用户导入并勾选的自定义 JSON 徽章
+  // 合并用户勾选的自定义 JSON 徽章
   customFilters.forEach(cf => {
     if (selectedCustomFilterIds.has(cf.id)) {
       T.push(cf);
@@ -452,9 +499,9 @@ function upd(){
   g.innerHTML='<div class="note">您的自定义预设已完全基于文件名匹配，无需导入任何评分（Scoring）模板，享受超轻量化运行。</div>';
 }
 
-function cc(id){navigator.clipboard.writeText(document.getElementById(id).value).then(()=>{const t=document.getElementById('toast');t.style.display='block';setTimeout(()=>t.style.display='none',1500)})}
+function cc(id){navigator.clipboard.writeText(document.getElementById(id).value).then(()=>{showToast('已复制到剪贴板！')})}
 
-document.querySelectorAll('.opts').forEach(g=>{g.querySelectorAll('.o').forEach(o=>{o.onclick=()=>{g.querySelectorAll('.o').forEach(x=>x.classList.remove('on'));o.classList.add('on');C[g.dataset.g]=o.dataset.v;upd()}})});
+document.querySelectorAll('.opts').forEach(g=>{g.querySelectorAll('.o').forEach(o=>{o.onclick=()=>{g.querySelectorAll('.o').forEach(x=>x.classList.remove('on'));o.classList.add('on');C[g.dataset.g]=o.dataset.v;}})});
 
 upd();
 </script></body></html>
