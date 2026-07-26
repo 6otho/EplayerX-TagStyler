@@ -41,7 +41,6 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 #guide .note{font-size:.7rem;color:#999;margin-bottom:.8rem;line-height:1.5}
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#4ade80;padding:.5rem 1rem;border-radius:8px;font-size:.78rem;display:none;z-index:99;border:1px solid #2a2a2a}
 
-/* 【全徽章展柜样式】 */
 .gallery-grid{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.5rem}
 .gallery-card{display:inline-flex;align-items:center;gap:.4rem;padding:5px 10px;background:#181818;border:1px solid #2a2a2a;border-radius:8px;font-size:.72rem;color:#ddd;line-height:1}
 .gallery-card img{height:18px;width:auto}
@@ -67,18 +66,17 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 <div class="o" data-v="fn">Filename Only</div>
 </div></div>
 
-<!-- 【功能 1：全徽章大图展柜】 -->
 <div class="sec">
   <h2>All Active Badges Gallery (全徽章展示大图鉴)</h2>
-  <div class="sub" style="margin-bottom:.5rem">这里展现了当前已启用的所有 SVG/PNG 徽章。</div>
+  <div class="sub" style="margin-bottom:.5rem">展现了当前已启用的所有 SVG/PNG 徽章。</div>
   <div id="badge-gallery" class="gallery-grid"></div>
 </div>
 
-<!-- 【功能 2：导入自定义 JSON 并动态选择显示】 -->
+<!-- 【增强版：支持直接粘贴 URL 网址或原始代码】 -->
 <div class="sec">
-  <h2>Import Custom Badges JSON (导入自定义 JSON 徽章)</h2>
-  <div class="sub" style="margin-bottom:.5rem">把您自己的 JSON 粘贴在下方，点击解析即可混合预览并勾选显示。</div>
-  <textarea id="custom-json-input" placeholder="请在这里粘贴包含 filters 的 JSON 内容..." style="width:100%;height:80px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
+  <h2>Import Custom Badges JSON (导入自定义 JSON / 网址)</h2>
+  <div class="sub" style="margin-bottom:.5rem">支持直接粘贴第三方 URL 网址（如 xperience-app.com 链接）或原始 JSON 代码。</div>
+  <textarea id="custom-json-input" placeholder="输入或粘贴网址 (例如 https://xperience-app.com/badges/....json) 或 JSON 内容..." style="width:100%;height:80px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
   <div style="display:flex;gap:.4rem;margin-top:.45rem">
     <button class="abtn" style="background:#1e3a29;border-color:#22c55e;color:#4ade80" onclick="loadCustomJson()">加载并解析 JSON 徽章</button>
     <button class="abtn" style="color:#f87171" onclick="clearCustomJson()">清空自定义徽章</button>
@@ -134,7 +132,6 @@ function getBadgeUrl(img) {
 
 let C={icon:'colored',hdr:'nodv',desc:'short'};
 
-// 动态自定义 JSON 状态管理
 let customFilters = [];
 let selectedCustomFilterIds = new Set();
 
@@ -167,7 +164,6 @@ function thtml(label,img,st,lg){
 
 function fmtName(s){ return s.qual; }
 
-// 正则测试器（用于动态计算自定义徽章是否匹配视频流）
 function matchFilterPattern(pattern, text) {
   if (!pattern || !text) return false;
   try {
@@ -179,22 +175,69 @@ function matchFilterPattern(pattern, text) {
   }
 }
 
-// 解析并加载用户粘贴的自定义 JSON
-function loadCustomJson() {
-  const text = document.getElementById('custom-json-input').value.trim();
-  if (!text) { alert('请先在文本框中粘贴 JSON 内容！'); return; }
-  try {
-    const data = JSON.parse(text);
-    if (!data.filters || !Array.isArray(data.filters)) {
-      alert('解析失败：JSON 必须包含 "filters" 数组！');
+// 【全面升级】：支持 URL 网络抓取 + 自动归一化兼容各种第三方 JSON 结构
+async function loadCustomJson() {
+  let text = document.getElementById('custom-json-input').value.trim();
+  if (!text) { alert('请先输入或粘贴 JSON 代码 / URL 网址！'); return; }
+
+  // 1. 如果用户输入的是 URL 网址（如 xperience-app.com 链接），异步 fetch 抓取内容
+  if (text.startsWith('http://') || text.startsWith('https://')) {
+    try {
+      const res = await fetch(text);
+      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+      text = await res.text();
+    } catch(err) {
+      alert('从网址拉取失败（可能存在跨域拦截或链接无效）：' + err.message);
       return;
     }
-    customFilters = data.filters.filter(f => f && f.imageURL);
-    selectedCustomFilterIds = new Set(customFilters.map(f => f.id || f.name));
+  }
+
+  // 2. 兼容各种 JSON 结构与字段别名
+  try {
+    const data = JSON.parse(text);
+    let rawList = [];
+
+    if (Array.isArray(data)) {
+      rawList = data;
+    } else if (data && typeof data === 'object') {
+      rawList = data.filters || data.badges || data.rules || data.items || data.data || [];
+    }
+
+    if (!Array.isArray(rawList) || rawList.length === 0) {
+      alert('解析失败：未找到有效的徽章数组列表，请检查内容。');
+      return;
+    }
+
+    // 3. 字段自动归一化 (兼容 imageUrl, url, image, regex, match 等不同命名)
+    customFilters = rawList.map((f, idx) => {
+      const img = f.imageURL || f.imageUrl || f.url || f.image || f.icon || '';
+      const name = f.name || f.label || f.title || f.id || `Badge-${idx+1}`;
+      const pat = f.pattern || f.regex || f.match || f.query || '';
+      const id = f.id || name || `custom-${idx}`;
+      return {
+        id: id,
+        name: name,
+        pattern: pat,
+        imageURL: img,
+        tagStyle: f.tagStyle || 'filled',
+        borderColor: f.borderColor || '#00000000',
+        tagColor: f.tagColor || '#00000000',
+        textColor: f.textColor || '#FFFFFF',
+        type: 'filter'
+      };
+    }).filter(f => f.imageURL); // 过滤掉无图片项
+
+    if (customFilters.length === 0) {
+      alert('未找到任何包含有效图片地址 (imageURL / url) 的徽章！');
+      return;
+    }
+
+    selectedCustomFilterIds = new Set(customFilters.map(f => f.id));
     renderCustomChips();
     upd();
+    alert(`成功加载并适配了 ${customFilters.length} 个自定义徽章！`);
   } catch (e) {
-    alert('JSON 格式错误：' + e.message);
+    alert('JSON 解析失败：' + e.message);
   }
 }
 
@@ -206,7 +249,6 @@ function clearCustomJson() {
   upd();
 }
 
-// 渲染可勾选的自定义徽章芯片按钮
 function renderCustomChips() {
   const box = document.getElementById('custom-badges-selector');
   const container = document.getElementById('custom-chips');
@@ -217,7 +259,7 @@ function renderCustomChips() {
   box.style.display = 'block';
   let h = '';
   customFilters.forEach(f => {
-    const fid = f.id || f.name;
+    const fid = f.id;
     const isOn = selectedCustomFilterIds.has(fid);
     h += `<div class="o ${isOn ? 'on' : ''}" onclick="toggleCustomFilter('${fid}')">${f.name || fid}</div>`;
   });
@@ -231,7 +273,6 @@ function toggleCustomFilter(fid) {
   upd();
 }
 
-// 渲染全徽章展示展柜
 function renderBadgeGallery(allFilters) {
   const container = document.getElementById('badge-gallery');
   let h = '';
@@ -252,7 +293,7 @@ function renderBadgeGallery(allFilters) {
 
 function preview(){
   let h='';
-  const activeCustom = customFilters.filter(f => selectedCustomFilterIds.has(f.id || f.name));
+  const activeCustom = customFilters.filter(f => selectedCustomFilterIds.has(f.id));
 
   for(const s of STREAMS){
     const st=(s.type||'debrid');const stCap=st==='p2p'?'P2P':st[0].toUpperCase()+st.slice(1);const descTxt=C.desc==='fn'?s.fn:s.fn+'\n'+(s.svc||'RD')+' \xb7 '+stCap+' \xb7 '+s.size;
@@ -305,7 +346,7 @@ function preview(){
     // 5) SURROUND
     h+=thtml(null,s.ch==='7.1'?'7.1-6.svg':'5.1-6.svg',ST.tr);
 
-    // 6) 动态匹配并渲染用户导入的自定义 JSON 徽章
+    // 6) 动态匹配第三方/自定义 JSON 徽章
     activeCustom.forEach(cf => {
       if (cf.pattern && cf.imageURL && matchFilterPattern(cf.pattern, s.fn)) {
         h += thtml(cf.name || '', cf.imageURL, ST.res);
@@ -317,7 +358,6 @@ function preview(){
   document.getElementById('pv').innerHTML=h;
 }
 
-// --- JSON Generation ---
 function mk(id,name,pat,img,st,gid){
   return{borderColor:st.bc,groupId:gid,id:id,imageURL:getBadgeUrl(img),isEnabled:true,name:name,pattern:pat,tagColor:st.bg,tagStyle:'filled',textColor:st.tc,type:'filter'};
 }
@@ -345,6 +385,7 @@ function gen(){
   T.push(mk('r7','720p','(?i)\\b720[pi]?\\b','720p-b.svg',ST.res,'gr'));
 
   // 3) HDR
+  const hp=C.hdr==='nodv'?dvN:'';
   T.push(mk('h+','HDR10+','hp+\'(?=.*(?i)hdr\\\\s*10\\\\s*(?:\\\\\\\\+|plus|p))\'','hdr10p-xx.svg',ST.res,'gv'));
   T.push(mk('h1','HDR10','hp+\'(?=.*(?i)hdr\\\\s*10)(?!.*(?i)hdr\\\\s*10\\\\s*(?:\\\\\\\\+|plus|p))\'','hdr10-x.svg',ST.res,'gv'));
   T.push(mk('hh','HDR','hp+\'(?=.*(?i)\\\\bHDR\\\\b)(?!.*(?i)hdr\\\\s*10)\'','hdr-x.svg',ST.res,'gv'));
@@ -364,15 +405,15 @@ function gen(){
 
   // Surround
   T.push(mk('c7','7.1','(?i)[^0-9][7-8][ .][0-1]','7.1-6.svg',ST.tr,'gc'));
-  T.push(mk('c5','5.1','(?=.*(?i)[^0-9]5[ .][0-1])(?!.*(?i)[^0-9][7-8][ .][0-1])','5.1-6.svg',ST.tr,'gc'));
+  T.push(mk('c5','5.1','(?=.*(?i)[^0-9]5[ .][0-1])(?!.*[^0-9][7-8][ .][0-1])','5.1-6.svg',ST.tr,'gc'));
 
   // Languages
   const L=[['en','\ud83c\uddec\ud83c\udde7','(?i)\\benglish\\b|\\beng\\b'],['es','\ud83c\uddea\ud83c\uddf8','(?i)\\bspanish\\b|\\bspa\\b'],['fr','\ud83c\uddeb\ud83c\uddf7','(?i)\\bfrench\\b|\\bfra\\b'],['de','\ud83c\udde9\ud83c\uddea','(?i)\\bgerman\\b|\\bdeu\\b'],['it','\ud83c\uddee\ud83c\uddf9','(?i)\\bitalian\\b|\\bita\\b'],['pt','\ud83c\udde7\ud83c\uddf7','(?i)\\bportuguese\\b|\\bpor\\b'],['ja','\ud83c\uddef\ud83c\uddf5','(?i)\\bjapanese\\b|\\bjpn\\b'],['ko','\ud83c\uddf0\ud83c\uddf7','(?i)\\bkorean\\b|\\bkor\\b'],['zh','\ud83c\udde8\ud83c\uddf3','(?i)\\bchinese\\b|\\bchi\\b'],['hi','\ud83c\uddee\ud83c\uddf3','(?i)\\bhindi\\b|\\bhin\\b'],['ar','\ud83c\uddf8\ud83c\dde6','(?i)\\barabic\\b|\\bara\\b'],['ru','\ud83c\uddf7\ud83c\uddfa','(?i)\\brussian\\b|\\brus\\b'],['mu','\ud83c\udf10','(?i)\\bmulti\\b|\\bdual[\\s._-]?audio\\b']];
   for(const[c,f,pt] of L)T.push(mk('l-'+c,f,pt,'',ST.dim,'gl'));
 
-  // 合并用户勾选的自定义 JSON 徽章
+  // 合并用户导入并勾选的自定义 JSON 徽章
   customFilters.forEach(cf => {
-    if (selectedCustomFilterIds.has(cf.id || cf.name)) {
+    if (selectedCustomFilterIds.has(cf.id)) {
       T.push(cf);
     }
   });
