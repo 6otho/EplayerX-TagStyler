@@ -42,7 +42,7 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 .abtn{padding:.5rem .9rem;background:#222;color:#fff;border:1px solid #333;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s}
 .abtn:hover{background:#333;border-color:#444}
 #guide .note{font-size:.7rem;color:#999;margin-bottom:.8rem;line-height:1.5}
-.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#4ade80;padding:.6rem 1.2rem;border-radius:8px;font-size:.82rem;display:none;z-index:99;border:1px solid #2a2a2a}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#4ade80;padding:.6rem 1.2rem;border-radius:8px;font-size:.82rem;display:none;z-index:99;border:1px solid #22c55e;box-shadow:0 4px 12px rgba(0,0,0,.5)}
 
 .gallery-grid{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.5rem}
 .gallery-card{display:inline-flex;align-items:center;gap:.4rem;padding:5px 10px;background:#181818;border:1px solid #2a2a2a;border-radius:8px;font-size:.72rem;color:#ddd;line-height:1}
@@ -88,11 +88,20 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
     </div>
   </div>
   <div class="sub" style="margin-bottom:.5rem">自由取消勾选不需要的徽章，保留您喜爱的组合。</div>
-  
   <div id="badge-manager-container"></div>
 </div>
 
-<button class="cbtn" style="margin:1.2rem 0;font-size:.9rem" onclick="confirmAndGenerate()">确认生成并导出 JSON (Generate Final JSON)</button>
+<!-- 【新增：GitHub Token 自动同步配置卡片】 -->
+<div class="sec" style="border-color:#22c55e">
+  <h2 style="color:#4ade80">6. GitHub Auto-Sync (一键自动同步到 GitHub)</h2>
+  <div class="sub" style="margin-bottom:.5rem">在下面粘贴您的 GitHub Personal Access Token，填一次后会自动保存在本地浏览器中。</div>
+  <div style="display:flex;gap:.4rem">
+    <input type="password" id="gh-token-input" placeholder="粘贴您的 GitHub Token (github_pat_...)" style="flex:1;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#fff;padding:.4rem .6rem;font-size:.72rem">
+    <button class="abtn" onclick="saveTokenToLocal()">保存 Token</button>
+  </div>
+</div>
+
+<button class="cbtn" style="margin:1.2rem 0;font-size:.9rem" onclick="confirmAndSyncToGitHub()">🚀 确认生成并一键自动同步到 GitHub (Sync to GitHub)</button>
 
 <div class="sec">
   <h2>All Active Badges Gallery (生效徽章展示大图鉴)</h2>
@@ -127,8 +136,8 @@ h1{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
 <div class="gt">Fusion Filters</div>
 <div class="gd">Fusion → Settings → Filters → Import Filters → paste URL</div>
 <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.45rem;width:100%">
-  <button class="abtn" style="flex:1;min-width:180px;background:#1e3a29;border-color:#22c55e;color:#4ade80" onclick="cc('oj')">Step 1: Copy Filters JSON (贴入 GitHub 保存)</button>
-  <button class="cbtn" style="flex:1.2;min-width:180px" onclick="cc('ou')">Step 2: Copy Import URL</button>
+  <button class="abtn" style="flex:1;min-width:180px" onclick="cc('oj')">Copy Filters JSON (手动复制)</button>
+  <button class="cbtn" style="flex:1.2;min-width:180px" onclick="cc('ou')">Copy Import URL (客户端导入)</button>
 </div>
 </div></div>
 </div>
@@ -146,25 +155,18 @@ function getBadgeUrl(img) {
 let C={icon:'colored',hdr:'nodv',desc:'short'};
 
 const SYSTEM_FILTERS = [
-  // Source
   { id: 's-uhdbd', name: 'Ultra HD Blu-ray', pattern: '(?i)\\b(uhd|ultra[\\s._-]?hd)[\\s._-]*(blu[\\s._-]?ray|bluray|bd)\\b', imageURL: 'u-hd-blu-ray.svg', gid: 'gs', groupName: 'Source (来源)' },
   { id: 's-bluray', name: 'Blu-ray Disc', pattern: '(?i)\\b(blu[\\s._-]?ray|bluray|bdrip|bdremux)\\b(?!.*(uhd|ultra[\\s._-]?hd))', imageURL: 'blu-raydisc.svg', gid: 'gs', groupName: 'Source (来源)' },
   { id: 's-hdtv', name: 'HDTV', pattern: '(?i)\\bhdtv\\b', imageURL: 'hdtv.svg', gid: 'gs', groupName: 'Source (来源)' },
   { id: 's-dvd', name: 'DVD RIP', pattern: '(?i)\\b(dvd[\\s._-]?rip|dvdrip)\\b', imageURL: 'dvd.svg', gid: 'gs', groupName: 'Source (来源)' },
-
-  // Resolution
   { id: 'r4', name: '4K Ultra HD', pattern: '(?i)^(?!.*\\b(?:1080[pi]?|720[pi]?)\\b).*?(?:\\b2160[pi]?\\b|\\b4k\\b|\\buhd\\b)', imageURL: '4Kx-1.svg', gid: 'gr', groupName: 'Resolution (分辨率)' },
   { id: 'r1', name: '1080p Full HD', pattern: '(?i)\\b1080[pi]?\\b', imageURL: '1080p-a.svg', gid: 'gr', groupName: 'Resolution (分辨率)' },
   { id: 'r7', name: '720p HD', pattern: '(?i)\\b720[pi]?\\b', imageURL: '720p-b.svg', gid: 'gr', groupName: 'Resolution (分辨率)' },
-
-  // Visual
   { id: 'h+', name: 'HDR10+', pattern: '(?=.*(?i)hdr\\s*10\\s*(?:\\+|plus|p))', imageURL: 'hdr10p-xx.svg', gid: 'gv', groupName: 'Visual (画质技术)' },
   { id: 'h1', name: 'HDR10', pattern: '(?=.*(?i)hdr\\s*10)(?!.*(?i)hdr\\s*10\\s*(?:\\+|plus|p))', imageURL: 'hdr10-x.svg', gid: 'gv', groupName: 'Visual (画质技术)' },
   { id: 'hh', name: 'HDR', pattern: '(?=.*(?i)\\bHDR\\b)(?!.*(?i)hdr\\s*10)', imageURL: 'hdr-x.svg', gid: 'gv', groupName: 'Visual (画质技术)' },
   { id: 'v-imax-e', name: 'IMAX Enhanced', pattern: '(?i)\\bimax[\\s._-]?enhanced\\b', imageURL: 'imax-e.svg', gid: 'gv', groupName: 'Visual (画质技术)' },
   { id: 'v-imax', name: 'IMAX', pattern: '(?i)^(?=.*\\bIMAX\\b)(?!.*enhanced)', imageURL: 'imax.svg', gid: 'gv', groupName: 'Visual (画质技术)' },
-
-  // Audio
   { id: 'a-dv', name: 'Dolby Vision', pattern: '(?i)\\b(?:dv|dovi|dolby[\\s._-]?vision)\\b', imageURL: 'dolby-vision-x.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
   { id: 'a-at', name: 'Dolby Atmos', pattern: '(?i)\\batmos\\b', imageURL: 'dolby-atmos-x.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
   { id: 'a-th', name: 'TrueHD', pattern: '(?i)^(?=.*true[\\s._-]?hd)(?!.*atmos)', imageURL: 'true-hd-1.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
@@ -174,12 +176,8 @@ const SYSTEM_FILTERS = [
   { id: 'd-ma', name: 'DTS-HD MA', pattern: '(?i)^(?=.*\\bdts[-_. ]?(?:hd[-_. ]?)?ma\\b)(?!.*\\bdts[-_.: ]?x\\b)', imageURL: 'dts-hd-ma.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
   { id: 'd-hd', name: 'DTS-HD', pattern: '(?i)^(?=.*\\bdts[-_. ]?hd\\b)(?!.*\\bdts[-_. ]?(?:hd[-_. ]?)?ma\\b)(?!.*\\bdts[-_.: ]?x\\b)', imageURL: 'dts-hd.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
   { id: 'd-d', name: 'DTS', pattern: '(?=.*(?i)\\bDTS\\b)(?!.*(?i)dts[-_. ]?(?:hd|ma|xll|x))', imageURL: 'dts.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
-
-  // Channels
   { id: 'c7', name: '7.1 Audio', pattern: '[^0-9][7-8][ .][0-1](?![0-9])', imageURL: '7.1-6.svg', gid: 'gc', groupName: 'Channels (声道)' },
   { id: 'c5', name: '5.1 Audio', pattern: '^(?=.*[^0-9]5[. ][01](?![0-9]))(?!.*[^0-9][7-8][. ][01](?![0-9]))', imageURL: '5.1-6.svg', gid: 'gc', groupName: 'Channels (声道)' },
-
-  // Language
   { id: 'l-en', name: '🇬🇧 English', pattern: '(?i)\\benglish\\b|\\beng\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
   { id: 'l-es', name: '🇪🇸 Spanish', pattern: '(?i)\\bspanish\\b|\\bspa\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
   { id: 'l-fr', name: '🇫🇷 French', pattern: '(?i)\\bfrench\\b|\\bfra\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
@@ -238,6 +236,84 @@ function matchFilterPattern(pattern, text) {
   }
 }
 
+// UTF-8 安全转 Base64（支持中文与 Emoji）
+function utf8ToBase64(str) {
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+    return String.fromCharCode('0x' + p1);
+  }));
+}
+
+function saveTokenToLocal() {
+  const token = document.getElementById('gh-token-input').value.trim();
+  if (!token) { alert('请输入有效的 Token！'); return; }
+  localStorage.setItem('epx_gh_token', token);
+  showToast('🔑 Token 已保存到本地浏览器！');
+}
+
+// 【自动同步 GitHub 主逻辑】
+async function confirmAndSyncToGitHub() {
+  upd(); // 先更新页面本地渲染
+
+  const token = document.getElementById('gh-token-input').value.trim() || localStorage.getItem('epx_gh_token');
+  const repo = '6otho/EplayerX-TagStyler';
+  const path = 'fusion-tags.json';
+  const branch = 'main';
+
+  if (!token) {
+    showToast('⚠️ 未检测到 Token，已生成本地 JSON。填写 Token 可自动上传！');
+    return;
+  }
+
+  const j = gen();
+  const jsonString = JSON.stringify(j, null, 2);
+
+  showToast('⏳ 正在通过 GitHub API 自动提交更新文件...');
+
+  try {
+    // 1. 先获取该文件当前的 sha（GitHub 要求更新时必须带 sha）
+    const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+
+    let sha = '';
+    if (getRes.ok) {
+      const fileData = await getRes.json();
+      sha = fileData.sha;
+    }
+
+    // 2. 将新的 JSON 转为 Base64 编码
+    const contentBase64 = utf8ToBase64(jsonString);
+
+    // 3. 提交 PUT 请求保存文件到 GitHub 仓库
+    const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify({
+        message: 'Auto update fusion-tags.json via EplayerX TagStyler UI',
+        content: contentBase64,
+        sha: sha || undefined,
+        branch: branch
+      })
+    });
+
+    if (!putRes.ok) {
+      const errData = await putRes.json();
+      throw new Error(errData.message || `HTTP ${putRes.status}`);
+    }
+
+    showToast('🎉 成功！最新 JSON 已自动更新提交至 GitHub！客户端现在刷新即可生效。');
+  } catch (err) {
+    alert('自动提交失败：' + err.message + '\n提示：请检查 Token 权限或 GitHub 仓库名。');
+  }
+}
+
 async function loadCustomJson() {
   let text = document.getElementById('custom-json-input').value.trim();
   if (!text) { alert('请先输入或粘贴 JSON 代码 / URL 网址！'); return; }
@@ -292,7 +368,7 @@ async function loadCustomJson() {
 
     customFilters.forEach(f => activeFilterIds.add(f.id));
     renderBadgeManager();
-    showToast(`成功合并了 ${customFilters.length} 个自定义徽章！点击【确认生成】应用。`);
+    showToast(`成功合并了 ${customFilters.length} 个自定义徽章！点击【确认生成并自动同步】可上传。`);
   } catch (e) {
     alert('JSON 解析失败：' + e.message);
   }
@@ -350,11 +426,6 @@ function resetDefaultFilters() {
   SYSTEM_FILTERS.forEach(f => activeFilterIds.add(f.id));
   renderBadgeManager();
   showToast('已重置为默认系统徽章！');
-}
-
-function confirmAndGenerate() {
-  upd();
-  showToast('✅ 已成功生成！请将新 JSON 粘贴更新至 GitHub 以在客户端生效。');
 }
 
 function showToast(msg) {
@@ -494,6 +565,12 @@ function upd(){
 function cc(id){navigator.clipboard.writeText(document.getElementById(id).value).then(()=>{showToast('已复制到剪贴板！')})}
 
 document.querySelectorAll('.opts').forEach(g=>{g.querySelectorAll('.o').forEach(o=>{o.onclick=()=>{g.querySelectorAll('.o').forEach(x=>x.classList.remove('on'));o.classList.add('on');C[g.dataset.g]=o.dataset.v;}})});
+
+// 页面加载时自动读取本地保存的 Token
+const savedToken = localStorage.getItem('epx_gh_token');
+if (savedToken) {
+  document.getElementById('gh-token-input').value = savedToken;
+}
 
 renderBadgeManager();
 upd();
