@@ -53,7 +53,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 .gallery-card{display:inline-flex;align-items:center;gap:.4rem;padding:5px 10px;background:#181818;border:1px solid #2a2a2a;border-radius:8px;font-size:.72rem;color:#ddd;line-height:1}
 .gallery-card img{height:18px;width:auto}
 
-/* 【分组标头与组控按钮样式】 */
 .badge-group-header{display:flex;justify-content:space-between;align-items:center;margin:1rem 0 .35rem;padding-bottom:.3rem;border-bottom:1px solid #1a1a1a}
 .badge-group-title-text{font-size:.68rem;color:#aaa;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
 .mini-btn{padding:.18rem .45rem;font-size:.62rem;background:#181818;border:1px solid #2a2a2a;border-radius:5px;color:#888;cursor:pointer;transition:all .15s}
@@ -130,7 +129,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 
 <div class="sec">
   <h2>5. Import Custom Badges JSON (导入自定义 JSON / 网址)</h2>
-  <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址（如 xperience-app 链接）或您的 JSON 代码，将其合并入图库。</div>
+  <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址（如 xperience-app 链接）或您的 JSON 代码，合并时会自动智能去重。</div>
   <textarea id="custom-json-input" placeholder="输入或粘贴网址 (例如 https://xperience-app.com/badges/....json) 或 JSON 内容..." style="width:100%;height:75px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
   <div style="display:flex;gap:.4rem;margin-top:.45rem">
     <button class="abtn" onclick="loadCustomJson()">加载解析并合并 JSON 徽章</button>
@@ -147,7 +146,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem;color:#60a5fa" onclick="resetDefaultFilters()">重置为默认</button>
     </div>
   </div>
-  <div class="sub" style="margin-bottom:.5rem">每个分组标题右侧均有【全选本组 / 清空本组】按钮，支持极速自由组合。</div>
+  <div class="sub" style="margin-bottom:.5rem">支持按组独立勾选。系统已开启智能去重，覆盖同名冲突徽章。</div>
   <div id="badge-manager-container"></div>
 </div>
 
@@ -258,6 +257,43 @@ const STREAMS=[
   {qual:'Bluray',title:'Demon Slayer S01\xb7E01',size:'4 GB',fn:'Demon.Slayer.2019.1080p.BluRay.DV.DDP5.1.Atmos-hallowed.mkv',pct:80,res:'1080p',hdr:null,dv:true,aud:'atmos',ch:'5.1',src:'bluray',q:'good',tier:'t2',imax:null,seadex:true},
   {qual:'Web-Dl',title:'Avatar Fire and Ash (2025)',size:'2 GB',fn:'Avatar.Fire.and.Ash.2025.720p.WEB-DL.DD5.1.DV-RandomGrp.mkv',pct:50,res:'720p',hdr:null,dv:true,aud:'dd',ch:'5.1',src:'webdl',q:'ok',tier:'t3',imax:null,seadex:false},
 ];
+
+// 【核心去重逻辑】：合并系统徽章与自定义徽章，若同名/同图片/同ID则由自定义优先覆盖
+function getDeduplicatedFilters() {
+  const map = new Map();
+  
+  SYSTEM_FILTERS.forEach(f => {
+    map.set(f.id, { ...f });
+  });
+
+  customFilters.forEach(cf => {
+    let existingKey = null;
+    const cfUrl = getBadgeUrl(cf.imageURL);
+
+    for (const [key, existing] of map.entries()) {
+      const sameId = cf.id && existing.id === cf.id;
+      const sameName = cf.name && existing.name.toLowerCase() === cf.name.toLowerCase();
+      const sameImg = cf.imageURL && getBadgeUrl(existing.imageURL) === cfUrl;
+      if (sameId || sameName || sameImg) {
+        existingKey = key;
+        break;
+      }
+    }
+
+    if (existingKey) {
+      // 覆盖系统原有同名/同图片徽章
+      map.set(existingKey, {
+        ...map.get(existingKey),
+        ...cf,
+        id: existingKey
+      });
+    } else {
+      map.set(cf.id, cf);
+    }
+  });
+
+  return Array.from(map.values());
+}
 
 function rgba(c){
   if(!c)return'transparent';
@@ -460,7 +496,7 @@ async function loadCustomJson() {
 
     customFilters.forEach(f => activeFilterIds.add(f.id));
     renderBadgeManager();
-    showToast(`成功合并了 ${customFilters.length} 个自定义徽章！点击【确认生成】应用。`);
+    showToast(`成功解析并自动去重合并了 ${customFilters.length} 个自定义徽章！`);
   } catch (e) {
     alert('JSON 解析失败：' + e.message);
   }
@@ -474,10 +510,9 @@ function clearCustomJson() {
   showToast('已清空导入的自定义徽章！');
 }
 
-// 【新增：支持组级独立全选/清空功能】
 function renderBadgeManager() {
   const container = document.getElementById('badge-manager-container');
-  const allList = [...SYSTEM_FILTERS, ...customFilters];
+  const allList = getDeduplicatedFilters();
   
   const groupsMap = {};
   allList.forEach(f => {
@@ -508,7 +543,7 @@ function renderBadgeManager() {
 }
 
 function toggleGroupFilters(gName, enable) {
-  const allList = [...SYSTEM_FILTERS, ...customFilters];
+  const allList = getDeduplicatedFilters();
   allList.forEach(f => {
     if ((f.groupName || 'Other Badges') === gName) {
       if (enable) activeFilterIds.add(f.id);
@@ -525,7 +560,7 @@ function toggleFilter(fid) {
 }
 
 function toggleAllFilters(enable) {
-  const allList = [...SYSTEM_FILTERS, ...customFilters];
+  const allList = getDeduplicatedFilters();
   if (enable) {
     allList.forEach(f => activeFilterIds.add(f.id));
   } else {
@@ -570,7 +605,7 @@ function renderBadgeGallery(allFilters) {
 
 function preview(){
   let h='';
-  const allList = [...SYSTEM_FILTERS, ...customFilters];
+  const allList = getDeduplicatedFilters();
   const activeFilters = allList.filter(f => activeFilterIds.has(f.id));
 
   const galleryBox = document.getElementById('badge-gallery');
@@ -589,11 +624,18 @@ function preview(){
 
     h+='<div class="cd"><div class="cn">'+fmtName(s)+'</div><div class="cs">'+descTxt+'</div><div class="tr" style="gap:'+(C.gap||'5px')+'">';
 
+    // 【预览卡片去重】：防止同一视频卡片打印重复图片
+    const renderedUrls = new Set();
+
     activeFilters.forEach(f => {
       if (f.pattern && f.imageURL && matchFilterPattern(f.pattern, s.fn)) {
         if (C.hdr === 'nodv' && s.dv && (f.id === 'h+' || f.id === 'h1' || f.id === 'hh')) {
           return;
         }
+        const imgUrl = getBadgeUrl(f.imageURL);
+        if (renderedUrls.has(imgUrl)) return; // 跳过重复图片
+        renderedUrls.add(imgUrl);
+
         h += thtml(f.name || '', f.imageURL, ST.res);
       }
     });
@@ -607,15 +649,23 @@ function gen(){
   const T=[],G=[];
   const dvN='(?!.*(?i)\\b(?:dv|dovi|dolby[\\s._-]?vision)\\b)';
 
-  const allList = [...SYSTEM_FILTERS, ...customFilters];
+  const allList = getDeduplicatedFilters();
   const activeFilters = allList.filter(f => activeFilterIds.has(f.id));
   const usedGroupIds = new Set();
+  const seenKeys = new Set();
 
   activeFilters.forEach(f => {
     let pat = f.pattern;
     if (C.hdr === 'nodv' && (f.id === 'h+' || f.id === 'h1' || f.id === 'hh')) {
       pat = '(?i)^' + dvN + pat.replace('(?i)', '');
     }
+
+    const imgUrl = getBadgeUrl(f.imageURL);
+    const dedupeKey = `${pat}_${imgUrl}`;
+    
+    // 【导出 JSON 去重】
+    if (seenKeys.has(dedupeKey)) return;
+    seenKeys.add(dedupeKey);
 
     const gid = f.gid || f.groupId || 'gs';
     usedGroupIds.add(gid);
@@ -624,7 +674,7 @@ function gen(){
       borderColor: f.borderColor || '#00000000',
       groupId: gid,
       id: f.id,
-      imageURL: getBadgeUrl(f.imageURL),
+      imageURL: imgUrl,
       isEnabled: true,
       name: f.name,
       pattern: pat,
