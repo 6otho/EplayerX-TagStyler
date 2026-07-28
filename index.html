@@ -83,7 +83,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
   <button class="settings-btn" onclick="openSettingsModal()">⚙️ GitHub 设置</button>
 </div>
 
-<!-- 【极简小白一键授权与自动建库弹窗】 -->
 <div class="modal-overlay" id="settings-modal">
   <div class="modal-card">
     <div class="modal-header">
@@ -91,7 +90,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
       <button class="modal-close" onclick="closeSettingsModal()">✕</button>
     </div>
 
-    <!-- 【预填充权限直达链接，小白 0 思考】 -->
     <details class="modal-tip" style="margin-bottom:.9rem;background:#0d1810;border-color:#1e3a24" open>
       <summary style="font-size:.72rem;color:#4ade80;font-weight:700;cursor:pointer">📖 点击查看小白一键授权教程 (无需手动建库)</summary>
       <div style="font-size:.68rem;color:#aaa;line-height:1.55;margin-top:.6rem;padding-top:.5rem;border-top:1px solid #1a2e1f">
@@ -270,27 +268,27 @@ const SYSTEM_FILTERS = [
   { id: 'l-mu', name: '🌐 Multi Audio', pattern: '(?i)\\bmulti\\b|\\bdual[\\s._-]?audio\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' }
 ];
 
-let activeFilterIds = new Set(SYSTEM_FILTERS.map(f => f.id));
+let activeFilterIds = new Set(SYSTEM_FILTERS.map(function (f) { return f.id; }));
 let customFilters = [];
 
-const ST={
-  res:{bc:'#FF858283',bg:'#33FFFFFF',tc:'#FFFFFF'},
-  tr:{bc:'#00000000',bg:'#00000000',tc:'#FFFFFF'},
-  dim:{bc:'#00000000',bg:'#00000000',tc:'#80FFFFFF'},
+const ST = {
+  res: { bc: '#FF858283', bg: '#33FFFFFF', tc: '#FFFFFF' },
+  tr: { bc: '#00000000', bg: '#00000000', tc: '#FFFFFF' },
+  dim: { bc: '#00000000', bg: '#00000000', tc: '#80FFFFFF' },
 };
 
-const STREAMS=[
-  {qual:'Bluray Remux',title:'Avatar Fire and Ash (2025)',size:'76 GB',fn:'Avatar.Fire.and.Ash.2025.2160p.BluRay.REMUX.IMAX.DV.TrueHD.7.1.Atmos-FraMeSToR.mkv',pct:99,res:'4K',hdr:null,dv:true,aud:'atmos',ch:'7.1',src:'remux',q:'best',tier:'t1',imax:'IMAX',seadex:false},
-  {qual:'Bluray',title:'Avatar Fire and Ash (2025)',size:'18 GB',fn:'Avatar.Fire.and.Ash.2025.2160p.BluRay.x265.HDR10.DTS-X.7.1-CtrlHD.mkv',pct:90,res:'4K',hdr:'HDR10',dv:false,aud:'dtsx',ch:'7.1',src:'bluray',q:'good',tier:'t1',imax:null,seadex:false},
-  {qual:'Bluray',title:'Demon Slayer S01\xb7E01',size:'4 GB',fn:'Demon.Slayer.2019.1080p.BluRay.DV.DDP5.1.Atmos-hallowed.mkv',pct:80,res:'1080p',hdr:null,dv:true,aud:'atmos',ch:'5.1',src:'bluray',q:'good',tier:'t2',imax:null,seadex:true},
-  {qual:'Web-Dl',title:'Avatar Fire and Ash (2025)',size:'2 GB',fn:'Avatar.Fire.and.Ash.2025.720p.WEB-DL.DD5.1.DV-RandomGrp.mkv',pct:50,res:'720p',hdr:null,dv:true,aud:'dd',ch:'5.1',src:'webdl',q:'ok',tier:'t3',imax:null,seadex:false},
+const STREAMS = [
+  { qual: 'Bluray Remux', title: 'Avatar Fire and Ash (2025)', size: '76 GB', fn: 'Avatar.Fire.and.Ash.2025.2160p.BluRay.REMUX.IMAX.DV.TrueHD.7.1.Atmos-FraMeSToR.mkv', pct: 99, res: '4K', hdr: null, dv: true, aud: 'atmos', ch: '7.1', src: 'remux', q: 'best', tier: 't1', imax: 'IMAX', seadex: false },
+  { qual: 'Bluray', title: 'Avatar Fire and Ash (2025)', size: '18 GB', fn: 'Avatar.Fire.and.Ash.2025.2160p.BluRay.x265.HDR10.DTS-X.7.1-CtrlHD.mkv', pct: 90, res: '4K', hdr: 'HDR10', dv: false, aud: 'dtsx', ch: '7.1', src: 'bluray', q: 'good', tier: 't1', imax: null, seadex: false },
+  { qual: 'Bluray', title: 'Demon Slayer S01\xb7E01', size: '4 GB', fn: 'Demon.Slayer.2019.1080p.BluRay.DV.DDP5.1.Atmos-hallowed.mkv', pct: 80, res: '1080p', hdr: null, dv: true, aud: 'atmos', ch: '5.1', src: 'bluray', q: 'good', tier: 't2', imax: null, seadex: true },
+  { qual: 'Web-Dl', title: 'Avatar Fire and Ash (2025)', size: '2 GB', fn: 'Avatar.Fire.and.Ash.2025.720p.WEB-DL.DD5.1.DV-RandomGrp.mkv', pct: 50, res: '720p', hdr: null, dv: true, aud: 'dd', ch: '5.1', src: 'webdl', q: 'ok', tier: 't3', imax: null, seadex: false },
 ];
 
 function getDeduplicatedFilters() {
   const map = new Map();
-  SYSTEM_FILTERS.forEach(f => map.set(f.id, { ...f }));
+  SYSTEM_FILTERS.forEach(function (f) { map.set(f.id, Object.assign({}, f)); });
 
-  customFilters.forEach(cf => {
+  customFilters.forEach(function (cf) {
     let existingKey = null;
     const cfUrl = getBadgeUrl(cf.imageURL);
 
@@ -305,11 +303,7 @@ function getDeduplicatedFilters() {
     }
 
     if (existingKey) {
-      map.set(existingKey, {
-        ...map.get(existingKey),
-        ...cf,
-        id: existingKey
-      });
+      map.set(existingKey, Object.assign({}, map.get(existingKey), cf, { id: existingKey }));
     } else {
       map.set(cf.id, cf);
     }
@@ -318,21 +312,35 @@ function getDeduplicatedFilters() {
   return Array.from(map.values());
 }
 
-function rgba(c){
-  if(!c)return'transparent';
-  if(c.length===7){const r=parseInt(c.slice(1,3),16),g=parseInt(c.slice(3,5),16),b=parseInt(c.slice(5,7),16);return'rgb('+r+','+g+','+b+')';}
-  if(c.length===9){const a=parseInt(c.slice(1,3),16)/255,r=parseInt(c.slice(3,5),16),g=parseInt(c.slice(5,7),16);return'rgba('+r+','+g+','+b+','+a.toFixed(3)+')';}
-  return'transparent';
+// 【修复版】超稳健 RGBA 颜色转换器（防崩防 undefined）
+function rgba(c) {
+  if (!c || typeof c !== 'string') return 'transparent';
+  let hex = c.trim();
+  if (hex.startsWith('#')) hex = hex.slice(1);
+  if (hex.length === 6) {
+    const r = parseInt(hex.slice(0, 2), 16) || 0;
+    const g = parseInt(hex.slice(2, 4), 16) || 0;
+    const b = parseInt(hex.slice(4, 6), 16) || 0;
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+  }
+  if (hex.length === 8) {
+    const a = (parseInt(hex.slice(0, 2), 16) || 0) / 255;
+    const r = parseInt(hex.slice(2, 4), 16) || 0;
+    const g = parseInt(hex.slice(4, 6), 16) || 0;
+    const b = parseInt(hex.slice(6, 8), 16) || 0;
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(2) + ')';
+  }
+  return 'transparent';
 }
 
-function thtml(label,img,st,lg){
-  const s='border-color:'+rgba(st.bc)+';background:'+rgba(st.bg)+';color:'+rgba(st.tc);
-  const cls='tg'+(lg?' lg':'');
-  if(img)return'<span class="'+cls+'" style="'+s+'"><img src="'+getBadgeUrl(img)+'"></span>';
-  return'<span class="'+cls+'" style="'+s+'">'+label+'</span>';
+function thtml(label, img, st, lg) {
+  const s = 'border-color:' + rgba(st.bc) + ';background:' + rgba(st.bg) + ';color:' + rgba(st.tc);
+  const cls = 'tg' + (lg ? ' lg' : '');
+  if (img) return '<span class="' + cls + '" style="' + s + '"><img src="' + getBadgeUrl(img) + '"></span>';
+  return '<span class="' + cls + '" style="' + s + '">' + label + '</span>';
 }
 
-function fmtName(s){ return s.qual; }
+function fmtName(s) { return s.qual; }
 
 function matchFilterPattern(pattern, text) {
   if (!pattern || !text) return false;
@@ -340,13 +348,13 @@ function matchFilterPattern(pattern, text) {
     let pat = pattern;
     if (pat.startsWith('(?i)')) pat = pat.slice(4);
     return new RegExp(pat, 'i').test(text);
-  } catch(e) {
+  } catch (e) {
     return false;
   }
 }
 
 function utf8ToBase64(str) {
-  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
     return String.fromCharCode('0x' + p1);
   }));
 }
@@ -361,7 +369,7 @@ function openSettingsModal() {
 
   const statusBox = document.getElementById('gh-user-status-box');
   if (username) {
-    statusBox.innerHTML = `<span class="status-badge connected">已连接用户: ${username} (${username}/${repoName})</span>`;
+    statusBox.innerHTML = '<span class="status-badge connected">已连接用户: ' + username + ' (' + username + '/' + repoName + ')</span>';
   } else {
     statusBox.innerHTML = '';
   }
@@ -382,23 +390,23 @@ async function verifyAndSaveToken() {
     return;
   }
 
-  showToast('⏳ 正在通过 GitHub API 验证您的 Token 身份...');
+  showToast('⏳ 正在验证 Token 身份...');
 
   try {
     const res = await fetch('https://api.github.com/user', {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': 'Bearer ' + token,
         'Accept': 'application/vnd.github.v3+json'
       }
     });
 
     if (!res.ok) {
-      throw new Error(`Token 验证失败 (${res.status})`);
+      throw new Error('Token 验证失败，请确认权限 (' + res.status + ')');
     }
 
     const userData = await res.json();
     const username = userData.login;
-    const fullRepo = `${username}/${repoName}`;
+    const fullRepo = username + '/' + repoName;
 
     localStorage.setItem('epx_gh_token', token);
     localStorage.setItem('epx_gh_username', username);
@@ -407,34 +415,31 @@ async function verifyAndSaveToken() {
 
     closeSettingsModal();
     upd();
-    showToast(`🎉 验证成功！已绑定用户: ${username} (${fullRepo})`);
+    showToast('🎉 验证成功！已绑定用户: ' + username + ' (' + fullRepo + ')');
   } catch (err) {
     alert('验证失败：' + err.message);
   }
 }
 
-// 【自动创建仓库的核心逻辑】：如果小白账号下没有该仓库，API 自动帮他新建！
 async function ensureRepoExists(token, username, repoName) {
-  const fullRepo = `${username}/${repoName}`;
+  const fullRepo = username + '/' + repoName;
 
-  // 1. 先检查仓库是否存在
-  const checkRes = await fetch(`https://api.github.com/repos/${fullRepo}`, {
+  const checkRes = await fetch('https://api.github.com/repos/' + fullRepo, {
     headers: {
-      'Authorization': `Bearer ${token}`,
+      'Authorization': 'Bearer ' + token,
       'Accept': 'application/vnd.github.v3+json'
     }
   });
 
-  if (checkRes.ok) return true; // 仓库已存在
+  if (checkRes.ok) return true;
 
   if (checkRes.status === 404) {
-    // 2. 仓库不存在！全自动帮小白调用 API 创建该仓库！
-    showToast(`⚙️ 检测到账号下无此仓库，正在自动为您创建 ${fullRepo}...`);
+    showToast('⚙️ 检测到账号下无此仓库，正在自动为您创建 ' + fullRepo + '...');
 
     const createRes = await fetch('https://api.github.com/user/repos', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3+json'
       },
@@ -448,15 +453,14 @@ async function ensureRepoExists(token, username, repoName) {
 
     if (!createRes.ok) {
       const err = await createRes.json();
-      throw new Error(`全自动新建仓库失败: ${err.message || createRes.status}`);
+      throw new Error('全自动新建仓库失败: ' + (err.message || createRes.status));
     }
 
-    // 等待 1.5 秒让 GitHub 初始化完毕
-    await new Promise(r => setTimeout(r, 1500));
+    await new Promise(function (r) { setTimeout(r, 1500); });
     return true;
   }
 
-  throw new Error(`检查仓库失败 HTTP ${checkRes.status}`);
+  throw new Error('检查仓库失败 HTTP ' + checkRes.status);
 }
 
 async function confirmAndSyncToGitHub() {
@@ -465,7 +469,7 @@ async function confirmAndSyncToGitHub() {
   const token = localStorage.getItem('epx_gh_token');
   const username = localStorage.getItem('epx_gh_username') || getDefaultOwner();
   const repoName = localStorage.getItem('epx_gh_reponame') || 'EplayerX-TagStyler';
-  const fullRepo = `${username}/${repoName}`;
+  const fullRepo = username + '/' + repoName;
   const path = 'fusion-tags.json';
 
   if (!token) {
@@ -477,7 +481,6 @@ async function confirmAndSyncToGitHub() {
   showToast('⏳ 正在校验并自动初始化仓库...');
 
   try {
-    // 全自动检测 + 自动帮小白新建仓库
     await ensureRepoExists(token, username, repoName);
 
     const j = gen();
@@ -485,9 +488,9 @@ async function confirmAndSyncToGitHub() {
 
     showToast('⏳ 正在提交更新到您的 GitHub 仓库...');
 
-    const getRes = await fetch(`https://api.github.com/repos/${fullRepo}/contents/${path}?ref=main`, {
+    const getRes = await fetch('https://api.github.com/repos/' + fullRepo + '/contents/' + path + '?ref=main', {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': 'Bearer ' + token,
         'Accept': 'application/vnd.github.v3+json'
       }
     });
@@ -500,10 +503,10 @@ async function confirmAndSyncToGitHub() {
 
     const contentBase64 = utf8ToBase64(jsonString);
 
-    const putRes = await fetch(`https://api.github.com/repos/${fullRepo}/contents/${path}`, {
+    const putRes = await fetch('https://api.github.com/repos/' + fullRepo + '/contents/' + path, {
       method: 'PUT',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3+json'
       },
@@ -517,10 +520,10 @@ async function confirmAndSyncToGitHub() {
 
     if (!putRes.ok) {
       const errData = await putRes.json();
-      throw new Error(errData.message || `HTTP ${putRes.status}`);
+      throw new Error(errData.message || ('HTTP ' + putRes.status));
     }
 
-    showToast(`🎉 成功！已自动帮您创建/更新仓库并提交文件: ${fullRepo}`);
+    showToast('🎉 成功！已自动帮您创建/更新仓库并提交文件: ' + fullRepo);
   } catch (err) {
     alert('自动同步失败：' + err.message);
   }
@@ -530,19 +533,19 @@ async function fetchJsonWithFallback(url) {
   try {
     const res = await fetch(url);
     if (res.ok) return await res.text();
-  } catch(e) { console.warn('Direct fetch blocked, trying proxy 1...', e); }
+  } catch (e) { console.warn('Direct fetch blocked, trying proxy 1...', e); }
 
   try {
     const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
     const res = await fetch(proxyUrl);
     if (res.ok) return await res.text();
-  } catch(e) { console.warn('Proxy 1 failed, trying proxy 2...', e); }
+  } catch (e) { console.warn('Proxy 1 failed, trying proxy 2...', e); }
 
   try {
     const proxyUrl2 = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
     const res = await fetch(proxyUrl2);
     if (res.ok) return await res.text();
-  } catch(e) {
+  } catch (e) {
     throw new Error('网络抓取被目标服务器 CORS 跨域拦截，请手动打开该链接复制 JSON 代码粘贴！');
   }
 }
@@ -553,7 +556,7 @@ async function loadCustomJson() {
 
   if (text.startsWith('http://') || text.startsWith('https://')) {
     showToast('⏳ 正在跨域抓取该网址的内容...');
-    try { text = await fetchJsonWithFallback(text); } catch(err) { alert('拉取失败：' + err.message); return; }
+    try { text = await fetchJsonWithFallback(text); } catch (err) { alert('拉取失败：' + err.message); return; }
   }
 
   try {
@@ -568,11 +571,11 @@ async function loadCustomJson() {
       return;
     }
 
-    customFilters = rawList.map((f, idx) => {
+    customFilters = rawList.map(function (f, idx) {
       const img = f.imageURL || f.imageUrl || f.url || f.image || f.icon || '';
-      const name = f.name || f.label || f.title || f.id || `Badge-${idx+1}`;
+      const name = f.name || f.label || f.title || f.id || ('Badge-' + (idx + 1));
       const pat = f.pattern || f.regex || f.match || f.query || '';
-      const id = f.id || `custom-${name}-${idx}`;
+      const id = f.id || ('custom-' + name + '-' + idx);
       return {
         id: id,
         name: name,
@@ -586,16 +589,16 @@ async function loadCustomJson() {
         textColor: f.textColor || '#FFFFFF',
         type: 'filter'
       };
-    }).filter(f => f.imageURL);
+    }).filter(function (f) { return f.imageURL; });
 
     if (customFilters.length === 0) {
       alert('未找到任何包含有效图片地址的徽章！');
       return;
     }
 
-    customFilters.forEach(f => activeFilterIds.add(f.id));
+    customFilters.forEach(function (f) { activeFilterIds.add(f.id); });
     renderBadgeManager();
-    showToast(`成功解析并自动去重合并了 ${customFilters.length} 个自定义徽章！`);
+    showToast('成功解析并自动去重合并了 ' + customFilters.length + ' 个自定义徽章！');
   } catch (e) {
     alert('JSON 解析失败：' + e.message);
   }
@@ -603,7 +606,7 @@ async function loadCustomJson() {
 
 function clearCustomJson() {
   document.getElementById('custom-json-input').value = '';
-  customFilters.forEach(f => activeFilterIds.delete(f.id));
+  customFilters.forEach(function (f) { activeFilterIds.delete(f.id); });
   customFilters = [];
   renderBadgeManager();
   showToast('已清空导入的自定义徽章！');
@@ -612,9 +615,9 @@ function clearCustomJson() {
 function renderBadgeManager() {
   const container = document.getElementById('badge-manager-container');
   const allList = getDeduplicatedFilters();
-  
+
   const groupsMap = {};
-  allList.forEach(f => {
+  allList.forEach(function (f) {
     const gName = f.groupName || 'Other Badges';
     if (!groupsMap[gName]) groupsMap[gName] = [];
     groupsMap[gName].push(f);
@@ -623,27 +626,25 @@ function renderBadgeManager() {
   let h = '';
   for (const [gName, filters] of Object.entries(groupsMap)) {
     const safeGName = gName.replace(/'/g, "\\'");
-    h += `<div class="badge-group-header">
-            <span class="badge-group-title-text">${gName}</span>
-            <div style="display:flex;gap:.3rem">
-              <button class="mini-btn" onclick="toggleGroupFilters('${safeGName}', true)">全选本组</button>
-              <button class="mini-btn" onclick="toggleGroupFilters('${safeGName}', false)">清空本组</button>
-            </div>
-          </div>
-          <div class="opts">`;
+    h += '<div class="badge-group-header">' +
+      '<span class="badge-group-title-text">' + gName + '</span>' +
+      '<div style="display:flex;gap:.3rem">' +
+      '<button class="mini-btn" onclick="toggleGroupFilters(\'' + safeGName + '\', true)">全选本组</button>' +
+      '<button class="mini-btn" onclick="toggleGroupFilters(\'' + safeGName + '\', false)">清空本组</button>' +
+      '</div></div><div class="opts">';
 
-    filters.forEach(f => {
+    filters.forEach(function (f) {
       const isOn = activeFilterIds.has(f.id);
-      h += `<div class="o ${isOn ? 'on' : ''}" onclick="toggleFilter('${f.id}')">${f.name}</div>`;
+      h += '<div class="o ' + (isOn ? 'on' : '') + '" onclick="toggleFilter(\'' + f.id + '\')">' + f.name + '</div>';
     });
-    h += `</div>`;
+    h += '</div>';
   }
   container.innerHTML = h;
 }
 
 function toggleGroupFilters(gName, enable) {
   const allList = getDeduplicatedFilters();
-  allList.forEach(f => {
+  allList.forEach(function (f) {
     if ((f.groupName || 'Other Badges') === gName) {
       if (enable) activeFilterIds.add(f.id);
       else activeFilterIds.delete(f.id);
@@ -661,7 +662,7 @@ function toggleFilter(fid) {
 function toggleAllFilters(enable) {
   const allList = getDeduplicatedFilters();
   if (enable) {
-    allList.forEach(f => activeFilterIds.add(f.id));
+    allList.forEach(function (f) { activeFilterIds.add(f.id); });
   } else {
     activeFilterIds.clear();
   }
@@ -670,7 +671,7 @@ function toggleAllFilters(enable) {
 
 function resetDefaultFilters() {
   activeFilterIds.clear();
-  SYSTEM_FILTERS.forEach(f => activeFilterIds.add(f.id));
+  SYSTEM_FILTERS.forEach(function (f) { activeFilterIds.add(f.id); });
   renderBadgeManager();
   showToast('已重置为默认系统徽章！');
 }
@@ -679,7 +680,7 @@ function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.style.display = 'block';
-  setTimeout(() => t.style.display = 'none', 3000);
+  setTimeout(function () { t.style.display = 'none'; }, 3000);
 }
 
 function renderBadgeGallery(allFilters) {
@@ -689,23 +690,23 @@ function renderBadgeGallery(allFilters) {
   let h = '';
   const seenUrls = new Set();
 
-  allFilters.forEach(f => {
+  allFilters.forEach(function (f) {
     if (f.imageURL && !seenUrls.has(f.imageURL)) {
       seenUrls.add(f.imageURL);
       const url = getBadgeUrl(f.imageURL);
-      h += `<div class="gallery-card">
-              <img src="${url}" alt="${f.name}">
-              <span>${f.name || f.id}</span>
-            </div>`;
+      h += '<div class="gallery-card">' +
+        '<img src="' + url + '" alt="' + f.name + '">' +
+        '<span>' + (f.name || f.id) + '</span>' +
+        '</div>';
     }
   });
   container.innerHTML = h || '<span style="color:#666;font-size:.7rem">当前未勾选任何生效徽章</span>';
 }
 
-function preview(){
-  let h='';
+function preview() {
+  let h = '';
   const allList = getDeduplicatedFilters();
-  const activeFilters = allList.filter(f => activeFilterIds.has(f.id));
+  const activeFilters = allList.filter(function (f) { return activeFilterIds.has(f.id); });
 
   const galleryBox = document.getElementById('badge-gallery');
   const pvBox = document.getElementById('pv');
@@ -717,15 +718,15 @@ function preview(){
     pvBox.classList.remove('mono-style');
   }
 
-  for(const s of STREAMS){
-    const st=(s.type||'debrid');const stCap=st==='p2p'?'P2P':st[0].toUpperCase()+st.slice(1);
+  for (const s of STREAMS) {
+    const st = (s.type || 'debrid'); const stCap = st === 'p2p' ? 'P2P' : st[0].toUpperCase() + st.slice(1);
     const descTxt = C.desc === 'fn' ? s.fn : s.fn + '\n' + (s.svc || 'RD') + ' \xb7 ' + stCap + ' \xb7 ' + s.size;
 
-    h+='<div class="cd"><div class="cn">'+fmtName(s)+'</div><div class="cs">'+descTxt+'</div><div class="tr" style="gap:'+(C.gap||'5px')+'">';
+    h += '<div class="cd"><div class="cn">' + fmtName(s) + '</div><div class="cs">' + descTxt + '</div><div class="tr" style="gap:' + (C.gap || '5px') + '">';
 
     const renderedUrls = new Set();
 
-    activeFilters.forEach(f => {
+    activeFilters.forEach(function (f) {
       if (f.pattern && f.imageURL && matchFilterPattern(f.pattern, s.fn)) {
         if (C.hdr === 'nodv' && s.dv && (f.id === 'h+' || f.id === 'h1' || f.id === 'hh')) {
           return;
@@ -738,29 +739,29 @@ function preview(){
       }
     });
 
-    h+='</div></div>';
+    h += '</div></div>';
   }
-  pvBox.innerHTML=h;
+  pvBox.innerHTML = h;
 }
 
-function gen(){
-  const T=[],G=[];
-  const dvN='(?!.*(?i)\\b(?:dv|dovi|dolby[\\s._-]?vision)\\b)';
+function gen() {
+  const T = [], G = [];
+  const dvN = '(?!.*(?i)\\b(?:dv|dovi|dolby[\\s._-]?vision)\\b)';
 
   const allList = getDeduplicatedFilters();
-  const activeFilters = allList.filter(f => activeFilterIds.has(f.id));
+  const activeFilters = allList.filter(function (f) { return activeFilterIds.has(f.id); });
   const usedGroupIds = new Set();
   const seenKeys = new Set();
 
-  activeFilters.forEach(f => {
+  activeFilters.forEach(function (f) {
     let pat = f.pattern;
     if (C.hdr === 'nodv' && (f.id === 'h+' || f.id === 'h1' || f.id === 'hh')) {
       pat = '(?i)^' + dvN + pat.replace('(?i)', '');
     }
 
     const imgUrl = getBadgeUrl(f.imageURL);
-    const dedupeKey = `${pat}_${imgUrl}`;
-    
+    const dedupeKey = pat + '_' + imgUrl;
+
     if (seenKeys.has(dedupeKey)) return;
     seenKeys.add(dedupeKey);
 
@@ -783,52 +784,61 @@ function gen(){
   });
 
   const ALL_GROUPS = [
-    {borderColor:'#00000000',color:'#27C04F',id:'gs',isExpanded:true,name:'Source'},
-    {borderColor:ST.res.bc,color:'#FFBE01',id:'gr',isExpanded:true,name:'Resolution'},
-    {borderColor:ST.res.bc,color:'#FF6B6B',id:'gv',isExpanded:true,name:'Visual'},
-    {borderColor:'#00000000',color:'#45B7D1',id:'ga',isExpanded:true,name:'Audio'},
-    {borderColor:'#00000000',color:'#FFD700',id:'gc',isExpanded:true,name:'Channels'},
-    {borderColor:'#00000000',color:'#4ECDC4',id:'gl',isExpanded:true,name:'Language'},
-    {borderColor:'#00000000',color:'#a855f7',id:'gcustom',isExpanded:true,name:'Custom Badges'}
+    { borderColor: '#00000000', color: '#27C04F', id: 'gs', isExpanded: true, name: 'Source' },
+    { borderColor: ST.res.bc, color: '#FFBE01', id: 'gr', isExpanded: true, name: 'Resolution' },
+    { borderColor: ST.res.bc, color: '#FF6B6B', id: 'gv', isExpanded: true, name: 'Visual' },
+    { borderColor: '#00000000', color: '#45B7D1', id: 'ga', isExpanded: true, name: 'Audio' },
+    { borderColor: '#00000000', color: '#FFD700', id: 'gc', isExpanded: true, name: 'Channels' },
+    { borderColor: '#00000000', color: '#4ECDC4', id: 'gl', isExpanded: true, name: 'Language' },
+    { borderColor: '#00000000', color: '#a855f7', id: 'gcustom', isExpanded: true, name: 'Custom Badges' }
   ];
 
-  ALL_GROUPS.forEach(g => {
+  ALL_GROUPS.forEach(function (g) {
     if (usedGroupIds.has(g.id)) {
       G.push(g);
     }
   });
 
-  return{filters:T,groups:G};
+  return { filters: T, groups: G };
 }
 
-function fmt(){
-  const d=C.desc==='fn'
-    ?'{stream.filename::exists["{stream.filename}"||""]}'
-    :'{stream.filename::exists["{stream.filename}"||""]}\\n{service.shortName::exists["{service.shortName}"||""]}{stream.type::exists[" \xb7 {stream.type::title::replace(\'P2p\',\'P2P\')}"||""]}';
-  return{n:'{stream.quality::exists["{stream.quality::title}"||""]}',d};
+function fmt() {
+  const d = C.desc === 'fn'
+    ? '{stream.filename::exists["{stream.filename}"||""]}'
+    : '{stream.filename::exists["{stream.filename}"||""]}\\n{service.shortName::exists["{service.shortName}"||""]}{stream.type::exists[" \xb7 {stream.type::title::replace(\'P2p\',\'P2P\')}"||""]}';
+  return { n: '{stream.quality::exists["{stream.quality::title}"||""]}', d: d };
 }
 
-function upd(){
-  const j=gen();
+function upd() {
+  const j = gen();
   preview();
   renderBadgeGallery(j.filters);
-  
-  document.getElementById('oj').value=JSON.stringify(j,null,2);
-  const f=fmt();
-  document.getElementById('on').value=f.n;
-  document.getElementById('od').value=f.d;
+
+  document.getElementById('oj').value = JSON.stringify(j, null, 2);
+  const f = fmt();
+  document.getElementById('on').value = f.n;
+  document.getElementById('od').value = f.d;
 
   const currentRepo = localStorage.getItem('epx_gh_repo') || (getDefaultOwner() + '/EplayerX-TagStyler');
-  const url = `https://raw.githubusercontent.com/${currentRepo}/main/fusion-tags.json`;
-  document.getElementById('ou').value=url;
-  
-  const g=document.getElementById('guide');
-  g.innerHTML='<div class="note">您的自定义预设已完全基于文件名匹配，无需导入任何评分（Scoring）模板，享受超轻量化运行。</div>';
+  const url = 'https://raw.githubusercontent.com/' + currentRepo + '/main/fusion-tags.json';
+  document.getElementById('ou').value = url;
+
+  const g = document.getElementById('guide');
+  g.innerHTML = '<div class="note">您的自定义预设已完全基于文件名匹配，无需导入任何评分（Scoring）模板，享受超轻量化运行。</div>';
 }
 
-function cc(id){navigator.clipboard.writeText(document.getElementById(id).value).then(()=>{showToast('已复制到剪贴板！')})}
+function cc(id) { navigator.clipboard.writeText(document.getElementById(id).value).then(function () { showToast('已复制到剪贴板！'); }); }
 
-document.querySelectorAll('.opts').forEach(g=>{g.querySelectorAll('.o').forEach(o=>{o.onclick=()=>{g.querySelectorAll('.o').forEach(x=>x.classList.remove('on'));o.classList.add('on');C[g.dataset.g]=o.dataset.v;upd();}})});
+document.querySelectorAll('.opts').forEach(function (g) {
+  g.querySelectorAll('.o').forEach(function (o) {
+    o.onclick = function () {
+      g.querySelectorAll('.o').forEach(function (x) { x.classList.remove('on'); });
+      o.classList.add('on');
+      C[g.dataset.g] = o.dataset.v;
+      upd();
+    };
+  });
+});
 
 renderBadgeManager();
 upd();
