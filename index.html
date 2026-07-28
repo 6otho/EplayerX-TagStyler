@@ -19,6 +19,13 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 .o.on{border-color:#fff;color:#fff;background:#1a1a1a}
 .o::before{content:'';position:absolute;left:.55rem;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;border:1.5px solid #444;transition:all .15s}
 .o.on::before{content:'\2713';border-color:#fff;background:#fff;color:#000;font-size:8px;display:flex;align-items:center;justify-content:center;font-weight:700}
+
+/* 【新导入的自定义徽章：专属紫色外观高亮】 */
+.o.custom-badge{border-color:#581c87;color:#c084fc;background:#180b28}
+.o.custom-badge:hover{border-color:#a855f7;color:#f0abfc}
+.o.custom-badge.on{border-color:#c084fc;color:#fff;background:#3b0764}
+.o.custom-badge.on::before{border-color:#c084fc;background:#c084fc;color:#000}
+
 .pvh{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:#555;margin:1.4rem 0 .6rem}
 .cd{background:#222;border:1px solid #2a2a2a;border-radius:12px;padding:.7rem .85rem;margin-bottom:.45rem;overflow:hidden}
 .cn{font-size:.88rem;font-weight:600;margin-bottom:.12rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -47,9 +54,9 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 .abtn{padding:.5rem .9rem;background:#222;color:#fff;border:1px solid #333;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s}
 .abtn:hover{background:#333;border-color:#444}
 #guide .note{font-size:.7rem;color:#999;margin-bottom:.8rem;line-height:1.5}
-.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#4ade80;padding:.6rem 1.2rem;border-radius:8px;font-size:.82rem;display:none;z-index:99;border:1px solid #22c55e;box-shadow:0 4px 12px rgba(0,0,0,.5)}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#4ade80;padding:.6rem 1.2rem;border-radius:8px;font-size:.82rem;display:none;z-index:9999;border:1px solid #22c55e;box-shadow:0 4px 12px rgba(0,0,0,.5)}
 
-.gallery-grid{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-top:.5rem;transition:gap .15s}
+.gallery-grid{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-top:.3rem;margin-bottom:1rem;transition:gap .15s}
 .gallery-card{display:inline-flex;align-items:center;gap:.4rem;padding:5px 10px;background:#181818;border:1px solid #2a2a2a;border-radius:8px;font-size:.72rem;color:#ddd;line-height:1}
 .gallery-card img{height:18px;width:auto}
 
@@ -60,7 +67,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 
 .modal-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:1000}
 .modal-overlay.open{display:flex}
-.modal-card{background:#111;border:1px solid #2a2a2a;border-radius:14px;padding:1.4rem 1.5rem;width:92%;max-width:460px;box-shadow:0 12px 40px rgba(0,0,0,.9);max-height:90vh;overflow-y:auto}
+.modal-card{background:#111;border:1px solid #2a2a2a;border-radius:14px;padding:1.4rem 1.5rem;width:92%;max-width:480px;box-shadow:0 12px 40px rgba(0,0,0,.9);max-height:90vh;overflow-y:auto}
 .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.0rem;padding-bottom:.6rem;border-bottom:1px solid #222}
 .modal-title{font-size:.9rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
 .modal-close{background:none;border:none;color:#666;font-size:1.2rem;cursor:pointer;padding:.2rem .4rem;line-height:1}
@@ -72,6 +79,13 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 .modal-tip{font-size:.68rem;color:#888;line-height:1.4;margin-bottom:.8rem;background:#0a0a0a;padding:.6rem .8rem;border-radius:8px;border:1px solid #1a1a1a}
 .status-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.65rem;font-weight:600;margin-top:.3rem}
 .status-badge.connected{background:#142918;color:#4ade80;border:1px solid #22c55e}
+
+/* 冲突抉择单选框样式 */
+.conflict-item-card{background:#0a0a0a;border:1px solid #2a2a2a;border-radius:10px;padding:.8rem 1rem;margin-bottom:.8rem}
+.conflict-title{font-size:.75rem;font-weight:700;color:#fbbf24;margin-bottom:.5rem;display:flex;align-items:center;gap:6px}
+.conflict-option{display:flex;align-items:center;gap:8px;padding:.4rem .6rem;background:#141414;border:1px solid #222;border-radius:6px;margin-bottom:.35rem;cursor:pointer;font-size:.72rem}
+.conflict-option:hover{border-color:#444}
+.conflict-option input[type="radio"]{accent-color:#22c55e;cursor:pointer}
 </style></head><body>
 <div class="wrap">
 
@@ -83,6 +97,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
   <button class="settings-btn" onclick="openSettingsModal()">⚙️ GitHub 设置</button>
 </div>
 
+<!-- GitHub 账号绑定弹窗 -->
 <div class="modal-overlay" id="settings-modal">
   <div class="modal-card">
     <div class="modal-header">
@@ -90,11 +105,10 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
       <button class="modal-close" onclick="closeSettingsModal()">✕</button>
     </div>
 
-    <!-- 极速权限链接（自动预勾选全能 repo 权限） -->
     <details class="modal-tip" style="margin-bottom:.9rem;background:#0d1810;border-color:#1e3a24" open>
       <summary style="font-size:.72rem;color:#4ade80;font-weight:700;cursor:pointer">📖 点击查看小白一键授权教程 (无需手动建库)</summary>
       <div style="font-size:.68rem;color:#aaa;line-height:1.55;margin-top:.6rem;padding-top:.5rem;border-top:1px solid #1a2e1f">
-        <p style="margin-bottom:.4rem"><b>1. 点击专属生成链接（全套读写权限已帮您预勾选好）：</b><br>
+        <p style="margin-bottom:.4rem"><b>1. 点击专属生成链接（权限名称已帮您勾选好）：</b><br>
            👉 <a href="https://github.com/settings/tokens/new?description=EplayerX-TagStyler&scopes=repo" target="_blank" style="color:#60a5fa;text-decoration:underline;font-weight:700">点击一键生成 GitHub Token</a>
         </p>
         <p style="margin-bottom:.4rem"><b>2. 复制密钥：</b><br>
@@ -125,6 +139,27 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
   </div>
 </div>
 
+<!-- 【新增：去重决策弹窗 (任君选择)】 -->
+<div class="modal-overlay" id="conflict-modal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title" style="color:#fbbf24">⚠️ 检测到重复徽章（请抉择保留项）</div>
+      <button class="modal-close" onclick="closeConflictModal()">✕</button>
+    </div>
+    
+    <div class="modal-tip">
+      💡 <b>任君选择</b>：检测到您勾选的徽章中存在功能概念重复的情况，请为以下冲突分类点选您想保留的徽章版本：
+    </div>
+
+    <div id="conflict-list-container"></div>
+
+    <div style="display:flex;gap:.5rem;margin-top:1.2rem">
+      <button class="cbtn" style="flex:1;padding:.65rem" onclick="resolveConflictsAndSync()">解决冲突并继续提交同步</button>
+      <button class="abtn" style="color:#888" onclick="closeConflictModal()">取消</button>
+    </div>
+  </div>
+</div>
+
 <div class="sec"><h2>1. Icon Style (图标风格)</h2><div class="opts" data-g="icon">
 <div class="o on" data-v="colored">Colored (彩色彩色)</div>
 <div class="o" data-v="mono">Mono (单色黑白)</div>
@@ -149,10 +184,10 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 
 <div class="sec">
   <h2>5. Import Custom Badges JSON (导入自定义 JSON / 网址)</h2>
-  <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址（如 xperience-app 链接）或您的 JSON 代码，合并时会自动智能去重。</div>
+  <div class="sub" style="margin-bottom:.5rem">粘贴第三方网址或 JSON 代码。合并导入时不过滤，方便您并排比对勾选（新徽章呈紫色高亮）。</div>
   <textarea id="custom-json-input" placeholder="输入或粘贴网址 (例如 https://xperience-app.com/badges/....json) 或 JSON 内容..." style="width:100%;height:75px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
   <div style="display:flex;gap:.4rem;margin-top:.45rem">
-    <button class="abtn" onclick="loadCustomJson()">加载解析并合并 JSON 徽章</button>
+    <button class="abtn" onclick="loadCustomJson()">解析并合并入下方面板</button>
     <button class="abtn" style="color:#f87171" onclick="clearCustomJson()">清空导入的自定义徽章</button>
   </div>
 </div>
@@ -166,16 +201,16 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem;color:#60a5fa" onclick="resetDefaultFilters()">重置为默认</button>
     </div>
   </div>
-  <div class="sub" style="margin-bottom:.5rem">支持按组独立勾选。系统已开启语义概念级去重，覆盖同名冲突徽章。</div>
+  <div class="sub" style="margin-bottom:.5rem">所有分类已完全分开。<span style="color:#c084fc">紫色边框</span>代表新导入的自定义徽章。</div>
   <div id="badge-manager-container"></div>
 </div>
 
 <button class="cbtn" style="margin:1.2rem 0;font-size:.9rem" onclick="confirmAndSyncToGitHub()">🚀 确认生成并一键自动同步到 GitHub (Sync to GitHub)</button>
 
 <div class="sec">
-  <h2>All Active Badges Gallery (生效徽章展示大图鉴)</h2>
-  <div class="sub" style="margin-bottom:.5rem">展现当前勾选生效的所有徽章列表。</div>
-  <div id="badge-gallery" class="gallery-grid"></div>
+  <h2>All Active Badges Gallery (生效徽章分类平铺大图鉴)</h2>
+  <div class="sub" style="margin-bottom:.5rem">展现当前勾选生效的所有徽章列表（已按类别分类呈现）。</div>
+  <div id="badge-gallery"></div>
 </div>
 
 <h2 class="pvh">Preview (视频流动态匹配预览)</h2>
@@ -228,7 +263,6 @@ function getDefaultOwner() {
   return '6otho';
 }
 
-// 安全清洗 Token（过滤换行、空格、引号）
 function getCleanToken() {
   let token = document.getElementById('gh-token-input').value || localStorage.getItem('epx_gh_token') || '';
   return token.replace(/["'\s]/g, '').trim();
@@ -330,32 +364,29 @@ function getFilterConcept(f) {
   return 'concept_custom_' + (id || name);
 }
 
-function getDeduplicatedFilters() {
-  const map = new Map();
-
-  SYSTEM_FILTERS.forEach(function (f) {
-    const concept = getFilterConcept(f);
-    map.set(concept, Object.assign({}, f, { concept: concept }));
-  });
-
-  customFilters.forEach(function (cf) {
-    const concept = getFilterConcept(cf);
-    const existing = map.get(concept);
-
-    if (existing) {
-      map.set(concept, Object.assign({}, existing, cf, {
-        id: cf.id || existing.id,
-        name: cf.name || existing.name,
-        imageURL: cf.imageURL || existing.imageURL,
-        pattern: cf.pattern || existing.pattern,
-        concept: concept
-      }));
-    } else {
-      map.set(concept, Object.assign({}, cf, { concept: concept }));
-    }
-  });
-
-  return Array.from(map.values());
+function getConceptDisplayName(concept) {
+  const map = {
+    'concept_4k': '4K 超高清分辨率徽章',
+    'concept_1080p': '1080p 全高清分辨率徽章',
+    'concept_720p': '720p 高清分辨率徽章',
+    'concept_480p': '480p 标清分辨率徽章',
+    'concept_uhdbd': 'UHD 4K 蓝光原盘来源',
+    'concept_bluray': 'Blu-ray 蓝光来源',
+    'concept_hdtv': 'HDTV 来源',
+    'concept_dvd': 'DVD 来源',
+    'concept_dv': 'Dolby Vision 杜比视界画质',
+    'concept_atmos': 'Dolby Atmos 杜比全景声',
+    'concept_truehd': 'Dolby TrueHD 音频',
+    'concept_ddp': 'Dolby Digital Plus (DDP) 音频',
+    'concept_dd': 'Dolby Digital (DD) 音频',
+    'concept_dtsx': 'DTS:X 音频',
+    'concept_dtsma': 'DTS-HD MA 音频',
+    'concept_dtshd': 'DTS-HD 音频',
+    'concept_dts': 'DTS 音频',
+    'concept_71': '7.1 环绕声道',
+    'concept_51': '5.1 环绕声道'
+  };
+  return map[concept] || '重复技术概念徽章';
 }
 
 function rgba(c) {
@@ -426,7 +457,10 @@ function closeSettingsModal() {
   document.getElementById('settings-modal').classList.remove('open');
 }
 
-// 【修好的验证逻辑：完全改用 Bearer 标准认证】
+function closeConflictModal() {
+  document.getElementById('conflict-modal').classList.remove('open');
+}
+
 async function verifyAndSaveToken() {
   const cleanToken = getCleanToken();
   const repoName = document.getElementById('gh-reponame-input').value.trim() || 'EplayerX-TagStyler';
@@ -448,7 +482,7 @@ async function verifyAndSaveToken() {
 
     if (!res.ok) {
       const errData = await res.json().catch(function() { return {}; });
-      throw new Error('Token 无效或认证失败 (' + (errData.message || res.status) + ')，请确认已复制完整的 ghp_ 或 github_pat_ 密钥');
+      throw new Error('Token 验证失败 (' + (errData.message || res.status) + ')，请确认已复制完整的 ghp_ 或 github_pat_ 密钥');
     }
 
     const userData = await res.json();
@@ -468,7 +502,6 @@ async function verifyAndSaveToken() {
   }
 }
 
-// 【自动检测与帮小白建库】
 async function ensureRepoExists(token, username, repoName) {
   const fullRepo = username + '/' + repoName;
   const cleanToken = token.replace(/["'\s]/g, '').trim();
@@ -484,7 +517,7 @@ async function ensureRepoExists(token, username, repoName) {
 
   if (checkRes.status === 401) {
     const errData = await checkRes.json().catch(function() { return {}; });
-    throw new Error('HTTP 401: Token 拒绝访问 (' + (errData.message || 'Bad credentials') + ')！请点击右上角⚙️重新复制正确的 Token（包含 ghp_ 前缀，不要带有空格）');
+    throw new Error('HTTP 401: Token 拒绝访问 (' + (errData.message || 'Bad credentials') + ')！请点击右上角⚙️检查 Token');
   }
 
   if (checkRes.status === 404) {
@@ -518,9 +551,101 @@ async function ensureRepoExists(token, username, repoName) {
   throw new Error('检查仓库失败 HTTP ' + checkRes.status);
 }
 
+// 【检测冲突并弹出决策弹窗的核心逻辑】
+function findSelectedConflicts() {
+  const allList = [...SYSTEM_FILTERS, ...customFilters];
+  const activeFilters = allList.filter(function(f) { return activeFilterIds.has(f.id); });
+
+  const conceptGroups = {};
+  activeFilters.forEach(function(f) {
+    const concept = getFilterConcept(f);
+    if (!conceptGroups[concept]) conceptGroups[concept] = [];
+    conceptGroups[concept].push(f);
+  });
+
+  const conflicts = [];
+  for (const [concept, filters] of Object.entries(conceptGroups)) {
+    if (filters.length > 1) {
+      conflicts.push({
+        concept: concept,
+        title: getConceptDisplayName(concept),
+        filters: filters
+      });
+    }
+  }
+  return conflicts;
+}
+
+function openConflictModal(conflicts) {
+  const container = document.getElementById('conflict-list-container');
+  let h = '';
+
+  conflicts.forEach(function(c, cIdx) {
+    h += '<div class="conflict-item-card">' +
+      '<div class="conflict-title">⚠️ ' + c.title + '（请选择保留其中一个）</div>';
+
+    c.filters.forEach(function(f, fIdx) {
+      const isCustom = f.isCustom || f.groupName.includes('导入');
+      const labelBadge = isCustom ? '【新导入版】' : '【系统默认版】';
+      const checkedStr = fIdx === 0 ? 'checked' : ''; // 默认首选第一个
+      const imgUrl = getBadgeUrl(f.imageURL);
+
+      h += '<label class="conflict-option">' +
+        '<input type="radio" name="conflict_' + cIdx + '" value="' + f.id + '" ' + checkedStr + '>' +
+        '<span><b>' + labelBadge + '</b> ' + f.name + '</span>' +
+        '<img src="' + imgUrl + '" style="height:16px;margin-left:auto">' +
+        '</label>';
+    });
+
+    h += '</div>';
+  });
+
+  container.innerHTML = h;
+  document.getElementById('conflict-modal').classList.add('open');
+}
+
+function resolveConflictsAndSync() {
+  const conflicts = findSelectedConflicts();
+
+  conflicts.forEach(function(c, cIdx) {
+    const radios = document.getElementsByName('conflict_' + cIdx);
+    let chosenId = null;
+    for (let i = 0; i < radios.length; i++) {
+      if (radios[i].checked) {
+        chosenId = radios[i].value;
+        break;
+      }
+    }
+
+    // 将未被选中的同概念冲突项从 activeFilterIds 中取消勾选
+    c.filters.forEach(function(f) {
+      if (f.id !== chosenId) {
+        activeFilterIds.delete(f.id);
+      }
+    });
+  });
+
+  closeConflictModal();
+  renderBadgeManager();
+  executeGitHubSync(); // 执行真正的提交同步
+}
+
 async function confirmAndSyncToGitHub() {
   upd();
 
+  // 1. 检查是否存在重复选择的概念冲突
+  const conflicts = findSelectedConflicts();
+  if (conflicts.length > 0) {
+    // 存在重复徽章！弹出【任君选择弹窗】由用户决策
+    openConflictModal(conflicts);
+    return;
+  }
+
+  // 2. 无冲突，直接执行同步
+  await executeGitHubSync();
+}
+
+async function executeGitHubSync() {
   const token = getCleanToken();
   const username = localStorage.getItem('epx_gh_username') || getDefaultOwner();
   const repoName = localStorage.getItem('epx_gh_reponame') || 'EplayerX-TagStyler';
@@ -578,7 +703,7 @@ async function confirmAndSyncToGitHub() {
       throw new Error(errData.message || ('HTTP ' + putRes.status));
     }
 
-    showToast('🎉 成功！已自动帮您创建/更新仓库并提交文件: ' + fullRepo);
+    showToast('🎉 成功！已自动提交更新至仓库: ' + fullRepo);
   } catch (err) {
     alert('自动同步失败：' + err.message);
   }
@@ -626,18 +751,20 @@ async function loadCustomJson() {
       return;
     }
 
-    customFilters = rawList.map(function (f, idx) {
+    // 【不强行覆盖】：自定义徽章与系统徽章 100% 并存，让用户自由勾选比对
+    const importedList = rawList.map(function (f, idx) {
       const img = f.imageURL || f.imageUrl || f.url || f.image || f.icon || '';
       const name = f.name || f.label || f.title || f.id || ('Badge-' + (idx + 1));
       const pat = f.pattern || f.regex || f.match || f.query || '';
-      const id = f.id || ('custom-' + name + '-' + idx);
+      const id = 'custom_' + (f.id || name) + '_' + idx;
       return {
         id: id,
-        name: name,
+        name: name + ' (新导入)',
         pattern: pat,
         imageURL: img,
         gid: f.groupId || 'gcustom',
-        groupName: 'Imported Custom Badges (导入的自定义徽章)',
+        groupName: 'Imported Custom Badges (新导入的自定义徽章)',
+        isCustom: true,
         tagStyle: f.tagStyle || 'filled',
         borderColor: f.borderColor || '#00000000',
         tagColor: f.tagColor || '#00000000',
@@ -646,14 +773,17 @@ async function loadCustomJson() {
       };
     }).filter(function (f) { return f.imageURL; });
 
-    if (customFilters.length === 0) {
+    if (importedList.length === 0) {
       alert('未找到任何包含有效图片地址的徽章！');
       return;
     }
 
-    customFilters.forEach(function (f) { activeFilterIds.add(f.id); });
+    customFilters = customFilters.concat(importedList);
+    importedList.forEach(function (f) { activeFilterIds.add(f.id); });
+    
     renderBadgeManager();
-    showToast('成功解析并自动概念去重合并了 ' + customFilters.length + ' 个自定义徽章！');
+    upd();
+    showToast('成功导入并合并了 ' + importedList.length + ' 个自定义徽章！新徽章以紫色高亮显示。');
   } catch (e) {
     alert('JSON 解析失败：' + e.message);
   }
@@ -664,12 +794,13 @@ function clearCustomJson() {
   customFilters.forEach(function (f) { activeFilterIds.delete(f.id); });
   customFilters = [];
   renderBadgeManager();
+  upd();
   showToast('已清空导入的自定义徽章！');
 }
 
 function renderBadgeManager() {
   const container = document.getElementById('badge-manager-container');
-  const allList = getDeduplicatedFilters();
+  const allList = [...SYSTEM_FILTERS, ...customFilters];
 
   const groupsMap = {};
   allList.forEach(function (f) {
@@ -690,7 +821,8 @@ function renderBadgeManager() {
 
     filters.forEach(function (f) {
       const isOn = activeFilterIds.has(f.id);
-      h += '<div class="o ' + (isOn ? 'on' : '') + '" onclick="toggleFilter(\'' + f.id + '\')">' + f.name + '</div>';
+      const customCls = f.isCustom ? ' custom-badge' : '';
+      h += '<div class="o ' + (isOn ? 'on' : '') + customCls + '" onclick="toggleFilter(\'' + f.id + '\')">' + f.name + '</div>';
     });
     h += '</div>';
   }
@@ -698,7 +830,7 @@ function renderBadgeManager() {
 }
 
 function toggleGroupFilters(gName, enable) {
-  const allList = getDeduplicatedFilters();
+  const allList = [...SYSTEM_FILTERS, ...customFilters];
   allList.forEach(function (f) {
     if ((f.groupName || 'Other Badges') === gName) {
       if (enable) activeFilterIds.add(f.id);
@@ -715,7 +847,7 @@ function toggleFilter(fid) {
 }
 
 function toggleAllFilters(enable) {
-  const allList = getDeduplicatedFilters();
+  const allList = [...SYSTEM_FILTERS, ...customFilters];
   if (enable) {
     allList.forEach(function (f) { activeFilterIds.add(f.id); });
   } else {
@@ -738,29 +870,43 @@ function showToast(msg) {
   setTimeout(function () { t.style.display = 'none'; }, 3000);
 }
 
+// 【按类别大分类平铺展现生效徽章】
 function renderBadgeGallery(allFilters) {
   const container = document.getElementById('badge-gallery');
-  container.style.gap = C.gap || '5px';
+
+  const groupsMap = {};
+  allFilters.forEach(function (f) {
+    const gName = f.groupName || 'Other Badges';
+    if (!groupsMap[gName]) groupsMap[gName] = [];
+    groupsMap[gName].push(f);
+  });
 
   let h = '';
-  const seenUrls = new Set();
+  for (const [gName, filters] of Object.entries(groupsMap)) {
+    h += '<div style="width:100%"><div class="badge-group-title-text" style="margin-top:.8rem">' + gName + '</div>' +
+      '<div class="gallery-grid" style="gap:' + (C.gap || '5px') + '">';
 
-  allFilters.forEach(function (f) {
-    if (f.imageURL && !seenUrls.has(f.imageURL)) {
-      seenUrls.add(f.imageURL);
-      const url = getBadgeUrl(f.imageURL);
-      h += '<div class="gallery-card">' +
-        '<img src="' + url + '" alt="' + f.name + '">' +
-        '<span>' + (f.name || f.id) + '</span>' +
-        '</div>';
-    }
-  });
+    const seenUrls = new Set();
+    filters.forEach(function (f) {
+      if (f.imageURL && !seenUrls.has(f.imageURL)) {
+        seenUrls.add(f.imageURL);
+        const url = getBadgeUrl(f.imageURL);
+        h += '<div class="gallery-card">' +
+          '<img src="' + url + '" alt="' + f.name + '">' +
+          '<span>' + (f.name || f.id) + '</span>' +
+          '</div>';
+      }
+    });
+
+    h += '</div></div>';
+  }
+
   container.innerHTML = h || '<span style="color:#666;font-size:.7rem">当前未勾选任何生效徽章</span>';
 }
 
 function preview() {
   let h = '';
-  const allList = getDeduplicatedFilters();
+  const allList = [...SYSTEM_FILTERS, ...customFilters];
   const activeFilters = allList.filter(function (f) { return activeFilterIds.has(f.id); });
 
   const galleryBox = document.getElementById('badge-gallery');
@@ -804,7 +950,7 @@ function gen() {
   const T = [], G = [];
   const dvN = '(?!.*(?i)\\b(?:dv|dovi|dolby[\\s._-]?vision)\\b)';
 
-  const allList = getDeduplicatedFilters();
+  const allList = [...SYSTEM_FILTERS, ...customFilters];
   const activeFilters = allList.filter(function (f) { return activeFilterIds.has(f.id); });
   const usedGroupIds = new Set();
   const seenKeys = new Set();
