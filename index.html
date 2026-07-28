@@ -60,15 +60,18 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 
 .modal-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:1000}
 .modal-overlay.open{display:flex}
-.modal-card{background:#111;border:1px solid #2a2a2a;border-radius:14px;padding:1.4rem 1.5rem;width:92%;max-width:440px;box-shadow:0 12px 40px rgba(0,0,0,.9)}
-.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;padding-bottom:.6rem;border-bottom:1px solid #222}
+.modal-card{background:#111;border:1px solid #2a2a2a;border-radius:14px;padding:1.4rem 1.5rem;width:92%;max-width:460px;box-shadow:0 12px 40px rgba(0,0,0,.9);max-height:90vh;overflow-y:auto}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.0rem;padding-bottom:.6rem;border-bottom:1px solid #222}
 .modal-title{font-size:.9rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
 .modal-close{background:none;border:none;color:#666;font-size:1.2rem;cursor:pointer;padding:.2rem .4rem;line-height:1}
 .modal-close:hover{color:#fff}
-.modal-field{margin-bottom:1rem}
+.modal-field{margin-bottom:.9rem}
 .modal-field label{font-size:.68rem;color:#888;display:block;margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.05em}
 .modal-field input{width:100%;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#fff;padding:.55rem .75rem;font-size:.75rem;font-family:ui-monospace,monospace}
 .modal-field input:focus{border-color:#22c55e;outline:none}
+.modal-tip{font-size:.68rem;color:#888;line-height:1.4;margin-bottom:.8rem;background:#0a0a0a;padding:.6rem .8rem;border-radius:8px;border:1px solid #1a1a1a}
+.status-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.65rem;font-weight:600;margin-top:.3rem}
+.status-badge.connected{background:#142918;color:#4ade80;border:1px solid #22c55e}
 </style></head><body>
 <div class="wrap">
 
@@ -80,26 +83,51 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
   <button class="settings-btn" onclick="openSettingsModal()">⚙️ GitHub 设置</button>
 </div>
 
+<!-- 【内置新手傻瓜式教程的 GitHub 弹窗】 -->
 <div class="modal-overlay" id="settings-modal">
   <div class="modal-card">
     <div class="modal-header">
-      <div class="modal-title">⚙️ GitHub 自动同步设置</div>
+      <div class="modal-title">⚙️ 绑定您的 GitHub 账号</div>
       <button class="modal-close" onclick="closeSettingsModal()">✕</button>
     </div>
+    
+    <div class="modal-tip">
+      💡 <b>无感一键同步</b>：只需粘贴 Token，网页会自动解析您的 GitHub 用户名，把更新直接写入您个人的 GitHub 仓库。
+    </div>
+
+    <!-- 【新增：新手小白 Token 教程折叠框】 -->
+    <details class="modal-tip" style="margin-bottom:.9rem;background:#0d1810;border-color:#1e3a24">
+      <summary style="font-size:.72rem;color:#4ade80;font-weight:700;cursor:pointer">📖 点击查看如何获取 GitHub Token (新手小白教程)</summary>
+      <div style="font-size:.68rem;color:#aaa;line-height:1.55;margin-top:.6rem;padding-top:.5rem;border-top:1px solid #1a2e1f">
+        <p style="margin-bottom:.4rem"><b>1. 打开生成页面：</b><br>
+           👉 <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color:#60a5fa;text-decoration:underline">点击直接跳转 GitHub Token 页面</a>
+        </p>
+        <p style="margin-bottom:.4rem"><b>2. 选中您的仓库：</b><br>
+           Token Name 随意填。在 <b>Repository access</b> 下勾选 <i>Only select repositories</i>，下拉菜单选中您的 <b>EplayerX-TagStyler</b> 仓库。
+        </p>
+        <p style="margin-bottom:.4rem"><b>3. 开启写入权限：</b><br>
+           展开 <b>Repository permissions</b>，找到 <b>Contents</b>，修改为 <b>Read and write</b>（读写）。
+        </p>
+        <p style="margin-bottom:0"><b>4. 复制贴回：</b><br>
+           点击底部的 <i>Generate token</i>，把生成的密钥代码（以 <code>github_pat_</code> 开头）复制贴在下方框内即可！
+        </p>
+      </div>
+    </details>
+
     <div class="modal-field">
       <label>GitHub Personal Access Token</label>
-      <input type="password" id="gh-token-input" placeholder="粘贴 Token (github_pat_...)">
+      <input type="password" id="gh-token-input" placeholder="粘贴您的 Token (github_pat_...)">
     </div>
+
     <div class="modal-field">
-      <label>GitHub 仓库路径 (Owner/Repo)</label>
-      <input type="text" id="gh-repo-input" value="6otho/EplayerX-TagStyler">
+      <label>仓库名称 (Repo Name)</label>
+      <input type="text" id="gh-reponame-input" value="EplayerX-TagStyler" placeholder="默认: EplayerX-TagStyler">
     </div>
-    <div class="modal-field">
-      <label>分支名称 (Branch)</label>
-      <input type="text" id="gh-branch-input" value="main">
-    </div>
-    <div style="display:flex;gap:.5rem;margin-top:1.2rem">
-      <button class="cbtn" style="flex:1;padding:.65rem" onclick="saveSettingsModal()">保存配置</button>
+
+    <div id="gh-user-status-box" style="margin-bottom:.8rem"></div>
+
+    <div style="display:flex;gap:.5rem;margin-top:1rem">
+      <button class="cbtn" style="flex:1;padding:.65rem" onclick="verifyAndSaveToken()">验证 Token 并绑定我的账号</button>
       <button class="abtn" style="color:#888" onclick="closeSettingsModal()">取消</button>
     </div>
   </div>
@@ -201,6 +229,13 @@ function getBadgeUrl(img) {
   return I_EPX + img;
 }
 
+function getDefaultOwner() {
+  if (window.location.hostname.endsWith('.github.io')) {
+    return window.location.hostname.replace('.github.io', '');
+  }
+  return '6otho';
+}
+
 let C={icon:'colored',hdr:'nodv',gap:'5px',desc:'short'};
 
 const SYSTEM_FILTERS = [
@@ -258,13 +293,9 @@ const STREAMS=[
   {qual:'Web-Dl',title:'Avatar Fire and Ash (2025)',size:'2 GB',fn:'Avatar.Fire.and.Ash.2025.720p.WEB-DL.DD5.1.DV-RandomGrp.mkv',pct:50,res:'720p',hdr:null,dv:true,aud:'dd',ch:'5.1',src:'webdl',q:'ok',tier:'t3',imax:null,seadex:false},
 ];
 
-// 【核心去重逻辑】：合并系统徽章与自定义徽章，若同名/同图片/同ID则由自定义优先覆盖
 function getDeduplicatedFilters() {
   const map = new Map();
-  
-  SYSTEM_FILTERS.forEach(f => {
-    map.set(f.id, { ...f });
-  });
+  SYSTEM_FILTERS.forEach(f => map.set(f.id, { ...f }));
 
   customFilters.forEach(cf => {
     let existingKey = null;
@@ -281,7 +312,6 @@ function getDeduplicatedFilters() {
     }
 
     if (existingKey) {
-      // 覆盖系统原有同名/同图片徽章
       map.set(existingKey, {
         ...map.get(existingKey),
         ...cf,
@@ -330,12 +360,18 @@ function utf8ToBase64(str) {
 
 function openSettingsModal() {
   const token = localStorage.getItem('epx_gh_token') || '';
-  const repo = localStorage.getItem('epx_gh_repo') || '6otho/EplayerX-TagStyler';
-  const branch = localStorage.getItem('epx_gh_branch') || 'main';
+  const username = localStorage.getItem('epx_gh_username') || '';
+  const repoName = localStorage.getItem('epx_gh_reponame') || 'EplayerX-TagStyler';
 
   document.getElementById('gh-token-input').value = token;
-  document.getElementById('gh-repo-input').value = repo;
-  document.getElementById('gh-branch-input').value = branch;
+  document.getElementById('gh-reponame-input').value = repoName;
+
+  const statusBox = document.getElementById('gh-user-status-box');
+  if (username) {
+    statusBox.innerHTML = `<span class="status-badge connected">已连接用户: ${username} (${username}/${repoName})</span>`;
+  } else {
+    statusBox.innerHTML = '';
+  }
 
   document.getElementById('settings-modal').classList.add('open');
 }
@@ -344,40 +380,73 @@ function closeSettingsModal() {
   document.getElementById('settings-modal').classList.remove('open');
 }
 
-function saveSettingsModal() {
+async function verifyAndSaveToken() {
   const token = document.getElementById('gh-token-input').value.trim();
-  const repo = document.getElementById('gh-repo-input').value.trim() || '6otho/EplayerX-TagStyler';
-  const branch = document.getElementById('gh-branch-input').value.trim() || 'main';
+  const repoName = document.getElementById('gh-reponame-input').value.trim() || 'EplayerX-TagStyler';
 
-  localStorage.setItem('epx_gh_token', token);
-  localStorage.setItem('epx_gh_repo', repo);
-  localStorage.setItem('epx_gh_branch', branch);
+  if (!token) {
+    alert('请先输入您的 GitHub Token！');
+    return;
+  }
 
-  closeSettingsModal();
-  showToast('🔑 GitHub 设置已成功保存！');
+  showToast('⏳ 正在验证身份...');
+
+  try {
+    const res = await fetch('https://api.github.com/user', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error(`Token 验证失败 (${res.status})`);
+    }
+
+    const userData = await res.json();
+    const username = userData.login;
+    const fullRepo = `${username}/${repoName}`;
+
+    localStorage.setItem('epx_gh_token', token);
+    localStorage.setItem('epx_gh_username', username);
+    localStorage.setItem('epx_gh_reponame', repoName);
+    localStorage.setItem('epx_gh_repo', fullRepo);
+
+    closeSettingsModal();
+    upd();
+    showToast(`🎉 验证成功！已绑定用户: ${username} (${fullRepo})`);
+  } catch (err) {
+    alert('验证失败：' + err.message);
+  }
 }
 
 async function confirmAndSyncToGitHub() {
   upd();
 
   const token = localStorage.getItem('epx_gh_token');
-  const repo = localStorage.getItem('epx_gh_repo') || '6otho/EplayerX-TagStyler';
-  const branch = localStorage.getItem('epx_gh_branch') || 'main';
+  let repo = localStorage.getItem('epx_gh_repo');
+  
+  if (!repo) {
+    const owner = localStorage.getItem('epx_gh_username') || getDefaultOwner();
+    const repoName = localStorage.getItem('epx_gh_reponame') || 'EplayerX-TagStyler';
+    repo = `${owner}/${repoName}`;
+  }
+
   const path = 'fusion-tags.json';
 
   if (!token) {
     openSettingsModal();
-    showToast('💡 请先配置 GitHub Token 即可启用一键自动同步！');
+    showToast('💡 请先在弹窗中验证并绑定您的 Token，即可开启一键自动同步！');
     return;
   }
 
   const j = gen();
   const jsonString = JSON.stringify(j, null, 2);
 
-  showToast('⏳ 正在通过 GitHub API 自动提交更新文件...');
+  showToast('⏳ 正在提交更新到您的 GitHub 仓库...');
 
   try {
-    const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`, {
+    const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}?ref=main`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Accept': 'application/vnd.github.v3+json'
@@ -403,7 +472,7 @@ async function confirmAndSyncToGitHub() {
         message: 'Auto update fusion-tags.json via EplayerX TagStyler UI',
         content: contentBase64,
         sha: sha || undefined,
-        branch: branch
+        branch: 'main'
       })
     });
 
@@ -412,9 +481,9 @@ async function confirmAndSyncToGitHub() {
       throw new Error(errData.message || `HTTP ${putRes.status}`);
     }
 
-    showToast('🎉 成功！最新 JSON 已自动同步写入 GitHub！');
+    showToast(`🎉 成功同步更新至您的 GitHub 仓库: ${repo}！`);
   } catch (err) {
-    alert('自动提交失败：' + err.message + '\n提示：请点击右上角⚙️检查 Token 或仓库名称。');
+    alert('自动提交失败：' + err.message + '\n提示：请确认您已在 GitHub 账号下创建了对应名字的仓库！');
   }
 }
 
@@ -422,17 +491,13 @@ async function fetchJsonWithFallback(url) {
   try {
     const res = await fetch(url);
     if (res.ok) return await res.text();
-  } catch(e) {
-    console.warn('Direct fetch blocked, trying proxy 1...', e);
-  }
+  } catch(e) { console.warn('Direct fetch blocked, trying proxy 1...', e); }
 
   try {
     const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
     const res = await fetch(proxyUrl);
     if (res.ok) return await res.text();
-  } catch(e) {
-    console.warn('Proxy 1 failed, trying proxy 2...', e);
-  }
+  } catch(e) { console.warn('Proxy 1 failed, trying proxy 2...', e); }
 
   try {
     const proxyUrl2 = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
@@ -449,12 +514,7 @@ async function loadCustomJson() {
 
   if (text.startsWith('http://') || text.startsWith('https://')) {
     showToast('⏳ 正在跨域抓取该网址的内容...');
-    try {
-      text = await fetchJsonWithFallback(text);
-    } catch(err) {
-      alert('拉取失败：' + err.message);
-      return;
-    }
+    try { text = await fetchJsonWithFallback(text); } catch(err) { alert('拉取失败：' + err.message); return; }
   }
 
   try {
@@ -624,7 +684,6 @@ function preview(){
 
     h+='<div class="cd"><div class="cn">'+fmtName(s)+'</div><div class="cs">'+descTxt+'</div><div class="tr" style="gap:'+(C.gap||'5px')+'">';
 
-    // 【预览卡片去重】：防止同一视频卡片打印重复图片
     const renderedUrls = new Set();
 
     activeFilters.forEach(f => {
@@ -633,7 +692,7 @@ function preview(){
           return;
         }
         const imgUrl = getBadgeUrl(f.imageURL);
-        if (renderedUrls.has(imgUrl)) return; // 跳过重复图片
+        if (renderedUrls.has(imgUrl)) return;
         renderedUrls.add(imgUrl);
 
         h += thtml(f.name || '', f.imageURL, ST.res);
@@ -663,7 +722,6 @@ function gen(){
     const imgUrl = getBadgeUrl(f.imageURL);
     const dedupeKey = `${pat}_${imgUrl}`;
     
-    // 【导出 JSON 去重】
     if (seenKeys.has(dedupeKey)) return;
     seenKeys.add(dedupeKey);
 
@@ -720,7 +778,9 @@ function upd(){
   const f=fmt();
   document.getElementById('on').value=f.n;
   document.getElementById('od').value=f.d;
-  const url='https://raw.githubusercontent.com/6otho/EplayerX-TagStyler/main/fusion-tags.json';
+
+  const currentRepo = localStorage.getItem('epx_gh_repo') || (getDefaultOwner() + '/EplayerX-TagStyler');
+  const url = `https://raw.githubusercontent.com/${currentRepo}/main/fusion-tags.json`;
   document.getElementById('ou').value=url;
   
   const g=document.getElementById('guide');
@@ -730,11 +790,6 @@ function upd(){
 function cc(id){navigator.clipboard.writeText(document.getElementById(id).value).then(()=>{showToast('已复制到剪贴板！')})}
 
 document.querySelectorAll('.opts').forEach(g=>{g.querySelectorAll('.o').forEach(o=>{o.onclick=()=>{g.querySelectorAll('.o').forEach(x=>x.classList.remove('on'));o.classList.add('on');C[g.dataset.g]=o.dataset.v;upd();}})});
-
-const savedToken = localStorage.getItem('epx_gh_token');
-if (savedToken) {
-  document.getElementById('gh-token-input').value = savedToken;
-}
 
 renderBadgeManager();
 upd();
