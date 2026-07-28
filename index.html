@@ -20,7 +20,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 .o::before{content:'';position:absolute;left:.55rem;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;border:1.5px solid #444;transition:all .15s}
 .o.on::before{content:'\2713';border-color:#fff;background:#fff;color:#000;font-size:8px;display:flex;align-items:center;justify-content:center;font-weight:700}
 
-/* 【新导入的自定义徽章：专属紫色外观高亮】 */
+/* 【新导入的自定义徽章：专属紫色高亮】 */
 .o.custom-badge{border-color:#581c87;color:#c084fc;background:#180b28}
 .o.custom-badge:hover{border-color:#a855f7;color:#f0abfc}
 .o.custom-badge.on{border-color:#c084fc;color:#fff;background:#3b0764}
@@ -80,7 +80,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 .status-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.65rem;font-weight:600;margin-top:.3rem}
 .status-badge.connected{background:#142918;color:#4ade80;border:1px solid #22c55e}
 
-/* 冲突抉择单选框样式 */
 .conflict-item-card{background:#0a0a0a;border:1px solid #2a2a2a;border-radius:10px;padding:.8rem 1rem;margin-bottom:.8rem}
 .conflict-title{font-size:.75rem;font-weight:700;color:#fbbf24;margin-bottom:.5rem;display:flex;align-items:center;gap:6px}
 .conflict-option{display:flex;align-items:center;gap:8px;padding:.4rem .6rem;background:#141414;border:1px solid #222;border-radius:6px;margin-bottom:.35rem;cursor:pointer;font-size:.72rem}
@@ -97,7 +96,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
   <button class="settings-btn" onclick="openSettingsModal()">⚙️ GitHub 设置</button>
 </div>
 
-<!-- GitHub 账号绑定弹窗 -->
 <div class="modal-overlay" id="settings-modal">
   <div class="modal-card">
     <div class="modal-header">
@@ -108,7 +106,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
     <details class="modal-tip" style="margin-bottom:.9rem;background:#0d1810;border-color:#1e3a24" open>
       <summary style="font-size:.72rem;color:#4ade80;font-weight:700;cursor:pointer">📖 点击查看小白一键授权教程 (无需手动建库)</summary>
       <div style="font-size:.68rem;color:#aaa;line-height:1.55;margin-top:.6rem;padding-top:.5rem;border-top:1px solid #1a2e1f">
-        <p style="margin-bottom:.4rem"><b>1. 点击专属生成链接（权限名称已帮您勾选好）：</b><br>
+        <p style="margin-bottom:.4rem"><b>1. 点击专属生成链接（全套读写权限已帮您预勾选好）：</b><br>
            👉 <a href="https://github.com/settings/tokens/new?description=EplayerX-TagStyler&scopes=repo" target="_blank" style="color:#60a5fa;text-decoration:underline;font-weight:700">点击一键生成 GitHub Token</a>
         </p>
         <p style="margin-bottom:.4rem"><b>2. 复制密钥：</b><br>
@@ -139,7 +137,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
   </div>
 </div>
 
-<!-- 【新增：去重决策弹窗 (任君选择)】 -->
 <div class="modal-overlay" id="conflict-modal">
   <div class="modal-card">
     <div class="modal-header">
@@ -184,24 +181,24 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 
 <div class="sec">
   <h2>5. Import Custom Badges JSON (导入自定义 JSON / 网址)</h2>
-  <div class="sub" style="margin-bottom:.5rem">粘贴第三方网址或 JSON 代码。合并导入时不过滤，方便您并排比对勾选（新徽章呈紫色高亮）。</div>
+  <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址（如 xperience-app 链接）或您的 JSON 代码。新徽章会自动归类入下方的对应功能组（以<span style="color:#c084fc">紫色高亮</span>区分）。</div>
   <textarea id="custom-json-input" placeholder="输入或粘贴网址 (例如 https://xperience-app.com/badges/....json) 或 JSON 内容..." style="width:100%;height:75px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
   <div style="display:flex;gap:.4rem;margin-top:.45rem">
-    <button class="abtn" onclick="loadCustomJson()">解析并合并入下方面板</button>
+    <button class="abtn" onclick="loadCustomJson()">解析并分类归入下方面板</button>
     <button class="abtn" style="color:#f87171" onclick="clearCustomJson()">清空导入的自定义徽章</button>
   </div>
 </div>
 
 <div class="sec">
   <div style="display:flex;justify-content:space-between;align-items:center">
-    <h2>6. Badge Manager (徽章勾选与管理面板)</h2>
+    <h2>6. Badge Manager (全徽章分类勾选与管理面板)</h2>
     <div style="display:flex;gap:.3rem">
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="toggleAllFilters(true)">全局全选</button>
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="toggleAllFilters(false)">全局全不选</button>
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem;color:#60a5fa" onclick="resetDefaultFilters()">重置为默认</button>
     </div>
   </div>
-  <div class="sub" style="margin-bottom:.5rem">所有分类已完全分开。<span style="color:#c084fc">紫色边框</span>代表新导入的自定义徽章。</div>
+  <div class="sub" style="margin-bottom:.5rem">所有新旧徽章已按技术领域自动归类并存（<span style="color:#c084fc">紫色字</span>代表新导入徽章，同组比对一目了然）。</div>
   <div id="badge-manager-container"></div>
 </div>
 
@@ -275,14 +272,17 @@ const SYSTEM_FILTERS = [
   { id: 's-bluray', name: 'Blu-ray Disc', pattern: '(?i)\\b(blu[\\s._-]?ray|bluray|bdrip|bdremux)\\b(?!.*(uhd|ultra[\\s._-]?hd))', imageURL: 'blu-raydisc.svg', gid: 'gs', groupName: 'Source (来源)' },
   { id: 's-hdtv', name: 'HDTV', pattern: '(?i)\\bhdtv\\b', imageURL: 'hdtv.svg', gid: 'gs', groupName: 'Source (来源)' },
   { id: 's-dvd', name: 'DVD RIP', pattern: '(?i)\\b(dvd[\\s._-]?rip|dvdrip)\\b', imageURL: 'dvd.svg', gid: 'gs', groupName: 'Source (来源)' },
+
   { id: 'r4', name: '4K Ultra HD', pattern: '(?i)^(?!.*\\b(?:1080[pi]?|720[pi]?)\\b).*?(?:\\b2160[pi]?\\b|\\b4k\\b|\\buhd\\b)', imageURL: '4Kx-1.svg', gid: 'gr', groupName: 'Resolution (分辨率)' },
   { id: 'r1', name: '1080p Full HD', pattern: '(?i)\\b1080[pi]?\\b', imageURL: '1080p-a.svg', gid: 'gr', groupName: 'Resolution (分辨率)' },
   { id: 'r7', name: '720p HD', pattern: '(?i)\\b720[pi]?\\b', imageURL: '720p-b.svg', gid: 'gr', groupName: 'Resolution (分辨率)' },
-  { id: 'h+', name: 'HDR10+', pattern: '(?=.*(?i)hdr\\s*10\\s*(?:\\+|plus|p))', imageURL: 'hdr10p-xx.svg', gid: 'gv', groupName: 'Visual (画质技术)' },
-  { id: 'h1', name: 'HDR10', pattern: '(?=.*(?i)hdr\\s*10)(?!.*(?i)hdr\\s*10\\s*(?:\\+|plus|p))', imageURL: 'hdr10-x.svg', gid: 'gv', groupName: 'Visual (画质技术)' },
-  { id: 'hh', name: 'HDR', pattern: '(?=.*(?i)\\bHDR\\b)(?!.*(?i)hdr\\s*10)', imageURL: 'hdr-x.svg', gid: 'gv', groupName: 'Visual (画质技术)' },
-  { id: 'v-imax-e', name: 'IMAX Enhanced', pattern: '(?i)\\bimax[\\s._-]?enhanced\\b', imageURL: 'imax-e.svg', gid: 'gv', groupName: 'Visual (画质技术)' },
-  { id: 'v-imax', name: 'IMAX', pattern: '(?i)^(?=.*\\bIMAX\\b)(?!.*enhanced)', imageURL: 'imax.svg', gid: 'gv', groupName: 'Visual (画质技术)' },
+
+  { id: 'h+', name: 'HDR10+', pattern: '(?=.*(?i)hdr\\s*10\\s*(?:\\+|plus|p))', imageURL: 'hdr10p-xx.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
+  { id: 'h1', name: 'HDR10', pattern: '(?=.*(?i)hdr\\s*10)(?!.*(?i)hdr\\s*10\\s*(?:\\+|plus|p))', imageURL: 'hdr10-x.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
+  { id: 'hh', name: 'HDR', pattern: '(?=.*(?i)\\bHDR\\b)(?!.*(?i)hdr\\s*10)', imageURL: 'hdr-x.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
+  { id: 'v-imax-e', name: 'IMAX Enhanced', pattern: '(?i)\\bimax[\\s._-]?enhanced\\b', imageURL: 'imax-e.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
+  { id: 'v-imax', name: 'IMAX', pattern: '(?i)^(?=.*\\bIMAX\\b)(?!.*enhanced)', imageURL: 'imax.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
+
   { id: 'a-dv', name: 'Dolby Vision', pattern: '(?i)\\b(?:dv|dovi|dolby[\\s._-]?vision)\\b', imageURL: 'dolby-vision-x.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
   { id: 'a-at', name: 'Dolby Atmos', pattern: '(?i)\\batmos\\b', imageURL: 'dolby-atmos-x.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
   { id: 'a-th', name: 'TrueHD', pattern: '(?i)^(?=.*true[\\s._-]?hd)(?!.*atmos)', imageURL: 'true-hd-1.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
@@ -292,8 +292,10 @@ const SYSTEM_FILTERS = [
   { id: 'd-ma', name: 'DTS-HD MA', pattern: '(?i)^(?=.*\\bdts[-_. ]?(?:hd[-_. ]?)?ma\\b)(?!.*\\bdts[-_.: ]?x\\b)', imageURL: 'dts-hd-ma.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
   { id: 'd-hd', name: 'DTS-HD', pattern: '(?i)^(?=.*\\bdts[-_. ]?hd\\b)(?!.*\\bdts[-_. ]?(?:hd[-_. ]?)?ma\\b)(?!.*\\bdts[-_.: ]?x\\b)', imageURL: 'dts-hd.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
   { id: 'd-d', name: 'DTS', pattern: '(?=.*(?i)\\bDTS\\b)(?!.*(?i)dts[-_. ]?(?:hd|ma|xll|x))', imageURL: 'dts.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
+
   { id: 'c7', name: '7.1 Audio', pattern: '[^0-9][7-8][ .][0-1](?![0-9])', imageURL: '7.1-6.svg', gid: 'gc', groupName: 'Channels (声道)' },
   { id: 'c5', name: '5.1 Audio', pattern: '^(?=.*[^0-9]5[. ][01](?![0-9]))(?!.*[^0-9][7-8][. ][01](?![0-9]))', imageURL: '5.1-6.svg', gid: 'gc', groupName: 'Channels (声道)' },
+
   { id: 'l-en', name: '🇬🇧 English', pattern: '(?i)\\benglish\\b|\\beng\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
   { id: 'l-es', name: '🇪🇸 Spanish', pattern: '(?i)\\bspanish\\b|\\bspa\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
   { id: 'l-fr', name: '🇫🇷 French', pattern: '(?i)\\bfrench\\b|\\bfra\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
@@ -362,6 +364,32 @@ function getFilterConcept(f) {
   if (/imax/.test(str)) return 'concept_imax';
 
   return 'concept_custom_' + (id || name);
+}
+
+// 【自动归类分类函数】：根据特征将导入的新徽章精准归纳至 来源/分辨率/画质/音视频 等分类组中
+function getCategoryNameForFilter(f) {
+  const concept = getFilterConcept(f);
+  
+  if (concept === 'concept_4k' || concept === 'concept_1080p' || concept === 'concept_720p' || concept === 'concept_480p') {
+    return 'Resolution (分辨率)';
+  }
+  if (concept === 'concept_uhdbd' || concept === 'concept_bluray' || concept === 'concept_hdtv' || concept === 'concept_dvd') {
+    return 'Source (来源)';
+  }
+  if (concept === 'concept_dv' || concept === 'concept_atmos' || concept === 'concept_truehd' || concept === 'concept_ddp' || concept === 'concept_dd' || concept.startsWith('concept_dts')) {
+    return 'Audio & Tech (音视频)';
+  }
+  if (concept === 'concept_71' || concept === 'concept_51') {
+    return 'Channels (声道)';
+  }
+  if (concept === 'concept_10bit' || concept === 'concept_8bit' || concept === 'concept_hevc' || concept === 'concept_avc' || concept.startsWith('concept_imax')) {
+    return 'Visual & Codecs (画质编码)';
+  }
+  if (f.id && f.id.startsWith('l-')) {
+    return 'Language (语言)';
+  }
+  
+  return 'Other Custom Badges (其他自定义徽章)';
 }
 
 function getConceptDisplayName(concept) {
@@ -551,7 +579,6 @@ async function ensureRepoExists(token, username, repoName) {
   throw new Error('检查仓库失败 HTTP ' + checkRes.status);
 }
 
-// 【检测冲突并弹出决策弹窗的核心逻辑】
 function findSelectedConflicts() {
   const allList = [...SYSTEM_FILTERS, ...customFilters];
   const activeFilters = allList.filter(function(f) { return activeFilterIds.has(f.id); });
@@ -585,9 +612,9 @@ function openConflictModal(conflicts) {
       '<div class="conflict-title">⚠️ ' + c.title + '（请选择保留其中一个）</div>';
 
     c.filters.forEach(function(f, fIdx) {
-      const isCustom = f.isCustom || f.groupName.includes('导入');
+      const isCustom = f.isCustom || (f.groupName && f.groupName.includes('新导入'));
       const labelBadge = isCustom ? '【新导入版】' : '【系统默认版】';
-      const checkedStr = fIdx === 0 ? 'checked' : ''; // 默认首选第一个
+      const checkedStr = fIdx === 0 ? 'checked' : '';
       const imgUrl = getBadgeUrl(f.imageURL);
 
       h += '<label class="conflict-option">' +
@@ -617,7 +644,6 @@ function resolveConflictsAndSync() {
       }
     }
 
-    // 将未被选中的同概念冲突项从 activeFilterIds 中取消勾选
     c.filters.forEach(function(f) {
       if (f.id !== chosenId) {
         activeFilterIds.delete(f.id);
@@ -627,21 +653,18 @@ function resolveConflictsAndSync() {
 
   closeConflictModal();
   renderBadgeManager();
-  executeGitHubSync(); // 执行真正的提交同步
+  executeGitHubSync();
 }
 
 async function confirmAndSyncToGitHub() {
   upd();
 
-  // 1. 检查是否存在重复选择的概念冲突
   const conflicts = findSelectedConflicts();
   if (conflicts.length > 0) {
-    // 存在重复徽章！弹出【任君选择弹窗】由用户决策
     openConflictModal(conflicts);
     return;
   }
 
-  // 2. 无冲突，直接执行同步
   await executeGitHubSync();
 }
 
@@ -751,19 +774,23 @@ async function loadCustomJson() {
       return;
     }
 
-    // 【不强行覆盖】：自定义徽章与系统徽章 100% 并存，让用户自由勾选比对
+    // 【智能自动分类归流】：将每一个新徽章自动计算并归入对应的 分辨率/来源/音视频/画质编码 分类组中
     const importedList = rawList.map(function (f, idx) {
       const img = f.imageURL || f.imageUrl || f.url || f.image || f.icon || '';
       const name = f.name || f.label || f.title || f.id || ('Badge-' + (idx + 1));
       const pat = f.pattern || f.regex || f.match || f.query || '';
       const id = 'custom_' + (f.id || name) + '_' + idx;
+      
+      const tempObj = { id: id, name: name, pattern: pat, imageURL: img };
+      const categoryName = getCategoryNameForFilter(tempObj);
+
       return {
         id: id,
         name: name + ' (新导入)',
         pattern: pat,
         imageURL: img,
         gid: f.groupId || 'gcustom',
-        groupName: 'Imported Custom Badges (新导入的自定义徽章)',
+        groupName: categoryName, // 精确分类组名！
         isCustom: true,
         tagStyle: f.tagStyle || 'filled',
         borderColor: f.borderColor || '#00000000',
@@ -783,7 +810,7 @@ async function loadCustomJson() {
     
     renderBadgeManager();
     upd();
-    showToast('成功导入并合并了 ' + importedList.length + ' 个自定义徽章！新徽章以紫色高亮显示。');
+    showToast('成功导入 ' + importedList.length + ' 个自定义徽章！已自动归类至各技术分组（紫色高亮）。');
   } catch (e) {
     alert('JSON 解析失败：' + e.message);
   }
@@ -798,19 +825,39 @@ function clearCustomJson() {
   showToast('已清空导入的自定义徽章！');
 }
 
+// 统一排序组名顺序
+const PREFERRED_GROUP_ORDER = [
+  'Source (来源)',
+  'Resolution (分辨率)',
+  'Visual & Codecs (画质编码)',
+  'Audio & Tech (音视频)',
+  'Channels (声道)',
+  'Language (语言)',
+  'Other Custom Badges (其他自定义徽章)'
+];
+
 function renderBadgeManager() {
   const container = document.getElementById('badge-manager-container');
   const allList = [...SYSTEM_FILTERS, ...customFilters];
 
   const groupsMap = {};
   allList.forEach(function (f) {
-    const gName = f.groupName || 'Other Badges';
+    const gName = f.groupName || 'Other Custom Badges (其他自定义徽章)';
     if (!groupsMap[gName]) groupsMap[gName] = [];
     groupsMap[gName].push(f);
   });
 
+  const sortedGroupKeys = Object.keys(groupsMap).sort(function (a, b) {
+    let idxA = PREFERRED_GROUP_ORDER.indexOf(a);
+    let idxB = PREFERRED_GROUP_ORDER.indexOf(b);
+    if (idxA === -1) idxA = 999;
+    if (idxB === -1) idxB = 999;
+    return idxA - idxB;
+  });
+
   let h = '';
-  for (const [gName, filters] of Object.entries(groupsMap)) {
+  sortedGroupKeys.forEach(function (gName) {
+    const filters = groupsMap[gName];
     const safeGName = gName.replace(/'/g, "\\'");
     h += '<div class="badge-group-header">' +
       '<span class="badge-group-title-text">' + gName + '</span>' +
@@ -825,14 +872,15 @@ function renderBadgeManager() {
       h += '<div class="o ' + (isOn ? 'on' : '') + customCls + '" onclick="toggleFilter(\'' + f.id + '\')">' + f.name + '</div>';
     });
     h += '</div>';
-  }
+  });
+
   container.innerHTML = h;
 }
 
 function toggleGroupFilters(gName, enable) {
   const allList = [...SYSTEM_FILTERS, ...customFilters];
   allList.forEach(function (f) {
-    if ((f.groupName || 'Other Badges') === gName) {
+    if ((f.groupName || 'Other Custom Badges (其他自定义徽章)') === gName) {
       if (enable) activeFilterIds.add(f.id);
       else activeFilterIds.delete(f.id);
     }
@@ -870,7 +918,6 @@ function showToast(msg) {
   setTimeout(function () { t.style.display = 'none'; }, 3000);
 }
 
-// 【按类别大分类平铺展现生效徽章】
 function renderBadgeGallery(allFilters) {
   const container = document.getElementById('badge-gallery');
 
@@ -881,8 +928,17 @@ function renderBadgeGallery(allFilters) {
     groupsMap[gName].push(f);
   });
 
+  const sortedGroupKeys = Object.keys(groupsMap).sort(function (a, b) {
+    let idxA = PREFERRED_GROUP_ORDER.indexOf(a);
+    let idxB = PREFERRED_GROUP_ORDER.indexOf(b);
+    if (idxA === -1) idxA = 999;
+    if (idxB === -1) idxB = 999;
+    return idxA - idxB;
+  });
+
   let h = '';
-  for (const [gName, filters] of Object.entries(groupsMap)) {
+  sortedGroupKeys.forEach(function (gName) {
+    const filters = groupsMap[gName];
     h += '<div style="width:100%"><div class="badge-group-title-text" style="margin-top:.8rem">' + gName + '</div>' +
       '<div class="gallery-grid" style="gap:' + (C.gap || '5px') + '">';
 
@@ -899,7 +955,7 @@ function renderBadgeGallery(allFilters) {
     });
 
     h += '</div></div>';
-  }
+  });
 
   container.innerHTML = h || '<span style="color:#666;font-size:.7rem">当前未勾选任何生效徽章</span>';
 }
