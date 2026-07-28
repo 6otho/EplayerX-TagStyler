@@ -90,17 +90,18 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
       <button class="modal-close" onclick="closeSettingsModal()">✕</button>
     </div>
 
+    <!-- 极速权限链接（自动预勾选全能 repo 权限） -->
     <details class="modal-tip" style="margin-bottom:.9rem;background:#0d1810;border-color:#1e3a24" open>
       <summary style="font-size:.72rem;color:#4ade80;font-weight:700;cursor:pointer">📖 点击查看小白一键授权教程 (无需手动建库)</summary>
       <div style="font-size:.68rem;color:#aaa;line-height:1.55;margin-top:.6rem;padding-top:.5rem;border-top:1px solid #1a2e1f">
-        <p style="margin-bottom:.4rem"><b>1. 点击专属生成链接（权限名称已帮您勾选好）：</b><br>
-           👉 <a href="https://github.com/settings/tokens/new?description=EplayerX-TagStyler&scopes=public_repo" target="_blank" style="color:#60a5fa;text-decoration:underline;font-weight:700">点击一键生成 Token 代码</a>
+        <p style="margin-bottom:.4rem"><b>1. 点击专属生成链接（全套读写权限已帮您预勾选好）：</b><br>
+           👉 <a href="https://github.com/settings/tokens/new?description=EplayerX-TagStyler&scopes=repo" target="_blank" style="color:#60a5fa;text-decoration:underline;font-weight:700">点击一键生成 GitHub Token</a>
         </p>
         <p style="margin-bottom:.4rem"><b>2. 复制密钥：</b><br>
            打开页面后直接拉到最底部，点击 <i>Generate token</i>，复制生成的代码（以 <code>ghp_</code> 开头）。
         </p>
         <p style="margin-bottom:0"><b>3. 粘贴绑定：</b><br>
-           贴在下方输入框点击【验证并绑定】。<b>如果您账号下没有仓库，系统会自动帮您创建仓库并保存，完全无需您手动建库！</b>
+           贴在下方输入框点击【验证并绑定】。<b>若您账号下没有仓库，系统会自动调用 API 帮您创建仓库并保存！</b>
         </p>
       </div>
     </details>
@@ -148,7 +149,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 
 <div class="sec">
   <h2>5. Import Custom Badges JSON (导入自定义 JSON / 网址)</h2>
-  <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址（如 xperience-app 链接）或您的 JSON 代码，已开启真实概念级去重。</div>
+  <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址（如 xperience-app 链接）或您的 JSON 代码，合并时会自动智能去重。</div>
   <textarea id="custom-json-input" placeholder="输入或粘贴网址 (例如 https://xperience-app.com/badges/....json) 或 JSON 内容..." style="width:100%;height:75px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
   <div style="display:flex;gap:.4rem;margin-top:.45rem">
     <button class="abtn" onclick="loadCustomJson()">加载解析并合并 JSON 徽章</button>
@@ -165,7 +166,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem;color:#60a5fa" onclick="resetDefaultFilters()">重置为默认</button>
     </div>
   </div>
-  <div class="sub" style="margin-bottom:.5rem">支持按组独立勾选。系统已开启语义概念级去重（如导入的 4K 会自动覆盖系统默认 4K）。</div>
+  <div class="sub" style="margin-bottom:.5rem">支持按组独立勾选。系统已开启语义概念级去重，覆盖同名冲突徽章。</div>
   <div id="badge-manager-container"></div>
 </div>
 
@@ -227,6 +228,7 @@ function getDefaultOwner() {
   return '6otho';
 }
 
+// 安全清洗 Token（过滤换行、空格、引号）
 function getCleanToken() {
   let token = document.getElementById('gh-token-input').value || localStorage.getItem('epx_gh_token') || '';
   return token.replace(/["'\s]/g, '').trim();
@@ -289,26 +291,22 @@ const STREAMS = [
   { qual: 'Web-Dl', title: 'Avatar Fire and Ash (2025)', size: '2 GB', fn: 'Avatar.Fire.and.Ash.2025.720p.WEB-DL.DD5.1.DV-RandomGrp.mkv', pct: 50, res: '720p', hdr: null, dv: true, aud: 'dd', ch: '5.1', src: 'webdl', q: 'ok', tier: 't3', imax: null, seadex: false },
 ];
 
-// 【核心语义概念识别器】：分析真实技术特征（不看假名字或随机ID）
 function getFilterConcept(f) {
   const pat = (f.pattern || '').toLowerCase();
   const name = (f.name || '').toLowerCase();
   const id = (f.id || '').toLowerCase();
   const str = id + ' ' + name + ' ' + pat;
 
-  // 1. 分辨率
   if (/(4k|2160|uhd|3840)/.test(str) && !/(blu-ray|bluray|bd)/.test(name)) return 'concept_4k';
   if (/(1080|fhd|1920)/.test(str)) return 'concept_1080p';
   if (/(720|1280)/.test(str)) return 'concept_720p';
   if (/(480|sd)/.test(str)) return 'concept_480p';
 
-  // 2. 来源
   if (/(uhd|ultra[\s._-]?hd)[\s._-]*(blu|bluray|bd)/.test(str)) return 'concept_uhdbd';
   if (/(blu[\s._-]?ray|bluray|bdrip|bdremux)/.test(str)) return 'concept_bluray';
   if (/hdtv/.test(str)) return 'concept_hdtv';
   if (/dvd/.test(str)) return 'concept_dvd';
 
-  // 3. 画质与音效
   if (/\b(dv|dovi|dolby[\s._-]?vision)\b/.test(str)) return 'concept_dv';
   if (/\b(atmos)\b/.test(str)) return 'concept_atmos';
   if (/\b(truehd|true[\s._-]?hd)\b/.test(str)) return 'concept_truehd';
@@ -319,11 +317,9 @@ function getFilterConcept(f) {
   if (/\b(dts[\s._-]*hd)\b/.test(str) && !/ma|master/.test(str)) return 'concept_dtshd';
   if (/\bdts\b/.test(str) && !/hd|ma|x/.test(str)) return 'concept_dts';
 
-  // 4. 声道
   if (/\b(7[\.\-]1|8ch)\b/.test(str) || id === 'c7') return 'concept_71';
   if (/\b(5[\.\-]1|6ch)\b/.test(str) || id === 'c5') return 'concept_51';
 
-  // 5. 编码深度等
   if (/10bit|10b|hi10p/.test(str)) return 'concept_10bit';
   if (/8bit|8b/.test(str)) return 'concept_8bit';
   if (/hevc|h265|x265/.test(str)) return 'concept_hevc';
@@ -334,7 +330,6 @@ function getFilterConcept(f) {
   return 'concept_custom_' + (id || name);
 }
 
-// 【真实概念去重】：按特征概念去重，导入的自定义徽章强行覆盖同概念的系统徽章
 function getDeduplicatedFilters() {
   const map = new Map();
 
@@ -431,6 +426,7 @@ function closeSettingsModal() {
   document.getElementById('settings-modal').classList.remove('open');
 }
 
+// 【修好的验证逻辑：完全改用 Bearer 标准认证】
 async function verifyAndSaveToken() {
   const cleanToken = getCleanToken();
   const repoName = document.getElementById('gh-reponame-input').value.trim() || 'EplayerX-TagStyler';
@@ -445,14 +441,14 @@ async function verifyAndSaveToken() {
   try {
     const res = await fetch('https://api.github.com/user', {
       headers: {
-        'Authorization': 'token ' + cleanToken,
+        'Authorization': 'Bearer ' + cleanToken,
         'Accept': 'application/vnd.github.v3+json'
       }
     });
 
     if (!res.ok) {
-      if (res.status === 401) throw new Error('Token 无效，请确认是否复制完整（请勿带空格）');
-      throw new Error('验证失败 HTTP ' + res.status);
+      const errData = await res.json().catch(function() { return {}; });
+      throw new Error('Token 无效或认证失败 (' + (errData.message || res.status) + ')，请确认已复制完整的 ghp_ 或 github_pat_ 密钥');
     }
 
     const userData = await res.json();
@@ -472,13 +468,14 @@ async function verifyAndSaveToken() {
   }
 }
 
+// 【自动检测与帮小白建库】
 async function ensureRepoExists(token, username, repoName) {
   const fullRepo = username + '/' + repoName;
   const cleanToken = token.replace(/["'\s]/g, '').trim();
 
   const checkRes = await fetch('https://api.github.com/repos/' + fullRepo, {
     headers: {
-      'Authorization': 'token ' + cleanToken,
+      'Authorization': 'Bearer ' + cleanToken,
       'Accept': 'application/vnd.github.v3+json'
     }
   });
@@ -486,7 +483,8 @@ async function ensureRepoExists(token, username, repoName) {
   if (checkRes.ok) return true;
 
   if (checkRes.status === 401) {
-    throw new Error('HTTP 401: Token 密钥无效或输入不正确（请点击右上角⚙️检查 Token，不要带有空格）');
+    const errData = await checkRes.json().catch(function() { return {}; });
+    throw new Error('HTTP 401: Token 拒绝访问 (' + (errData.message || 'Bad credentials') + ')！请点击右上角⚙️重新复制正确的 Token（包含 ghp_ 前缀，不要带有空格）');
   }
 
   if (checkRes.status === 404) {
@@ -495,7 +493,7 @@ async function ensureRepoExists(token, username, repoName) {
     const createRes = await fetch('https://api.github.com/user/repos', {
       method: 'POST',
       headers: {
-        'Authorization': 'token ' + cleanToken,
+        'Authorization': 'Bearer ' + cleanToken,
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3+json'
       },
@@ -508,9 +506,8 @@ async function ensureRepoExists(token, username, repoName) {
     });
 
     if (!createRes.ok) {
-      if (createRes.status === 401) throw new Error('HTTP 401: Token 缺乏创建仓库的权限');
-      const err = await createRes.json();
-      throw new Error('自动新建仓库失败: ' + (err.message || createRes.status));
+      const errData = await createRes.json().catch(function() { return {}; });
+      throw new Error('自动新建仓库失败: ' + (errData.message || createRes.status));
     }
 
     showToast('⚙️ 仓库创建成功！正在等待 GitHub 初始化...');
@@ -548,7 +545,7 @@ async function confirmAndSyncToGitHub() {
 
     const getRes = await fetch('https://api.github.com/repos/' + fullRepo + '/contents/' + path + '?ref=main', {
       headers: {
-        'Authorization': 'token ' + token,
+        'Authorization': 'Bearer ' + token,
         'Accept': 'application/vnd.github.v3+json'
       }
     });
@@ -564,7 +561,7 @@ async function confirmAndSyncToGitHub() {
     const putRes = await fetch('https://api.github.com/repos/' + fullRepo + '/contents/' + path, {
       method: 'PUT',
       headers: {
-        'Authorization': 'token ' + token,
+        'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3+json'
       },
@@ -577,7 +574,7 @@ async function confirmAndSyncToGitHub() {
     });
 
     if (!putRes.ok) {
-      const errData = await putRes.json();
+      const errData = await putRes.json().catch(function() { return {}; });
       throw new Error(errData.message || ('HTTP ' + putRes.status));
     }
 
@@ -656,7 +653,7 @@ async function loadCustomJson() {
 
     customFilters.forEach(function (f) { activeFilterIds.add(f.id); });
     renderBadgeManager();
-    showToast('成功解析并根据真实概念去重合并了 ' + customFilters.length + ' 个自定义徽章！');
+    showToast('成功解析并自动概念去重合并了 ' + customFilters.length + ' 个自定义徽章！');
   } catch (e) {
     alert('JSON 解析失败：' + e.message);
   }
@@ -782,7 +779,6 @@ function preview() {
 
     h += '<div class="cd"><div class="cn">' + fmtName(s) + '</div><div class="cs">' + descTxt + '</div><div class="tr" style="gap:' + (C.gap || '5px') + '">';
 
-    // 【预览卡片概念锁】：防止同一卡片重复渲染相同概念（如两个 4K 图标）
     const renderedConcepts = new Set();
 
     activeFilters.forEach(function (f) {
@@ -792,7 +788,7 @@ function preview() {
         }
         
         const concept = f.concept || getFilterConcept(f);
-        if (renderedConcepts.has(concept)) return; // 同一概念只打印一次
+        if (renderedConcepts.has(concept)) return;
         renderedConcepts.add(concept);
 
         h += thtml(f.name || '', f.imageURL, ST.res);
