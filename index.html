@@ -20,7 +20,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 .o::before{content:'';position:absolute;left:.55rem;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;border:1.5px solid #444;transition:all .15s}
 .o.on::before{content:'\2713';border-color:#fff;background:#fff;color:#000;font-size:8px;display:flex;align-items:center;justify-content:center;font-weight:700}
 
-/* 【新导入的自定义徽章：专属紫色高亮】 */
 .o.custom-badge{border-color:#581c87;color:#c084fc;background:#180b28}
 .o.custom-badge:hover{border-color:#a855f7;color:#f0abfc}
 .o.custom-badge.on{border-color:#c084fc;color:#fff;background:#3b0764}
@@ -181,7 +180,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 
 <div class="sec">
   <h2>5. Import Custom Badges JSON (导入自定义 JSON / 网址)</h2>
-  <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址（如 xperience-app 链接）或您的 JSON 代码。新徽章会自动归类入下方的对应功能组（以<span style="color:#c084fc">紫色高亮</span>区分）。</div>
+  <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址（如 xperience-app 链接）或您的 JSON 代码，合并时会自动智能归类入各技术领域（以<span style="color:#c084fc">紫色高亮</span>区分）。</div>
   <textarea id="custom-json-input" placeholder="输入或粘贴网址 (例如 https://xperience-app.com/badges/....json) 或 JSON 内容..." style="width:100%;height:75px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
   <div style="display:flex;gap:.4rem;margin-top:.45rem">
     <button class="abtn" onclick="loadCustomJson()">解析并分类归入下方面板</button>
@@ -198,7 +197,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem;color:#60a5fa" onclick="resetDefaultFilters()">重置为默认</button>
     </div>
   </div>
-  <div class="sub" style="margin-bottom:.5rem">所有新旧徽章已按技术领域自动归类并存（<span style="color:#c084fc">紫色字</span>代表新导入徽章，同组比对一目了然）。</div>
+  <div class="sub" style="margin-bottom:.5rem">杜比/DTS/HDR等已精密隔离。<span style="color:#c084fc">紫色字</span>代表新导入徽章，同分类比对一目了然。</div>
   <div id="badge-manager-container"></div>
 </div>
 
@@ -294,7 +293,7 @@ const SYSTEM_FILTERS = [
   { id: 'd-d', name: 'DTS', pattern: '(?=.*(?i)\\bDTS\\b)(?!.*(?i)dts[-_. ]?(?:hd|ma|xll|x))', imageURL: 'dts.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
 
   { id: 'c7', name: '7.1 Audio', pattern: '[^0-9][7-8][ .][0-1](?![0-9])', imageURL: '7.1-6.svg', gid: 'gc', groupName: 'Channels (声道)' },
-  { id: 'c5', name: '5.1 Audio', pattern: '^(?=.*[^0-9]5[. ][01](?![0-9]))(?!.*[^0-9][7-8][. ][01](?![0-9]))', imageURL: '5.1-6.svg', gid: 'gc', groupName: 'Channels (声道)' },
+  { id: 'c5', name: '5.1 Audio', pattern: '^(?=.*[^0-9]5[. ][01](?![0-9]))(?!.*[^0-9][7-8][ .][0-1](?![0-9]))', imageURL: '5.1-6.svg', gid: 'gc', groupName: 'Channels (声道)' },
 
   { id: 'l-en', name: '🇬🇧 English', pattern: '(?i)\\benglish\\b|\\beng\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
   { id: 'l-es', name: '🇪🇸 Spanish', pattern: '(?i)\\bspanish\\b|\\bspa\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
@@ -327,35 +326,48 @@ const STREAMS = [
   { qual: 'Web-Dl', title: 'Avatar Fire and Ash (2025)', size: '2 GB', fn: 'Avatar.Fire.and.Ash.2025.720p.WEB-DL.DD5.1.DV-RandomGrp.mkv', pct: 50, res: '720p', hdr: null, dv: true, aud: 'dd', ch: '5.1', src: 'webdl', q: 'ok', tier: 't3', imax: null, seadex: false },
 ];
 
+// 【超高精度子技术隔离识别器】
 function getFilterConcept(f) {
   const pat = (f.pattern || '').toLowerCase();
   const name = (f.name || '').toLowerCase();
   const id = (f.id || '').toLowerCase();
   const str = id + ' ' + name + ' ' + pat;
 
-  if (/(4k|2160|uhd|3840)/.test(str) && !/(blu-ray|bluray|bd)/.test(name)) return 'concept_4k';
-  if (/(1080|fhd|1920)/.test(str)) return 'concept_1080p';
-  if (/(720|1280)/.test(str)) return 'concept_720p';
-  if (/(480|sd)/.test(str)) return 'concept_480p';
+  // 1. 杜比 5 大独立子技术隔离
+  if (/\b(dv|dovi)\b|vision/.test(str)) return 'concept_dv';
+  if (/atmos/.test(str)) return 'concept_atmos';
+  if (/true[\s._-]?hd/.test(str)) return 'concept_truehd';
+  if (/ddp|\bdd\+|e-?ac-?3|digital[\s._-]?plus|digital\+/.test(str)) return 'concept_ddp';
+  if ((/ac-?3|dolby[\s._-]?digital|\bdd\b/.test(str)) && !/ddp|\bdd\+|e-?ac-?3|digital[\s._-]?plus|digital\+|true[\s._-]?hd|atmos/.test(str)) return 'concept_dd';
 
+  // 2. DTS 4 大独立子技术隔离
+  if (/dts[-_.: ]?x/.test(str)) return 'concept_dtsx';
+  if (/dts[-_. ]?(hd[-_. ]?)?ma|dtshd[\s._-]?ma|master/.test(str)) return 'concept_dtsma';
+  if (/dts[-_. ]?hd|dtshd/.test(str)) return 'concept_dtshd';
+  if (/\bdts\b/.test(str)) return 'concept_dts';
+
+  // 3. HDR 3 大独立子技术隔离
+  if (/hdr[\s._-]?10[\s._-]?(\+|plus)/.test(str)) return 'concept_hdr10p';
+  if (/hdr[\s._-]?10/.test(str)) return 'concept_hdr10';
+  if (/\bhdr\b/.test(str)) return 'concept_hdr';
+
+  // 4. 来源 4 大独立子技术隔离
   if (/(uhd|ultra[\s._-]?hd)[\s._-]*(blu|bluray|bd)/.test(str)) return 'concept_uhdbd';
   if (/(blu[\s._-]?ray|bluray|bdrip|bdremux)/.test(str)) return 'concept_bluray';
   if (/hdtv/.test(str)) return 'concept_hdtv';
   if (/dvd/.test(str)) return 'concept_dvd';
 
-  if (/\b(dv|dovi|dolby[\s._-]?vision)\b/.test(str)) return 'concept_dv';
-  if (/\b(atmos)\b/.test(str)) return 'concept_atmos';
-  if (/\b(truehd|true[\s._-]?hd)\b/.test(str)) return 'concept_truehd';
-  if (/\b(ddp|dd\+|e-?ac-?3)\b/.test(str)) return 'concept_ddp';
-  if (/\b(dd|ac-?3|dolby[\s._-]?digital)\b/.test(str) && !/ddp|dd\+|eac3/.test(str)) return 'concept_dd';
-  if (/\b(dts[:\s._-]*x)\b/.test(str)) return 'concept_dtsx';
-  if (/\b(dts[\s._-]*hd[\s._-]*ma|dtshd[\s._-]*ma)\b/.test(str)) return 'concept_dtsma';
-  if (/\b(dts[\s._-]*hd)\b/.test(str) && !/ma|master/.test(str)) return 'concept_dtshd';
-  if (/\bdts\b/.test(str) && !/hd|ma|x/.test(str)) return 'concept_dts';
+  // 5. 分辨率 4 大独立子技术隔离
+  if (/(4k|2160|uhd|3840)/.test(str) && !/(blu-ray|bluray|bd)/.test(name)) return 'concept_4k';
+  if (/(1080|fhd|1920)/.test(str)) return 'concept_1080p';
+  if (/(720|1280)/.test(str)) return 'concept_720p';
+  if (/(480|sd)/.test(str)) return 'concept_480p';
 
+  // 6. 声道
   if (/\b(7[\.\-]1|8ch)\b/.test(str) || id === 'c7') return 'concept_71';
   if (/\b(5[\.\-]1|6ch)\b/.test(str) || id === 'c5') return 'concept_51';
 
+  // 7. 编码深度等
   if (/10bit|10b|hi10p/.test(str)) return 'concept_10bit';
   if (/8bit|8b/.test(str)) return 'concept_8bit';
   if (/hevc|h265|x265/.test(str)) return 'concept_hevc';
@@ -366,7 +378,7 @@ function getFilterConcept(f) {
   return 'concept_custom_' + (id || name);
 }
 
-// 【自动归类分类函数】：根据特征将导入的新徽章精准归纳至 来源/分辨率/画质/音视频 等分类组中
+// 自动归类分组
 function getCategoryNameForFilter(f) {
   const concept = getFilterConcept(f);
   
@@ -382,7 +394,7 @@ function getCategoryNameForFilter(f) {
   if (concept === 'concept_71' || concept === 'concept_51') {
     return 'Channels (声道)';
   }
-  if (concept === 'concept_10bit' || concept === 'concept_8bit' || concept === 'concept_hevc' || concept === 'concept_avc' || concept.startsWith('concept_imax')) {
+  if (concept === 'concept_10bit' || concept === 'concept_8bit' || concept === 'concept_hevc' || concept === 'concept_avc' || concept.startsWith('concept_imax') || concept.startsWith('concept_hdr')) {
     return 'Visual & Codecs (画质编码)';
   }
   if (f.id && f.id.startsWith('l-')) {
@@ -404,17 +416,48 @@ function getConceptDisplayName(concept) {
     'concept_dvd': 'DVD 来源',
     'concept_dv': 'Dolby Vision 杜比视界画质',
     'concept_atmos': 'Dolby Atmos 杜比全景声',
-    'concept_truehd': 'Dolby TrueHD 音频',
-    'concept_ddp': 'Dolby Digital Plus (DDP) 音频',
-    'concept_dd': 'Dolby Digital (DD) 音频',
+    'concept_truehd': 'Dolby TrueHD 无损音频',
+    'concept_ddp': 'Dolby Digital Plus (DDP / DD+) 音频',
+    'concept_dd': 'Dolby Digital (DD / AC3) 音频',
     'concept_dtsx': 'DTS:X 音频',
     'concept_dtsma': 'DTS-HD MA 音频',
     'concept_dtshd': 'DTS-HD 音频',
-    'concept_dts': 'DTS 音频',
+    'concept_dts': 'DTS 数字环绕音频',
+    'concept_hdr10p': 'HDR10+ 高动态范围',
+    'concept_hdr10': 'HDR10 高动态范围',
+    'concept_hdr': 'HDR 高动态范围',
     'concept_71': '7.1 环绕声道',
     'concept_51': '5.1 环绕声道'
   };
   return map[concept] || '重复技术概念徽章';
+}
+
+function getDeduplicatedFilters() {
+  const map = new Map();
+
+  SYSTEM_FILTERS.forEach(function (f) {
+    const concept = getFilterConcept(f);
+    map.set(concept, Object.assign({}, f, { concept: concept }));
+  });
+
+  customFilters.forEach(function (cf) {
+    const concept = getFilterConcept(cf);
+    const existing = map.get(concept);
+
+    if (existing) {
+      map.set(concept, Object.assign({}, existing, cf, {
+        id: cf.id || existing.id,
+        name: cf.name || existing.name,
+        imageURL: cf.imageURL || existing.imageURL,
+        pattern: cf.pattern || existing.pattern,
+        concept: concept
+      }));
+    } else {
+      map.set(concept, Object.assign({}, cf, { concept: concept }));
+    }
+  });
+
+  return Array.from(map.values());
 }
 
 function rgba(c) {
@@ -774,7 +817,6 @@ async function loadCustomJson() {
       return;
     }
 
-    // 【智能自动分类归流】：将每一个新徽章自动计算并归入对应的 分辨率/来源/音视频/画质编码 分类组中
     const importedList = rawList.map(function (f, idx) {
       const img = f.imageURL || f.imageUrl || f.url || f.image || f.icon || '';
       const name = f.name || f.label || f.title || f.id || ('Badge-' + (idx + 1));
@@ -790,7 +832,7 @@ async function loadCustomJson() {
         pattern: pat,
         imageURL: img,
         gid: f.groupId || 'gcustom',
-        groupName: categoryName, // 精确分类组名！
+        groupName: categoryName,
         isCustom: true,
         tagStyle: f.tagStyle || 'filled',
         borderColor: f.borderColor || '#00000000',
@@ -810,7 +852,7 @@ async function loadCustomJson() {
     
     renderBadgeManager();
     upd();
-    showToast('成功导入 ' + importedList.length + ' 个自定义徽章！已自动归类至各技术分组（紫色高亮）。');
+    showToast('成功导入 ' + importedList.length + ' 个自定义徽章！已自动精密归类至各技术分组。');
   } catch (e) {
     alert('JSON 解析失败：' + e.message);
   }
@@ -825,7 +867,6 @@ function clearCustomJson() {
   showToast('已清空导入的自定义徽章！');
 }
 
-// 统一排序组名顺序
 const PREFERRED_GROUP_ORDER = [
   'Source (来源)',
   'Resolution (分辨率)',
