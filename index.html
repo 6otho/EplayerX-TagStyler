@@ -144,7 +144,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
     </div>
     
     <div class="modal-tip">
-      💡 <b>任君选择</b>：检测到您勾选的徽章中存在功能概念重复的情况，请为以下冲突分类点选您想保留的徽章版本：
+      💡 <b>任君选择</b>：检测到您勾选的徽章中存在同概念重复的情况，请为以下冲突点选您想保留的徽章版本：
     </div>
 
     <div id="conflict-list-container"></div>
@@ -180,7 +180,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 
 <div class="sec">
   <h2>5. Import Custom Badges JSON (导入自定义 JSON / 网址)</h2>
-  <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址（如 xperience-app 链接）或您的 JSON 代码，合并时会自动智能归类入各技术领域（以<span style="color:#c084fc">紫色高亮</span>区分）。</div>
+  <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址（如 xperience-app 链接）或您的 JSON 代码，合并时会自动智能归类（以<span style="color:#c084fc">紫色高亮</span>区分）。</div>
   <textarea id="custom-json-input" placeholder="输入或粘贴网址 (例如 https://xperience-app.com/badges/....json) 或 JSON 内容..." style="width:100%;height:75px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
   <div style="display:flex;gap:.4rem;margin-top:.45rem">
     <button class="abtn" onclick="loadCustomJson()">解析并分类归入下方面板</button>
@@ -197,7 +197,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem;color:#60a5fa" onclick="resetDefaultFilters()">重置为默认</button>
     </div>
   </div>
-  <div class="sub" style="margin-bottom:.5rem">杜比/DTS/HDR等已精密隔离。<span style="color:#c084fc">紫色字</span>代表新导入徽章，同分类比对一目了然。</div>
+  <div class="sub" style="margin-bottom:.5rem">杜比 5 大音视频、DTS 4 大音效已完美隔离。<span style="color:#c084fc">紫色字</span>代表新导入徽章。</div>
   <div id="badge-manager-container"></div>
 </div>
 
@@ -326,48 +326,65 @@ const STREAMS = [
   { qual: 'Web-Dl', title: 'Avatar Fire and Ash (2025)', size: '2 GB', fn: 'Avatar.Fire.and.Ash.2025.720p.WEB-DL.DD5.1.DV-RandomGrp.mkv', pct: 50, res: '720p', hdr: null, dv: true, aud: 'dd', ch: '5.1', src: 'webdl', q: 'ok', tier: 't3', imax: null, seadex: false },
 ];
 
-// 【超高精度子技术隔离识别器】
+// 【超高精度子技术隔离识别器】：先清洗否定断言，按真实子特征精准判定
 function getFilterConcept(f) {
-  const pat = (f.pattern || '').toLowerCase();
-  const name = (f.name || '').toLowerCase();
   const id = (f.id || '').toLowerCase();
+  const name = (f.name || '').toLowerCase();
+  let pat = (f.pattern || '').toLowerCase();
+  
+  // 关键清洗：清洗掉 (?!...) 否定断言干扰
+  pat = pat.replace(/\(\?!.*?\)/g, '');
   const str = id + ' ' + name + ' ' + pat;
 
-  // 1. 杜比 5 大独立子技术隔离
-  if (/\b(dv|dovi)\b|vision/.test(str)) return 'concept_dv';
-  if (/atmos/.test(str)) return 'concept_atmos';
-  if (/true[\s._-]?hd/.test(str)) return 'concept_truehd';
-  if (/ddp|\bdd\+|e-?ac-?3|digital[\s._-]?plus|digital\+/.test(str)) return 'concept_ddp';
-  if ((/ac-?3|dolby[\s._-]?digital|\bdd\b/.test(str)) && !/ddp|\bdd\+|e-?ac-?3|digital[\s._-]?plus|digital\+|true[\s._-]?hd|atmos/.test(str)) return 'concept_dd';
+  // 1. 优先比对 ID，绝对精准匹配
+  if (id === 'a-dv' || id === 'dolby-vision') return 'concept_dv';
+  if (id === 'a-at' || id === 'dolby-atmos') return 'concept_atmos';
+  if (id === 'a-th' || id === 'truehd') return 'concept_truehd';
+  if (id === 'a-dp' || id === 'dolby-digital-plus') return 'concept_ddp';
+  if (id === 'a-dd' || id === 'dolby-digital') return 'concept_dd';
+  if (id === 'd-x' || id === 'dts-x') return 'concept_dtsx';
+  if (id === 'd-ma' || id === 'dts-hd-master-audio') return 'concept_dtsma';
+  if (id === 'd-hd' || id === 'dts-hd') return 'concept_dtshd';
+  if (id === 'd-d' || id === 'dts') return 'concept_dts';
+  if (id === 'r4' || id === '4k-ultra-hd') return 'concept_4k';
+  if (id === 'r1' || id === '1080p-full-hd') return 'concept_1080p';
+  if (id === 'r7' || id === '720p-hd') return 'concept_720p';
 
-  // 2. DTS 4 大独立子技术隔离
+  // 2. 杜比 5 大独立子技术隔离
+  if (/\b(dv|dovi)\b|vision/.test(str)) return 'concept_dv';
+  if (/\batmos\b/.test(name) || /\batmos\b/.test(pat)) return 'concept_atmos';
+  if (/true[\s._-]?hd/.test(name) || /true[\s._-]?hd/.test(pat)) return 'concept_truehd';
+  if (/ddp|\bdd\+|e-?ac-?3|digital[\s._-]?plus|digital\+/.test(str)) return 'concept_ddp';
+  if (/ac-?3|dolby[\s._-]?digital|\bdd\b/.test(str)) return 'concept_dd';
+
+  // 3. DTS 4 大独立子技术隔离
   if (/dts[-_.: ]?x/.test(str)) return 'concept_dtsx';
   if (/dts[-_. ]?(hd[-_. ]?)?ma|dtshd[\s._-]?ma|master/.test(str)) return 'concept_dtsma';
   if (/dts[-_. ]?hd|dtshd/.test(str)) return 'concept_dtshd';
   if (/\bdts\b/.test(str)) return 'concept_dts';
 
-  // 3. HDR 3 大独立子技术隔离
+  // 4. HDR 3 大独立子技术隔离
   if (/hdr[\s._-]?10[\s._-]?(\+|plus)/.test(str)) return 'concept_hdr10p';
   if (/hdr[\s._-]?10/.test(str)) return 'concept_hdr10';
   if (/\bhdr\b/.test(str)) return 'concept_hdr';
 
-  // 4. 来源 4 大独立子技术隔离
+  // 5. 来源 4 大独立子技术隔离
   if (/(uhd|ultra[\s._-]?hd)[\s._-]*(blu|bluray|bd)/.test(str)) return 'concept_uhdbd';
   if (/(blu[\s._-]?ray|bluray|bdrip|bdremux)/.test(str)) return 'concept_bluray';
   if (/hdtv/.test(str)) return 'concept_hdtv';
   if (/dvd/.test(str)) return 'concept_dvd';
 
-  // 5. 分辨率 4 大独立子技术隔离
+  // 6. 分辨率 4 大独立子技术隔离
   if (/(4k|2160|uhd|3840)/.test(str) && !/(blu-ray|bluray|bd)/.test(name)) return 'concept_4k';
   if (/(1080|fhd|1920)/.test(str)) return 'concept_1080p';
   if (/(720|1280)/.test(str)) return 'concept_720p';
   if (/(480|sd)/.test(str)) return 'concept_480p';
 
-  // 6. 声道
+  // 7. 声道
   if (/\b(7[\.\-]1|8ch)\b/.test(str) || id === 'c7') return 'concept_71';
   if (/\b(5[\.\-]1|6ch)\b/.test(str) || id === 'c5') return 'concept_51';
 
-  // 7. 编码深度等
+  // 8. 编码深度等
   if (/10bit|10b|hi10p/.test(str)) return 'concept_10bit';
   if (/8bit|8b/.test(str)) return 'concept_8bit';
   if (/hevc|h265|x265/.test(str)) return 'concept_hevc';
@@ -378,7 +395,7 @@ function getFilterConcept(f) {
   return 'concept_custom_' + (id || name);
 }
 
-// 自动归类分组
+// 自动归类组名映射
 function getCategoryNameForFilter(f) {
   const concept = getFilterConcept(f);
   
@@ -416,13 +433,13 @@ function getConceptDisplayName(concept) {
     'concept_dvd': 'DVD 来源',
     'concept_dv': 'Dolby Vision 杜比视界画质',
     'concept_atmos': 'Dolby Atmos 杜比全景声',
-    'concept_truehd': 'Dolby TrueHD 无损音频',
+    'concept_truehd': 'Dolby TrueHD 音频',
     'concept_ddp': 'Dolby Digital Plus (DDP / DD+) 音频',
     'concept_dd': 'Dolby Digital (DD / AC3) 音频',
     'concept_dtsx': 'DTS:X 音频',
     'concept_dtsma': 'DTS-HD MA 音频',
     'concept_dtshd': 'DTS-HD 音频',
-    'concept_dts': 'DTS 数字环绕音频',
+    'concept_dts': 'DTS 音频',
     'concept_hdr10p': 'HDR10+ 高动态范围',
     'concept_hdr10': 'HDR10 高动态范围',
     'concept_hdr': 'HDR 高动态范围',
@@ -553,7 +570,7 @@ async function verifyAndSaveToken() {
 
     if (!res.ok) {
       const errData = await res.json().catch(function() { return {}; });
-      throw new Error('Token 验证失败 (' + (errData.message || res.status) + ')，请确认已复制完整的 ghp_ 或 github_pat_ 密钥');
+      throw new Error('Token 验证失败，请确认是否复制完整（请勿带空格）');
     }
 
     const userData = await res.json();
