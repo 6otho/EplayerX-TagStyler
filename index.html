@@ -266,22 +266,20 @@ function getCleanToken() {
 
 let C={icon:'colored',hdr:'nodv',gap:'5px',desc:'short'};
 
+// 【已更新】：7.1 与 5.1 默认路径更新为 7.1-d.svg 和 5.1-d.svg
 const SYSTEM_FILTERS = [
   { id: 's-uhdbd', name: 'Ultra HD Blu-ray', pattern: '(?i)\\b(uhd|ultra[\\s._-]?hd)[\\s._-]*(blu[\\s._-]?ray|bluray|bd)\\b', imageURL: 'u-hd-blu-ray.svg', gid: 'gs', groupName: 'Source (来源)' },
   { id: 's-bluray', name: 'Blu-ray Disc', pattern: '(?i)\\b(blu[\\s._-]?ray|bluray|bdrip|bdremux)\\b(?!.*(uhd|ultra[\\s._-]?hd))', imageURL: 'blu-raydisc.svg', gid: 'gs', groupName: 'Source (来源)' },
   { id: 's-hdtv', name: 'HDTV', pattern: '(?i)\\bhdtv\\b', imageURL: 'hdtv.svg', gid: 'gs', groupName: 'Source (来源)' },
   { id: 's-dvd', name: 'DVD RIP', pattern: '(?i)\\b(dvd[\\s._-]?rip|dvdrip)\\b', imageURL: 'dvd.svg', gid: 'gs', groupName: 'Source (来源)' },
-
   { id: 'r4', name: '4K Ultra HD', pattern: '(?i)^(?!.*\\b(?:1080[pi]?|720[pi]?)\\b).*?(?:\\b2160[pi]?\\b|\\b4k\\b|\\buhd\\b)', imageURL: '4Kx-1.svg', gid: 'gr', groupName: 'Resolution (分辨率)' },
   { id: 'r1', name: '1080p Full HD', pattern: '(?i)\\b1080[pi]?\\b', imageURL: '1080p-a.svg', gid: 'gr', groupName: 'Resolution (分辨率)' },
   { id: 'r7', name: '720p HD', pattern: '(?i)\\b720[pi]?\\b', imageURL: '720p-b.svg', gid: 'gr', groupName: 'Resolution (分辨率)' },
-
   { id: 'h+', name: 'HDR10+', pattern: '(?=.*(?i)hdr\\s*10\\s*(?:\\+|plus|p))', imageURL: 'hdr10p-xx.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
   { id: 'h1', name: 'HDR10', pattern: '(?=.*(?i)hdr\\s*10)(?!.*(?i)hdr\\s*10\\s*(?:\\+|plus|p))', imageURL: 'hdr10-x.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
   { id: 'hh', name: 'HDR', pattern: '(?=.*(?i)\\bHDR\\b)(?!.*(?i)hdr\\s*10)', imageURL: 'hdr-x.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
   { id: 'v-imax-e', name: 'IMAX Enhanced', pattern: '(?i)\\bimax[\\s._-]?enhanced\\b', imageURL: 'imax-e.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
   { id: 'v-imax', name: 'IMAX', pattern: '(?i)^(?=.*\\bIMAX\\b)(?!.*enhanced)', imageURL: 'imax.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
-
   { id: 'a-dv', name: 'Dolby Vision', pattern: '(?i)\\b(?:dv|dovi|dolby[\\s._-]?vision)\\b', imageURL: 'dolby-vision-x.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
   { id: 'a-at', name: 'Dolby Atmos', pattern: '(?i)\\batmos\\b', imageURL: 'dolby-atmos-x.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
   { id: 'a-th', name: 'TrueHD', pattern: '(?i)^(?=.*true[\\s._-]?hd)(?!.*atmos)', imageURL: 'true-hd-1.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
@@ -291,10 +289,8 @@ const SYSTEM_FILTERS = [
   { id: 'd-ma', name: 'DTS-HD MA', pattern: '(?i)^(?=.*\\bdts[-_. ]?(?:hd[-_. ]?)?ma\\b)(?!.*\\bdts[-_.: ]?x\\b)', imageURL: 'dts-hd-ma.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
   { id: 'd-hd', name: 'DTS-HD', pattern: '(?i)^(?=.*\\bdts[-_. ]?hd\\b)(?!.*\\bdts[-_. ]?(?:hd[-_. ]?)?ma\\b)(?!.*\\bdts[-_.: ]?x\\b)', imageURL: 'dts-hd.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
   { id: 'd-d', name: 'DTS', pattern: '(?=.*(?i)\\bDTS\\b)(?!.*(?i)dts[-_. ]?(?:hd|ma|xll|x))', imageURL: 'dts.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
-
-  { id: 'c7', name: '7.1 Audio', pattern: '[^0-9][7-8][ .][0-1](?![0-9])', imageURL: '7.1-6.svg', gid: 'gc', groupName: 'Channels (声道)' },
-  { id: 'c5', name: '5.1 Audio', pattern: '^(?=.*[^0-9]5[. ][01](?![0-9]))(?!.*[^0-9][7-8][ .][0-1](?![0-9]))', imageURL: '5.1-6.svg', gid: 'gc', groupName: 'Channels (声道)' },
-
+  { id: 'c7', name: '7.1 Audio', pattern: '[^0-9][7-8][ .][0-1](?![0-9])', imageURL: '7.1-d.svg', gid: 'gc', groupName: 'Channels (声道)' },
+  { id: 'c5', name: '5.1 Audio', pattern: '^(?=.*[^0-9]5[. ][01](?![0-9]))(?!.*[^0-9][7-8][ .][0-1](?![0-9]))', imageURL: '5.1-d.svg', gid: 'gc', groupName: 'Channels (声道)' },
   { id: 'l-en', name: '🇬🇧 English', pattern: '(?i)\\benglish\\b|\\beng\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
   { id: 'l-es', name: '🇪🇸 Spanish', pattern: '(?i)\\bspanish\\b|\\bspa\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
   { id: 'l-fr', name: '🇫🇷 French', pattern: '(?i)\\bfrench\\b|\\bfra\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
@@ -326,17 +322,14 @@ const STREAMS = [
   { qual: 'Web-Dl', title: 'Avatar Fire and Ash (2025)', size: '2 GB', fn: 'Avatar.Fire.and.Ash.2025.720p.WEB-DL.DD5.1.DV-RandomGrp.mkv', pct: 50, res: '720p', hdr: null, dv: true, aud: 'dd', ch: '5.1', src: 'webdl', q: 'ok', tier: 't3', imax: null, seadex: false },
 ];
 
-// 【超高精度子技术隔离识别器】：先清洗否定断言，按真实子特征精准判定
 function getFilterConcept(f) {
   const id = (f.id || '').toLowerCase();
   const name = (f.name || '').toLowerCase();
   let pat = (f.pattern || '').toLowerCase();
   
-  // 关键清洗：清洗掉 (?!...) 否定断言干扰
   pat = pat.replace(/\(\?!.*?\)/g, '');
   const str = id + ' ' + name + ' ' + pat;
 
-  // 1. 优先比对 ID，绝对精准匹配
   if (id === 'a-dv' || id === 'dolby-vision') return 'concept_dv';
   if (id === 'a-at' || id === 'dolby-atmos') return 'concept_atmos';
   if (id === 'a-th' || id === 'truehd') return 'concept_truehd';
@@ -350,41 +343,34 @@ function getFilterConcept(f) {
   if (id === 'r1' || id === '1080p-full-hd') return 'concept_1080p';
   if (id === 'r7' || id === '720p-hd') return 'concept_720p';
 
-  // 2. 杜比 5 大独立子技术隔离
   if (/\b(dv|dovi)\b|vision/.test(str)) return 'concept_dv';
   if (/\batmos\b/.test(name) || /\batmos\b/.test(pat)) return 'concept_atmos';
   if (/true[\s._-]?hd/.test(name) || /true[\s._-]?hd/.test(pat)) return 'concept_truehd';
   if (/ddp|\bdd\+|e-?ac-?3|digital[\s._-]?plus|digital\+/.test(str)) return 'concept_ddp';
   if (/ac-?3|dolby[\s._-]?digital|\bdd\b/.test(str)) return 'concept_dd';
 
-  // 3. DTS 4 大独立子技术隔离
   if (/dts[-_.: ]?x/.test(str)) return 'concept_dtsx';
   if (/dts[-_. ]?(hd[-_. ]?)?ma|dtshd[\s._-]?ma|master/.test(str)) return 'concept_dtsma';
   if (/dts[-_. ]?hd|dtshd/.test(str)) return 'concept_dtshd';
   if (/\bdts\b/.test(str)) return 'concept_dts';
 
-  // 4. HDR 3 大独立子技术隔离
   if (/hdr[\s._-]?10[\s._-]?(\+|plus)/.test(str)) return 'concept_hdr10p';
   if (/hdr[\s._-]?10/.test(str)) return 'concept_hdr10';
   if (/\bhdr\b/.test(str)) return 'concept_hdr';
 
-  // 5. 来源 4 大独立子技术隔离
   if (/(uhd|ultra[\s._-]?hd)[\s._-]*(blu|bluray|bd)/.test(str)) return 'concept_uhdbd';
   if (/(blu[\s._-]?ray|bluray|bdrip|bdremux)/.test(str)) return 'concept_bluray';
   if (/hdtv/.test(str)) return 'concept_hdtv';
   if (/dvd/.test(str)) return 'concept_dvd';
 
-  // 6. 分辨率 4 大独立子技术隔离
   if (/(4k|2160|uhd|3840)/.test(str) && !/(blu-ray|bluray|bd)/.test(name)) return 'concept_4k';
   if (/(1080|fhd|1920)/.test(str)) return 'concept_1080p';
   if (/(720|1280)/.test(str)) return 'concept_720p';
   if (/(480|sd)/.test(str)) return 'concept_480p';
 
-  // 7. 声道
   if (/\b(7[\.\-]1|8ch)\b/.test(str) || id === 'c7') return 'concept_71';
   if (/\b(5[\.\-]1|6ch)\b/.test(str) || id === 'c5') return 'concept_51';
 
-  // 8. 编码深度等
   if (/10bit|10b|hi10p/.test(str)) return 'concept_10bit';
   if (/8bit|8b/.test(str)) return 'concept_8bit';
   if (/hevc|h265|x265/.test(str)) return 'concept_hevc';
@@ -395,7 +381,6 @@ function getFilterConcept(f) {
   return 'concept_custom_' + (id || name);
 }
 
-// 自动归类组名映射
 function getCategoryNameForFilter(f) {
   const concept = getFilterConcept(f);
   
@@ -570,7 +555,7 @@ async function verifyAndSaveToken() {
 
     if (!res.ok) {
       const errData = await res.json().catch(function() { return {}; });
-      throw new Error('Token 验证失败，请确认是否复制完整（请勿带空格）');
+      throw new Error('Token 验证失败 (' + (errData.message || res.status) + ')，请确认已复制完整的 ghp_ 或 github_pat_ 密钥');
     }
 
     const userData = await res.json();
