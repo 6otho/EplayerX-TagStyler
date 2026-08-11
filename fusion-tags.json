@@ -2,175 +2,6 @@
   "filters": [
     {
       "borderColor": "#00000000",
-      "groupId": "gl",
-      "id": "l-en",
-      "imageURL": "",
-      "isEnabled": true,
-      "name": "🇬🇧 English",
-      "pattern": "(?i)\\benglish\\b|\\beng\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#FFFFFF",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "gl",
-      "id": "l-es",
-      "imageURL": "",
-      "isEnabled": true,
-      "name": "🇪🇸 Spanish",
-      "pattern": "(?i)\\bspanish\\b|\\bspa\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#FFFFFF",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "gl",
-      "id": "l-fr",
-      "imageURL": "",
-      "isEnabled": true,
-      "name": "🇫🇷 French",
-      "pattern": "(?i)\\bfrench\\b|\\bfra\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#FFFFFF",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "gl",
-      "id": "l-de",
-      "imageURL": "",
-      "isEnabled": true,
-      "name": "🇩🇪 German",
-      "pattern": "(?i)\\bgerman\\b|\\bdeu\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#FFFFFF",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "gl",
-      "id": "l-it",
-      "imageURL": "",
-      "isEnabled": true,
-      "name": "🇮🇹 Italian",
-      "pattern": "(?i)\\bitalian\\b|\\bita\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#FFFFFF",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "gl",
-      "id": "l-pt",
-      "imageURL": "",
-      "isEnabled": true,
-      "name": "🇧🇷 Portuguese",
-      "pattern": "(?i)\\bportuguese\\b|\\bpor\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#FFFFFF",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "gl",
-      "id": "l-ja",
-      "imageURL": "",
-      "isEnabled": true,
-      "name": "🇯🇵 Japanese",
-      "pattern": "(?i)\\bjapanese\\b|\\bjpn\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#FFFFFF",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "gl",
-      "id": "l-ko",
-      "imageURL": "",
-      "isEnabled": true,
-      "name": "🇰🇷 Korean",
-      "pattern": "(?i)\\bkorean\\b|\\bkor\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#FFFFFF",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "gl",
-      "id": "l-zh",
-      "imageURL": "",
-      "isEnabled": true,
-      "name": "🇨🇳 Chinese",
-      "pattern": "(?i)\\bchinese\\b|\\bchi\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#FFFFFF",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "gl",
-      "id": "l-hi",
-      "imageURL": "",
-      "isEnabled": true,
-      "name": "🇮🇳 Hindi",
-      "pattern": "(?i)\\bhindi\\b|\\bhin\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#FFFFFF",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "gl",
-      "id": "l-ar",
-      "imageURL": "",
-      "isEnabled": true,
-      "name": "🇸🇦 Arabic",
-      "pattern": "(?i)\\barabic\\b|\\bara\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#FFFFFF",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "gl",
-      "id": "l-ru",
-      "imageURL": "",
-      "isEnabled": true,
-      "name": "🇷🇺 Russian",
-      "pattern": "(?i)\\brussian\\b|\\brus\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#FFFFFF",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "gl",
-      "id": "l-mu",
-      "imageURL": "",
-      "isEnabled": true,
-      "name": "🌐 Multi Audio",
-      "pattern": "(?i)\\bmulti\\b|\\bdual[\\s._-]?audio\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#FFFFFF",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
       "groupId": "resolution",
       "id": "custom_4k-ultra-hd_0",
       "imageURL": "https://raw.githubusercontent.com/6otho/Epx-Badge/refs/heads/main/Badges/4Kx-1.svg",
@@ -262,19 +93,6 @@
     },
     {
       "borderColor": "#00000000",
-      "groupId": "resolution",
-      "id": "custom_480p-sd_7",
-      "imageURL": "https://raw.githubusercontent.com/6otho/Epx-Badge/refs/heads/main/Badges/480p-b.svg",
-      "isEnabled": true,
-      "name": "480p SD (新导入)",
-      "pattern": "(?i)\\b480p\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#00000000",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
       "groupId": "video-tech",
       "id": "custom_dolby-vision_8",
       "imageURL": "https://github.com/l3okuGmail/badges/raw/refs/heads/main/icons/DBV-a.svg",
@@ -320,6 +138,19 @@
       "isEnabled": true,
       "name": "HDR (新导入)",
       "pattern": "(?i)\\bhdr\\b",
+      "tagColor": "#00000000",
+      "tagStyle": "filled",
+      "textColor": "#00000000",
+      "type": "filter"
+    },
+    {
+      "borderColor": "#00000000",
+      "groupId": "video-tech",
+      "id": "custom_sdr_12",
+      "imageURL": "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/sdr-a.svg",
+      "isEnabled": true,
+      "name": "SDR (新导入)",
+      "pattern": "(?i)\\bsdr\\b",
       "tagColor": "#00000000",
       "tagStyle": "filled",
       "textColor": "#00000000",
@@ -534,13 +365,5 @@
       "type": "filter"
     }
   ],
-  "groups": [
-    {
-      "borderColor": "#00000000",
-      "color": "#4ECDC4",
-      "id": "gl",
-      "isExpanded": true,
-      "name": "Language"
-    }
-  ]
+  "groups": []
 }
