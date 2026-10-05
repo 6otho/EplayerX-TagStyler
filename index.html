@@ -49,7 +49,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 .gc{flex:1}
 .gt{font-size:.88rem;font-weight:600;color:#ddd;margin-bottom:.25rem}
 .gd{font-size:.8rem;color:#888;line-height:1.5}
-.gd.sub{font-size:.7rem;color:#666;margin-top:.3rem}
 .abtn{padding:.5rem .9rem;background:#222;color:#fff;border:1px solid #333;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s}
 .abtn:hover{background:#333;border-color:#444}
 #guide .note{font-size:.7rem;color:#999;margin-bottom:.8rem;line-height:1.5}
@@ -78,12 +77,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 .modal-tip{font-size:.68rem;color:#888;line-height:1.4;margin-bottom:.8rem;background:#0a0a0a;padding:.6rem .8rem;border-radius:8px;border:1px solid #1a1a1a}
 .status-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.65rem;font-weight:600;margin-top:.3rem}
 .status-badge.connected{background:#142918;color:#4ade80;border:1px solid #22c55e}
-
-.conflict-item-card{background:#0a0a0a;border:1px solid #2a2a2a;border-radius:10px;padding:.8rem 1rem;margin-bottom:.8rem}
-.conflict-title{font-size:.75rem;font-weight:700;color:#fbbf24;margin-bottom:.5rem;display:flex;align-items:center;gap:6px}
-.conflict-option{display:flex;align-items:center;gap:8px;padding:.4rem .6rem;background:#141414;border:1px solid #222;border-radius:6px;margin-bottom:.35rem;cursor:pointer;font-size:.72rem}
-.conflict-option:hover{border-color:#444}
-.conflict-option input[type="radio"]{accent-color:#22c55e;cursor:pointer}
 </style></head><body>
 <div class="wrap">
 
@@ -105,14 +98,14 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
     <details class="modal-tip" style="margin-bottom:.9rem;background:#0d1810;border-color:#1e3a24" open>
       <summary style="font-size:.72rem;color:#4ade80;font-weight:700;cursor:pointer">📖 点击查看小白一键授权教程 (无需手动建库)</summary>
       <div style="font-size:.68rem;color:#aaa;line-height:1.55;margin-top:.6rem;padding-top:.5rem;border-top:1px solid #1a2e1f">
-        <p style="margin-bottom:.4rem"><b>1. 点击专属生成链接（全套读写权限已帮您预勾选好）：</b><br>
+        <p style="margin-bottom:.4rem"><b>1. 点击专属生成链接：</b><br>
            👉 <a href="https://github.com/settings/tokens/new?description=EplayerX-TagStyler&scopes=repo" target="_blank" style="color:#60a5fa;text-decoration:underline;font-weight:700">点击一键生成 GitHub Token</a>
         </p>
         <p style="margin-bottom:.4rem"><b>2. 复制密钥：</b><br>
-           打开页面后直接拉到最底部，点击 <i>Generate token</i>，复制生成的代码（以 <code>ghp_</code> 开头）。
+           打开页面后拉到底部点击 <i>Generate token</i>，复制生成的代码（<code>ghp_...</code>）。
         </p>
         <p style="margin-bottom:0"><b>3. 粘贴绑定：</b><br>
-           贴在下方输入框点击【验证并绑定】。<b>若您账号下没有仓库，系统会自动调用 API 帮您创建仓库并保存！</b>
+           贴在下方输入框点击【验证并绑定】。若账号下没有仓库，系统会自动调用 API 为您创建！
         </p>
       </div>
     </details>
@@ -136,52 +129,27 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
   </div>
 </div>
 
-<div class="modal-overlay" id="conflict-modal">
-  <div class="modal-card">
-    <div class="modal-header">
-      <div class="modal-title" style="color:#fbbf24">⚠️ 检测到重复徽章（请抉择保留项）</div>
-      <button class="modal-close" onclick="closeConflictModal()">✕</button>
-    </div>
-    
-    <div class="modal-tip">
-      💡 <b>任君选择</b>：检测到您勾选的徽章中存在同概念重复的情况，请为以下冲突点选您想保留的徽章版本：
-    </div>
-
-    <div id="conflict-list-container"></div>
-
-    <div style="display:flex;gap:.5rem;margin-top:1.2rem">
-      <button class="cbtn" style="flex:1;padding:.65rem" onclick="resolveConflictsAndSync()">解决冲突并继续提交同步</button>
-      <button class="abtn" style="color:#888" onclick="closeConflictModal()">取消</button>
-    </div>
-  </div>
-</div>
-
 <div class="sec"><h2>1. Icon Style (图标风格)</h2><div class="opts" data-g="icon">
 <div class="o on" data-v="colored">Colored (彩色彩色)</div>
 <div class="o" data-v="mono">Mono (单色黑白)</div>
 </div></div>
 
-<div class="sec"><h2>2. HDR Display (HDR 显示策略)</h2><div class="opts" data-g="hdr">
-<div class="o on" data-v="nodv">Only when no DV (无 DV 时才显示 HDR)</div>
-<div class="o" data-v="always">Always (总是显示 HDR)</div>
-</div></div>
-
-<div class="sec"><h2>3. Badge Spacing (徽章排列间距)</h2><div class="opts" data-g="gap">
+<div class="sec"><h2>2. Badge Spacing (徽章排列间距)</h2><div class="opts" data-g="gap">
 <div class="o" data-v="2px">Tight (极窄 2px)</div>
 <div class="o on" data-v="5px">Standard (标准 5px)</div>
 <div class="o" data-v="8px">Relaxed (宽松 8px)</div>
 <div class="o" data-v="12px">Wide (宽距 12px)</div>
 </div></div>
 
-<div class="sec"><h2>4. Description (描述栏排版)</h2><div class="opts" data-g="desc">
+<div class="sec"><h2>3. Description (描述栏排版)</h2><div class="opts" data-g="desc">
 <div class="o on" data-v="short">Service + Filename (服务商 + 文件名)</div>
 <div class="o" data-v="fn">Filename Only (仅显示文件名)</div>
 </div></div>
 
 <div class="sec">
-  <h2>5. Import Custom Badges JSON (导入自定义 JSON / 网址)</h2>
-  <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址（如 xperience-app 链接）或您的 JSON 代码，合并时会自动智能归类（以<span style="color:#c084fc">紫色高亮</span>区分）。</div>
-  <textarea id="custom-json-input" placeholder="输入或粘贴网址 (例如 https://xperience-app.com/badges/....json) 或 JSON 内容..." style="width:100%;height:75px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
+  <h2>4. Import Custom Badges JSON (导入自定义 JSON / 网址)</h2>
+  <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址或您的 JSON 代码，合并时会自动智能归类。</div>
+  <textarea id="custom-json-input" placeholder="输入或粘贴网址或 JSON 内容..." style="width:100%;height:75px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
   <div style="display:flex;gap:.4rem;margin-top:.45rem">
     <button class="abtn" onclick="loadCustomJson()">解析并分类归入下方面板</button>
     <button class="abtn" style="color:#f87171" onclick="clearCustomJson()">清空导入的自定义徽章</button>
@@ -190,14 +158,14 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 
 <div class="sec">
   <div style="display:flex;justify-content:space-between;align-items:center">
-    <h2>6. Badge Manager (全徽章分类勾选与管理面板)</h2>
+    <h2>5. Badge Manager (全徽章分类勾选与管理面板)</h2>
     <div style="display:flex;gap:.3rem">
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="toggleAllFilters(true)">全局全选</button>
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem" onclick="toggleAllFilters(false)">全局全不选</button>
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem;color:#60a5fa" onclick="resetDefaultFilters()">重置为默认</button>
     </div>
   </div>
-  <div class="sub" style="margin-bottom:.5rem">杜比 5 大音视频、DTS 4 大音效已完美隔离。<span style="color:#c084fc">紫色字</span>代表新导入徽章。</div>
+  <div class="sub" style="margin-bottom:.5rem">已按规范排序分类。点选可单独启用或关闭。</div>
   <div id="badge-manager-container"></div>
 </div>
 
@@ -219,19 +187,8 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 
 <h2 class="oph" style="margin-top:1.5rem">Setup</h2>
 
-<div id="aios-section">
 <div class="gs">
 <div class="gn">1</div>
-<div class="gc">
-<div class="gt">Formatter</div>
-<div class="gd">AIOStreams → Formatter → Custom → replace both fields → Save</div>
-<div style="display:flex;gap:.4rem;margin-top:.45rem"><button class="abtn" onclick="cc('on')">Copy Name</button><button class="abtn" onclick="cc('od')">Copy Description</button></div>
-<textarea id="on" style="display:none"></textarea><textarea id="od" style="display:none"></textarea>
-</div></div>
-</div>
-
-<div class="gs">
-<div class="gn">2</div>
 <div class="gc">
 <div class="gt">Fusion Filters</div>
 <div class="gd">Fusion → Settings → Filters → Import Filters → paste URL</div>
@@ -244,14 +201,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 <div class="toast" id="toast">Copied!</div>
 
 <script>
-const I_EPX='https://cdn.jsdelivr.net/gh/6otho/Epx-Badge@main/Badges/';
-
-function getBadgeUrl(img) {
-  if (!img) return '';
-  if (img.startsWith('http://') || img.startsWith('https://')) return img;
-  return I_EPX + img;
-}
-
 function getDefaultOwner() {
   if (window.location.hostname.endsWith('.github.io')) {
     return window.location.hostname.replace('.github.io', '');
@@ -264,239 +213,501 @@ function getCleanToken() {
   return token.replace(/["'\s]/g, '').trim();
 }
 
-let C={icon:'colored',hdr:'nodv',gap:'5px',desc:'short'};
+let C = { icon: 'colored', gap: '5px', desc: 'short' };
 
-// 【已更新】：7.1 与 5.1 默认路径更新为 7.1-d.svg 和 5.1-d.svg
+// 完整同步你指定的 29 个徽章体系
 const SYSTEM_FILTERS = [
-  { id: 's-uhdbd', name: 'Ultra HD Blu-ray', pattern: '(?i)\\b(uhd|ultra[\\s._-]?hd)[\\s._-]*(blu[\\s._-]?ray|bluray|bd)\\b', imageURL: 'u-hd-blu-ray.svg', gid: 'gs', groupName: 'Source (来源)' },
-  { id: 's-bluray', name: 'Blu-ray Disc', pattern: '(?i)\\b(blu[\\s._-]?ray|bluray|bdrip|bdremux)\\b(?!.*(uhd|ultra[\\s._-]?hd))', imageURL: 'blu-raydisc.svg', gid: 'gs', groupName: 'Source (来源)' },
-  { id: 's-hdtv', name: 'HDTV', pattern: '(?i)\\bhdtv\\b', imageURL: 'hdtv.svg', gid: 'gs', groupName: 'Source (来源)' },
-  { id: 's-dvd', name: 'DVD RIP', pattern: '(?i)\\b(dvd[\\s._-]?rip|dvdrip)\\b', imageURL: 'dvd.svg', gid: 'gs', groupName: 'Source (来源)' },
-  { id: 'r4', name: '4K Ultra HD', pattern: '(?i)^(?!.*\\b(?:1080[pi]?|720[pi]?)\\b).*?(?:\\b2160[pi]?\\b|\\b4k\\b|\\buhd\\b)', imageURL: '4Kx-1.svg', gid: 'gr', groupName: 'Resolution (分辨率)' },
-  { id: 'r1', name: '1080p Full HD', pattern: '(?i)\\b1080[pi]?\\b', imageURL: '1080p-a.svg', gid: 'gr', groupName: 'Resolution (分辨率)' },
-  { id: 'r7', name: '720p HD', pattern: '(?i)\\b720[pi]?\\b', imageURL: '720p-b.svg', gid: 'gr', groupName: 'Resolution (分辨率)' },
-  { id: 'h+', name: 'HDR10+', pattern: '(?=.*(?i)hdr\\s*10\\s*(?:\\+|plus|p))', imageURL: 'hdr10p-xx.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
-  { id: 'h1', name: 'HDR10', pattern: '(?=.*(?i)hdr\\s*10)(?!.*(?i)hdr\\s*10\\s*(?:\\+|plus|p))', imageURL: 'hdr10-x.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
-  { id: 'hh', name: 'HDR', pattern: '(?=.*(?i)\\bHDR\\b)(?!.*(?i)hdr\\s*10)', imageURL: 'hdr-x.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
-  { id: 'v-imax-e', name: 'IMAX Enhanced', pattern: '(?i)\\bimax[\\s._-]?enhanced\\b', imageURL: 'imax-e.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
-  { id: 'v-imax', name: 'IMAX', pattern: '(?i)^(?=.*\\bIMAX\\b)(?!.*enhanced)', imageURL: 'imax.svg', gid: 'gv', groupName: 'Visual & Codecs (画质编码)' },
-  { id: 'a-dv', name: 'Dolby Vision', pattern: '(?i)\\b(?:dv|dovi|dolby[\\s._-]?vision)\\b', imageURL: 'dolby-vision-x.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
-  { id: 'a-at', name: 'Dolby Atmos', pattern: '(?i)\\batmos\\b', imageURL: 'dolby-atmos-x.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
-  { id: 'a-th', name: 'TrueHD', pattern: '(?i)^(?=.*true[\\s._-]?hd)(?!.*atmos)', imageURL: 'true-hd-1.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
-  { id: 'a-dp', name: 'Dolby Digital Plus', pattern: '(?i)^(?=.*(?:dd[p+]|e[\\s._-]?ac[\\s._-]?3))(?!.*atmos)(?!.*true[\\s._-]?hd)', imageURL: 'dolby-digitalplus-x.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
-  { id: 'a-dd', name: 'Dolby Digital', pattern: '(?i)^(?=.*(?:dd[^p+a-z]|(?<!e-)ac-?3))(?!.*(?:dd[p+]|e[\\s._-]?ac[\\s._-]?3))(?!.*true[\\s._-]?hd)(?!.*atmos)', imageURL: 'dolby-digital-x.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
-  { id: 'd-x', name: 'DTS:X', pattern: '(?i)\\bdts[-_.: ]?x\\b', imageURL: 'dts-x.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
-  { id: 'd-ma', name: 'DTS-HD MA', pattern: '(?i)^(?=.*\\bdts[-_. ]?(?:hd[-_. ]?)?ma\\b)(?!.*\\bdts[-_.: ]?x\\b)', imageURL: 'dts-hd-ma.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
-  { id: 'd-hd', name: 'DTS-HD', pattern: '(?i)^(?=.*\\bdts[-_. ]?hd\\b)(?!.*\\bdts[-_. ]?(?:hd[-_. ]?)?ma\\b)(?!.*\\bdts[-_.: ]?x\\b)', imageURL: 'dts-hd.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
-  { id: 'd-d', name: 'DTS', pattern: '(?=.*(?i)\\bDTS\\b)(?!.*(?i)dts[-_. ]?(?:hd|ma|xll|x))', imageURL: 'dts.svg', gid: 'ga', groupName: 'Audio & Tech (音视频)' },
-  { id: 'c7', name: '7.1 Audio', pattern: '[^0-9][7-8][ .][0-1](?![0-9])', imageURL: '7.1-d.svg', gid: 'gc', groupName: 'Channels (声道)' },
-  { id: 'c5', name: '5.1 Audio', pattern: '^(?=.*[^0-9]5[. ][01](?![0-9]))(?!.*[^0-9][7-8][ .][0-1](?![0-9]))', imageURL: '5.1-d.svg', gid: 'gc', groupName: 'Channels (声道)' },
-  { id: 'l-en', name: '🇬🇧 English', pattern: '(?i)\\benglish\\b|\\beng\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
-  { id: 'l-es', name: '🇪🇸 Spanish', pattern: '(?i)\\bspanish\\b|\\bspa\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
-  { id: 'l-fr', name: '🇫🇷 French', pattern: '(?i)\\bfrench\\b|\\bfra\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
-  { id: 'l-de', name: '🇩🇪 German', pattern: '(?i)\\bgerman\\b|\\bdeu\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
-  { id: 'l-it', name: '🇮🇹 Italian', pattern: '(?i)\\bitalian\\b|\\bita\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
-  { id: 'l-pt', name: '🇧🇷 Portuguese', pattern: '(?i)\\bportuguese\\b|\\bpor\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
-  { id: 'l-ja', name: '🇯🇵 Japanese', pattern: '(?i)\\bjapanese\\b|\\bjpn\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
-  { id: 'l-ko', name: '🇰🇷 Korean', pattern: '(?i)\\bkorean\\b|\\bkor\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
-  { id: 'l-zh', name: '🇨🇳 Chinese', pattern: '(?i)\\bchinese\\b|\\bchi\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
-  { id: 'l-hi', name: '🇮🇳 Hindi', pattern: '(?i)\\bhindi\\b|\\bhin\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
-  { id: 'l-ar', name: '🇸🇦 Arabic', pattern: '(?i)\\barabic\\b|\\bara\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
-  { id: 'l-ru', name: '🇷🇺 Russian', pattern: '(?i)\\brussian\\b|\\brus\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' },
-  { id: 'l-mu', name: '🌐 Multi Audio', pattern: '(?i)\\bmulti\\b|\\bdual[\\s._-]?audio\\b', imageURL: '', gid: 'gl', groupName: 'Language (语言)' }
+  {
+    id: "4k-ultra-hd",
+    groupId: "resolution",
+    name: "4K Ultra HD",
+    pattern: "(?i)\\b(4k|2160p|uhd|ultra\\s*hd)\\b",
+    imageURL: "https://raw.githubusercontent.com/6otho/Epx-Badge/refs/heads/main/Badges/4Kx-1.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Resolution"
+  },
+  {
+    id: "1080p-full-hd",
+    groupId: "resolution",
+    name: "1080p Full HD",
+    pattern: "(?i)\\b1080[pi]?\\b",
+    imageURL: "https://raw.githubusercontent.com/6otho/Epx-Badge/refs/heads/main/Badges/1080p-a.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Resolution"
+  },
+  {
+    id: "720p-hd",
+    groupId: "resolution",
+    name: "720p HD",
+    pattern: "(?i)\\b720[pi]?\\b",
+    imageURL: "https://raw.githubusercontent.com/6otho/Epx-Badge/refs/heads/main/Badges/720p-b.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Resolution"
+  },
+  {
+    id: "480p-sd",
+    groupId: "resolution",
+    name: "480p SD",
+    pattern: "(?i)\\b480p\\b",
+    imageURL: "https://raw.githubusercontent.com/6otho/Epx-Badge/refs/heads/main/Badges/480p-b.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Resolution"
+  },
+  {
+    id: "blu-ray-disc",
+    groupId: "source",
+    name: "Blu-ray Disc",
+    pattern: "(?i)\\b(blu[\\s._-]?ray|bluray|bdrip|bdremux)\\b",
+    imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/blu-raydisc.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Source"
+  },
+  {
+    id: "ultrahd-blu-ray",
+    groupId: "source",
+    name: "Ultra HD Blu-ray",
+    pattern: "(?i)\\b(uhd|ultra[\\s._-]?hd)[\\s._-]*(blu[\\s._-]?ray|bluray|bd)\\b",
+    imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/u-hd-blu-ray.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Source"
+  },
+  {
+    id: "hdtv",
+    groupId: "source",
+    name: "HDTV",
+    pattern: "(?i)\\bhdtv\\b",
+    imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/hdtv.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Source"
+  },
+  {
+    id: "dvd-rip",
+    groupId: "source",
+    name: "DVD RIP",
+    pattern: "(?i)\\b(dvd[\\s._-]?rip|dvdrip)\\b",
+    imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/dvd.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Source"
+  },
+  {
+    id: "dolby-vision",
+    groupId: "video-tech",
+    name: "Dolby Vision",
+    pattern: "(?is)^(?!.*(?:profile[\\s:_ -]*0?[5-8]|p[.\\s_-]?0?[5-8]|dvhe\\.0?[5-8]|dvh1\\.0?[5-8]|dvp0?[5-8]|dbvp0?[5-8])).*?(dolby[\\s._-]*vision|dovi|dv|dbv)",
+    imageURL: "https://github.com/l3okuGmail/badges/raw/refs/heads/main/icons/DBV-a.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Video Tech"
+  },
+  {
+    id: "hdr10-plus",
+    groupId: "video-tech",
+    name: "HDR10+",
+    pattern: "(?i)\\b(hdr10\\+|hdr10\\s*plus\\b|hdr\\s*10\\s*\\+)",
+    imageURL: "https://github.com/l3okuGmail/badges/raw/refs/heads/main/icons/hdr10p-c.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Video Tech"
+  },
+  {
+    id: "hdr10",
+    groupId: "video-tech",
+    name: "HDR10",
+    pattern: "(?i)\\b(hdr10|hdr\\s*10)\\b(?!\\s*\\+|\\s*plus)",
+    imageURL: "https://github.com/l3okuGmail/badges/raw/refs/heads/main/icons/hdr10-c.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Video Tech"
+  },
+  {
+    id: "hdr",
+    groupId: "video-tech",
+    name: "HDR",
+    pattern: "(?i)\\bhdr\\b",
+    imageURL: "https://github.com/l3okuGmail/badges/raw/refs/heads/main/icons/hdr-c.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Video Tech"
+  },
+  {
+    id: "sdr",
+    groupId: "video-tech",
+    name: "SDR",
+    pattern: "(?i)\\bsdr\\b",
+    imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/sdr-a.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Video Tech"
+  },
+  {
+    id: "imax-enhanced",
+    groupId: "video-tech",
+    name: "IMAX Enhanced",
+    pattern: "(?i)\\b(imax[\\s._-]*enhanced)\\b",
+    imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/imax-e.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Video Tech"
+  },
+  {
+    id: "imax",
+    groupId: "video-tech",
+    name: "IMAX",
+    pattern: "(?i)\\b(imax)\\b(?![\\s._-]*enhanced)",
+    imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/imax.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Video Tech"
+  },
+  {
+    id: "hevc",
+    groupId: "video-codec",
+    name: "HEVC",
+    pattern: "(?i)\\b(hevc|h[\\s._-]?265|x265)\\b",
+    imageURL: "https://raw.githubusercontent.com/6otho/Epx-Badge/main/Badges/hevc-1.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: false,
+    type: "filter",
+    groupName: "Video Codec"
+  },
+  {
+    id: "avc",
+    groupId: "video-codec",
+    name: "AVC",
+    pattern: "(?i)\\b(avc|h[\\s._-]?264|x264)\\b",
+    imageURL: "https://raw.githubusercontent.com/6otho/Epx-Badge/main/Badges/avc-1.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: false,
+    type: "filter",
+    groupName: "Video Codec"
+  },
+  {
+    id: "dolby-atmos",
+    groupId: "audio-tech",
+    name: "Dolby Atmos",
+    pattern: "(?i)\\b(dolby\\s*atmos|atmos)\\b",
+    imageURL: "https://github.com/l3okuGmail/badges/raw/refs/heads/main/icons/DBA-b.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Audio Tech"
+  },
+  {
+    id: "truehd",
+    groupId: "audio-tech",
+    name: "TrueHD",
+    pattern: "(?i)\\b(truehd|true\\s*hd|dolby\\s*truehd)\\b",
+    imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/true-hd-1.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Audio Tech"
+  },
+  {
+    id: "dolby-digital-plus",
+    groupId: "audio-tech",
+    name: "Dolby Digital Plus",
+    pattern: "(?i)\\b(ddp[\\s._-]*[0-9][\\s._-]*[0-9]|ddp|dd\\+|dolby[\\s._-]*digital[\\s._-]*plus|e-?ac-?3)(?![a-z])",
+    imageURL: "https://github.com/l3okuGmail/badges/raw/refs/heads/main/icons/DBDP-b.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Audio Tech"
+  },
+  {
+    id: "dolby-digital",
+    groupId: "audio-tech",
+    name: "Dolby Digital",
+    pattern: "(?i)\\b(dd[\\s._-]*[0-9][\\s._-]*[0-9]|dd|dolby[\\s._-]*digital|ac-?3)(?![\\s._-]*plus|\\+|p|[a-z])",
+    imageURL: "https://github.com/l3okuGmail/badges/raw/refs/heads/main/icons/DBD-b.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Audio Tech"
+  },
+  {
+    id: "dts-x",
+    groupId: "audio-tech",
+    name: "DTS:X",
+    pattern: "(?i)\\b(dts[:\\s._-]*x)\\b",
+    imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/dts-x.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Audio Tech"
+  },
+  {
+    id: "dts-hd-master-audio",
+    groupId: "audio-tech",
+    name: "DTS-HD Master Audio",
+    pattern: "(?i)\\b(dts[\\s._-]*hd[\\s._-]*ma|dtshd\\s*ma|dts[\\s._-]*hd[\\s._-]*master)\\b",
+    imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/dts-hd-ma.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Audio Tech"
+  },
+  {
+    id: "dts-hd",
+    groupId: "audio-tech",
+    name: "DTS-HD",
+    pattern: "(?i)\\b(dts[\\s._-]*hd|dtshd)(?![\\s._-]*(ma|master)|ma)\\b",
+    imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/dts-hd.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Audio Tech"
+  },
+  {
+    id: "dts",
+    groupId: "audio-tech",
+    name: "DTS",
+    pattern: "(?i)\\bdts\\b(?![\\s._:-]*(x|hd))",
+    imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/dts.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Audio Tech"
+  },
+  {
+    id: "custom_dolby-vision-p5",
+    groupId: "dv-profile",
+    name: "Dolby Vision P5",
+    pattern: "(?i)(?:profile|p)[\\s:_ -]*0?5(?:\\.0)?|(?:dvhe|dvh1|dva1|dvav)\\.0?5(?:\\.0)?|(?:dovi|dv|dbv|dolby[\\s._-]*vision)[.\\s_-]*(?:p(?:rofile)?[.\\s_-]?0?5|0?5)(?:\\.0)?|(?:dbv|dv|dovi)p0?5",
+    imageURL: "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/DV-P5x.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Profile"
+  },
+  {
+    id: "custom_dolby-vision-p7",
+    groupId: "dv-profile",
+    name: "Dolby Vision P7",
+    pattern: "(?i)(?:profile|p)[\\s:_ -]*0?7(?:\\.0|\\.6)?|(?:dvhe|dvh1|dva1|dvav)\\.0?7|(?:dovi|dv|dbv|dolby[\\s._-]*vision)[.\\s_-]*(?:p(?:rofile)?[.\\s_-]?0?7|0?7)|(?:dbv|dv|dovi)p0?7",
+    imageURL: "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/DV-P7x.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Profile"
+  },
+  {
+    id: "custom_dolby-vision-p8",
+    groupId: "dv-profile",
+    name: "Dolby Vision P8",
+    pattern: "(?i)(?:profile|p)[\\s:_ -]*0?8(?:\\.1|\\.4|\\.0)?|(?:dvhe|dvh1|dva1|dvav)\\.0?8|(?:dovi|dv|dbv|dolby[\\s._-]*vision)[.\\s_-]*(?:p(?:rofile)?[.\\s_-]?0?8|0?8)|(?:dbv|dv|dovi)p0?8",
+    imageURL: "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/DV-P8x.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Profile"
+  },
+  {
+    id: "10bit",
+    groupId: "bit-depth",
+    name: "10Bit",
+    pattern: "(?i)\\b(10[\\s._-]?bit|10b|hi10p)\\b",
+    imageURL: "https://raw.githubusercontent.com/6otho/Epx-Badge/main/Badges/10bit.png",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Bit Depth"
+  },
+  {
+    id: "8bit",
+    groupId: "bit-depth",
+    name: "8Bit",
+    pattern: "(?i)\\b(8[\\s._-]?bit|8b)\\b",
+    imageURL: "https://raw.githubusercontent.com/6otho/Epx-Badge/main/Badges/8bit.png",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Bit Depth"
+  },
+  {
+    id: "71-audio",
+    groupId: "audio-channels",
+    name: "7.1 Audio",
+    pattern: "(?i)\\b(7\\.1|7-1|8ch|8\\s*channel)\\b",
+    imageURL: "https://github.com/l3okuGmail/badges/raw/refs/heads/main/icons/7.1-d.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Audio Channels"
+  },
+  {
+    id: "51-audio",
+    groupId: "audio-channels",
+    name: "5.1 Audio",
+    pattern: "(?i)\\b(5\\.1|5-1|6ch|6\\s*channel)\\b",
+    imageURL: "https://github.com/l3okuGmail/badges/raw/refs/heads/main/icons/5.1-e.svg",
+    tagColor: "#00000000",
+    borderColor: "#00000000",
+    textColor: "#00000000",
+    tagStyle: "filled and bordered",
+    isEnabled: true,
+    type: "filter",
+    groupName: "Audio Channels"
+  }
 ];
 
-let activeFilterIds = new Set(SYSTEM_FILTERS.map(function (f) { return f.id; }));
+let activeFilterIds = new Set(SYSTEM_FILTERS.filter(f => f.isEnabled).map(f => f.id));
 let customFilters = [];
 
-const ST = {
-  res: { bc: '#FF858283', bg: '#33FFFFFF', tc: '#FFFFFF' },
-  tr: { bc: '#00000000', bg: '#00000000', tc: '#FFFFFF' },
-  dim: { bc: '#00000000', bg: '#00000000', tc: '#80FFFFFF' },
-};
-
-const STREAMS = [
-  { qual: 'Bluray Remux', title: 'Avatar Fire and Ash (2025)', size: '76 GB', fn: 'Avatar.Fire.and.Ash.2025.2160p.BluRay.REMUX.IMAX.DV.TrueHD.7.1.Atmos-FraMeSToR.mkv', pct: 99, res: '4K', hdr: null, dv: true, aud: 'atmos', ch: '7.1', src: 'remux', q: 'best', tier: 't1', imax: 'IMAX', seadex: false },
-  { qual: 'Bluray', title: 'Avatar Fire and Ash (2025)', size: '18 GB', fn: 'Avatar.Fire.and.Ash.2025.2160p.BluRay.x265.HDR10.DTS-X.7.1-CtrlHD.mkv', pct: 90, res: '4K', hdr: 'HDR10', dv: false, aud: 'dtsx', ch: '7.1', src: 'bluray', q: 'good', tier: 't1', imax: null, seadex: false },
-  { qual: 'Bluray', title: 'Demon Slayer S01\xb7E01', size: '4 GB', fn: 'Demon.Slayer.2019.1080p.BluRay.DV.DDP5.1.Atmos-hallowed.mkv', pct: 80, res: '1080p', hdr: null, dv: true, aud: 'atmos', ch: '5.1', src: 'bluray', q: 'good', tier: 't2', imax: null, seadex: true },
-  { qual: 'Web-Dl', title: 'Avatar Fire and Ash (2025)', size: '2 GB', fn: 'Avatar.Fire.and.Ash.2025.720p.WEB-DL.DD5.1.DV-RandomGrp.mkv', pct: 50, res: '720p', hdr: null, dv: true, aud: 'dd', ch: '5.1', src: 'webdl', q: 'ok', tier: 't3', imax: null, seadex: false },
+const PREFERRED_GROUP_ORDER = [
+  'Resolution',
+  'Source',
+  'Video Tech',
+  'Video Codec',
+  'Audio Tech',
+  'Profile',
+  'Bit Depth',
+  'Audio Channels',
+  'Other Custom Badges'
 ];
 
-function getFilterConcept(f) {
-  const id = (f.id || '').toLowerCase();
-  const name = (f.name || '').toLowerCase();
-  let pat = (f.pattern || '').toLowerCase();
-  
-  pat = pat.replace(/\(\?!.*?\)/g, '');
-  const str = id + ' ' + name + ' ' + pat;
+const ALL_SYSTEM_GROUPS = [
+  { id: "resolution", name: "Resolution", color: "#00000000", borderColor: "#00000000", isExpanded: true },
+  { id: "source", name: "Source", color: "#00000000", borderColor: "#00000000", isExpanded: true },
+  { id: "video-tech", name: "Video Tech", color: "#00000000", borderColor: "#00000000", isExpanded: true },
+  { id: "video-codec", name: "Video Codec", color: "#00000000", borderColor: "#00000000", isExpanded: true },
+  { id: "audio-tech", name: "Audio Tech", color: "#00000000", borderColor: "#00000000", isExpanded: true },
+  { id: "dv-profile", name: "Profile", color: "#00000000", borderColor: "#00000000", isExpanded: true },
+  { id: "bit-depth", name: "Bit Depth", color: "#00000000", borderColor: "#00000000", isExpanded: true },
+  { id: "audio-channels", name: "Audio Channels", color: "#00000000", borderColor: "#00000000", isExpanded: true }
+];
 
-  if (id === 'a-dv' || id === 'dolby-vision') return 'concept_dv';
-  if (id === 'a-at' || id === 'dolby-atmos') return 'concept_atmos';
-  if (id === 'a-th' || id === 'truehd') return 'concept_truehd';
-  if (id === 'a-dp' || id === 'dolby-digital-plus') return 'concept_ddp';
-  if (id === 'a-dd' || id === 'dolby-digital') return 'concept_dd';
-  if (id === 'd-x' || id === 'dts-x') return 'concept_dtsx';
-  if (id === 'd-ma' || id === 'dts-hd-master-audio') return 'concept_dtsma';
-  if (id === 'd-hd' || id === 'dts-hd') return 'concept_dtshd';
-  if (id === 'd-d' || id === 'dts') return 'concept_dts';
-  if (id === 'r4' || id === '4k-ultra-hd') return 'concept_4k';
-  if (id === 'r1' || id === '1080p-full-hd') return 'concept_1080p';
-  if (id === 'r7' || id === '720p-hd') return 'concept_720p';
-
-  if (/\b(dv|dovi)\b|vision/.test(str)) return 'concept_dv';
-  if (/\batmos\b/.test(name) || /\batmos\b/.test(pat)) return 'concept_atmos';
-  if (/true[\s._-]?hd/.test(name) || /true[\s._-]?hd/.test(pat)) return 'concept_truehd';
-  if (/ddp|\bdd\+|e-?ac-?3|digital[\s._-]?plus|digital\+/.test(str)) return 'concept_ddp';
-  if (/ac-?3|dolby[\s._-]?digital|\bdd\b/.test(str)) return 'concept_dd';
-
-  if (/dts[-_.: ]?x/.test(str)) return 'concept_dtsx';
-  if (/dts[-_. ]?(hd[-_. ]?)?ma|dtshd[\s._-]?ma|master/.test(str)) return 'concept_dtsma';
-  if (/dts[-_. ]?hd|dtshd/.test(str)) return 'concept_dtshd';
-  if (/\bdts\b/.test(str)) return 'concept_dts';
-
-  if (/hdr[\s._-]?10[\s._-]?(\+|plus)/.test(str)) return 'concept_hdr10p';
-  if (/hdr[\s._-]?10/.test(str)) return 'concept_hdr10';
-  if (/\bhdr\b/.test(str)) return 'concept_hdr';
-
-  if (/(uhd|ultra[\s._-]?hd)[\s._-]*(blu|bluray|bd)/.test(str)) return 'concept_uhdbd';
-  if (/(blu[\s._-]?ray|bluray|bdrip|bdremux)/.test(str)) return 'concept_bluray';
-  if (/hdtv/.test(str)) return 'concept_hdtv';
-  if (/dvd/.test(str)) return 'concept_dvd';
-
-  if (/(4k|2160|uhd|3840)/.test(str) && !/(blu-ray|bluray|bd)/.test(name)) return 'concept_4k';
-  if (/(1080|fhd|1920)/.test(str)) return 'concept_1080p';
-  if (/(720|1280)/.test(str)) return 'concept_720p';
-  if (/(480|sd)/.test(str)) return 'concept_480p';
-
-  if (/\b(7[\.\-]1|8ch)\b/.test(str) || id === 'c7') return 'concept_71';
-  if (/\b(5[\.\-]1|6ch)\b/.test(str) || id === 'c5') return 'concept_51';
-
-  if (/10bit|10b|hi10p/.test(str)) return 'concept_10bit';
-  if (/8bit|8b/.test(str)) return 'concept_8bit';
-  if (/hevc|h265|x265/.test(str)) return 'concept_hevc';
-  if (/avc|h264|x264/.test(str)) return 'concept_avc';
-  if (/imax[\s._-]?enhanced/.test(str)) return 'concept_imax_e';
-  if (/imax/.test(str)) return 'concept_imax';
-
-  return 'concept_custom_' + (id || name);
-}
-
-function getCategoryNameForFilter(f) {
-  const concept = getFilterConcept(f);
-  
-  if (concept === 'concept_4k' || concept === 'concept_1080p' || concept === 'concept_720p' || concept === 'concept_480p') {
-    return 'Resolution (分辨率)';
-  }
-  if (concept === 'concept_uhdbd' || concept === 'concept_bluray' || concept === 'concept_hdtv' || concept === 'concept_dvd') {
-    return 'Source (来源)';
-  }
-  if (concept === 'concept_dv' || concept === 'concept_atmos' || concept === 'concept_truehd' || concept === 'concept_ddp' || concept === 'concept_dd' || concept.startsWith('concept_dts')) {
-    return 'Audio & Tech (音视频)';
-  }
-  if (concept === 'concept_71' || concept === 'concept_51') {
-    return 'Channels (声道)';
-  }
-  if (concept === 'concept_10bit' || concept === 'concept_8bit' || concept === 'concept_hevc' || concept === 'concept_avc' || concept.startsWith('concept_imax') || concept.startsWith('concept_hdr')) {
-    return 'Visual & Codecs (画质编码)';
-  }
-  if (f.id && f.id.startsWith('l-')) {
-    return 'Language (语言)';
-  }
-  
-  return 'Other Custom Badges (其他自定义徽章)';
-}
-
-function getConceptDisplayName(concept) {
-  const map = {
-    'concept_4k': '4K 超高清分辨率徽章',
-    'concept_1080p': '1080p 全高清分辨率徽章',
-    'concept_720p': '720p 高清分辨率徽章',
-    'concept_480p': '480p 标清分辨率徽章',
-    'concept_uhdbd': 'UHD 4K 蓝光原盘来源',
-    'concept_bluray': 'Blu-ray 蓝光来源',
-    'concept_hdtv': 'HDTV 来源',
-    'concept_dvd': 'DVD 来源',
-    'concept_dv': 'Dolby Vision 杜比视界画质',
-    'concept_atmos': 'Dolby Atmos 杜比全景声',
-    'concept_truehd': 'Dolby TrueHD 音频',
-    'concept_ddp': 'Dolby Digital Plus (DDP / DD+) 音频',
-    'concept_dd': 'Dolby Digital (DD / AC3) 音频',
-    'concept_dtsx': 'DTS:X 音频',
-    'concept_dtsma': 'DTS-HD MA 音频',
-    'concept_dtshd': 'DTS-HD 音频',
-    'concept_dts': 'DTS 音频',
-    'concept_hdr10p': 'HDR10+ 高动态范围',
-    'concept_hdr10': 'HDR10 高动态范围',
-    'concept_hdr': 'HDR 高动态范围',
-    'concept_71': '7.1 环绕声道',
-    'concept_51': '5.1 环绕声道'
-  };
-  return map[concept] || '重复技术概念徽章';
-}
-
-function getDeduplicatedFilters() {
-  const map = new Map();
-
-  SYSTEM_FILTERS.forEach(function (f) {
-    const concept = getFilterConcept(f);
-    map.set(concept, Object.assign({}, f, { concept: concept }));
-  });
-
-  customFilters.forEach(function (cf) {
-    const concept = getFilterConcept(cf);
-    const existing = map.get(concept);
-
-    if (existing) {
-      map.set(concept, Object.assign({}, existing, cf, {
-        id: cf.id || existing.id,
-        name: cf.name || existing.name,
-        imageURL: cf.imageURL || existing.imageURL,
-        pattern: cf.pattern || existing.pattern,
-        concept: concept
-      }));
-    } else {
-      map.set(concept, Object.assign({}, cf, { concept: concept }));
-    }
-  });
-
-  return Array.from(map.values());
-}
-
-function rgba(c) {
-  if (!c || typeof c !== 'string') return 'transparent';
-  let hex = c.trim();
-  if (hex.startsWith('#')) hex = hex.slice(1);
-  if (hex.length === 6) {
-    const r = parseInt(hex.slice(0, 2), 16) || 0;
-    const g = parseInt(hex.slice(2, 4), 16) || 0;
-    const b = parseInt(hex.slice(4, 6), 16) || 0;
-    return 'rgb(' + r + ',' + g + ',' + b + ')';
-  }
-  if (hex.length === 8) {
-    const a = (parseInt(hex.slice(0, 2), 16) || 0) / 255;
-    const r = parseInt(hex.slice(2, 4), 16) || 0;
-    const g = parseInt(hex.slice(4, 6), 16) || 0;
-    const b = parseInt(hex.slice(6, 8), 16) || 0;
-    return 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(2) + ')';
-  }
-  return 'transparent';
-}
-
-function thtml(label, img, st, lg) {
-  const s = 'border-color:' + rgba(st.bc) + ';background:' + rgba(st.bg) + ';color:' + rgba(st.tc);
-  const cls = 'tg' + (lg ? ' lg' : '');
-  if (img) return '<span class="' + cls + '" style="' + s + '"><img src="' + getBadgeUrl(img) + '"></span>';
-  return '<span class="' + cls + '" style="' + s + '">' + label + '</span>';
-}
-
-function fmtName(s) { return s.qual; }
+const STREAMS = [
+  { qual: 'Bluray Remux', title: 'Avatar Fire and Ash (2025)', size: '76 GB', fn: 'Avatar.Fire.and.Ash.2025.2160p.BluRay.REMUX.IMAX.DV.P8.TrueHD.7.1.Atmos-FraMeSToR.mkv' },
+  { qual: 'Bluray', title: 'Demon Slayer', size: '18 GB', fn: 'Demon.Slayer.2024.1080p.BluRay.x265.HDR10.DTS-X.7.1-CtrlHD.mkv' },
+  { qual: 'Web-Dl', title: 'Cyberpunk Edgerunners', size: '4 GB', fn: 'Cyberpunk.Edgerunners.S01E01.1080p.NF.WEB-DL.DoVi.P5.DDP5.1.Atmos.mkv' },
+  { qual: 'Web-Dl', title: 'Sample Show', size: '2 GB', fn: 'Sample.Show.720p.HDTV.DD5.1.mkv' }
+];
 
 function matchFilterPattern(pattern, text) {
   if (!pattern || !text) return false;
   try {
     let pat = pattern;
-    if (pat.startsWith('(?i)')) pat = pat.slice(4);
-    return new RegExp(pat, 'i').test(text);
+    let flags = 'i';
+    if (pat.startsWith('(?is)')) { pat = pat.slice(5); flags = 'is'; }
+    else if (pat.startsWith('(?i)')) { pat = pat.slice(4); }
+    return new RegExp(pat, flags).test(text);
   } catch (e) {
     return false;
   }
@@ -509,20 +720,15 @@ function utf8ToBase64(str) {
 }
 
 function openSettingsModal() {
-  const token = getCleanToken();
+  document.getElementById('gh-token-input').value = getCleanToken();
+  document.getElementById('gh-reponame-input').value = localStorage.getItem('epx_gh_reponame') || 'EplayerX-TagStyler';
   const username = localStorage.getItem('epx_gh_username') || '';
-  const repoName = localStorage.getItem('epx_gh_reponame') || 'EplayerX-TagStyler';
-
-  document.getElementById('gh-token-input').value = token;
-  document.getElementById('gh-reponame-input').value = repoName;
-
   const statusBox = document.getElementById('gh-user-status-box');
   if (username) {
-    statusBox.innerHTML = '<span class="status-badge connected">已连接用户: ' + username + ' (' + username + '/' + repoName + ')</span>';
+    statusBox.innerHTML = '<span class="status-badge connected">已连接: ' + username + '</span>';
   } else {
     statusBox.innerHTML = '';
   }
-
   document.getElementById('settings-modal').classList.add('open');
 }
 
@@ -530,190 +736,50 @@ function closeSettingsModal() {
   document.getElementById('settings-modal').classList.remove('open');
 }
 
-function closeConflictModal() {
-  document.getElementById('conflict-modal').classList.remove('open');
-}
-
 async function verifyAndSaveToken() {
   const cleanToken = getCleanToken();
   const repoName = document.getElementById('gh-reponame-input').value.trim() || 'EplayerX-TagStyler';
-
-  if (!cleanToken) {
-    alert('请先输入您的 GitHub Token！');
-    return;
-  }
-
+  if (!cleanToken) { alert('请先输入 GitHub Token！'); return; }
   showToast('⏳ 正在通过 GitHub API 验证身份...');
-
   try {
     const res = await fetch('https://api.github.com/user', {
-      headers: {
-        'Authorization': 'Bearer ' + cleanToken,
-        'Accept': 'application/vnd.github.v3+json'
-      }
+      headers: { 'Authorization': 'Bearer ' + cleanToken, 'Accept': 'application/vnd.github.v3+json' }
     });
-
-    if (!res.ok) {
-      const errData = await res.json().catch(function() { return {}; });
-      throw new Error('Token 验证失败 (' + (errData.message || res.status) + ')，请确认已复制完整的 ghp_ 或 github_pat_ 密钥');
-    }
-
+    if (!res.ok) throw new Error('Token 验证失败，请确认密钥正确且具备 repo 权限');
     const userData = await res.json();
     const username = userData.login;
-    const fullRepo = username + '/' + repoName;
-
     localStorage.setItem('epx_gh_token', cleanToken);
     localStorage.setItem('epx_gh_username', username);
     localStorage.setItem('epx_gh_reponame', repoName);
-    localStorage.setItem('epx_gh_repo', fullRepo);
-
     closeSettingsModal();
     upd();
-    showToast('🎉 验证成功！已绑定用户: ' + username + ' (' + fullRepo + ')');
+    showToast('🎉 验证成功！已绑定用户: ' + username);
   } catch (err) {
-    alert('验证失败：' + err.message);
+    alert(err.message);
   }
 }
 
 async function ensureRepoExists(token, username, repoName) {
   const fullRepo = username + '/' + repoName;
-  const cleanToken = token.replace(/["'\s]/g, '').trim();
-
-  const checkRes = await fetch('https://api.github.com/repos/' + fullRepo, {
-    headers: {
-      'Authorization': 'Bearer ' + cleanToken,
-      'Accept': 'application/vnd.github.v3+json'
-    }
+  const res = await fetch('https://api.github.com/repos/' + fullRepo, {
+    headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github.v3+json' }
   });
-
-  if (checkRes.ok) return true;
-
-  if (checkRes.status === 401) {
-    const errData = await checkRes.json().catch(function() { return {}; });
-    throw new Error('HTTP 401: Token 拒绝访问 (' + (errData.message || 'Bad credentials') + ')！请点击右上角⚙️检查 Token');
-  }
-
-  if (checkRes.status === 404) {
-    showToast('⚙️ 检测到账号下无此仓库，正在自动为您创建 ' + fullRepo + '...');
-
+  if (res.ok) return true;
+  if (res.status === 404) {
+    showToast('⚙️ 正在为您自动创建 ' + fullRepo + '...');
     const createRes = await fetch('https://api.github.com/user/repos', {
       method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + cleanToken,
-        'Content-Type': 'application/json',
-        'Accept': 'application/vnd.github.v3+json'
-      },
-      body: JSON.stringify({
-        name: repoName,
-        description: 'EplayerX TagStyler Fusion Badges Repository',
-        private: false,
-        auto_init: true
-      })
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: repoName, private: false, auto_init: true })
     });
-
-    if (!createRes.ok) {
-      const errData = await createRes.json().catch(function() { return {}; });
-      throw new Error('自动新建仓库失败: ' + (errData.message || createRes.status));
-    }
-
-    showToast('⚙️ 仓库创建成功！正在等待 GitHub 初始化...');
-    await new Promise(function (r) { setTimeout(r, 2000); });
+    if (!createRes.ok) throw new Error('创建仓库失败');
+    await new Promise(r => setTimeout(r, 2000));
     return true;
   }
-
-  throw new Error('检查仓库失败 HTTP ' + checkRes.status);
-}
-
-function findSelectedConflicts() {
-  const allList = [...SYSTEM_FILTERS, ...customFilters];
-  const activeFilters = allList.filter(function(f) { return activeFilterIds.has(f.id); });
-
-  const conceptGroups = {};
-  activeFilters.forEach(function(f) {
-    const concept = getFilterConcept(f);
-    if (!conceptGroups[concept]) conceptGroups[concept] = [];
-    conceptGroups[concept].push(f);
-  });
-
-  const conflicts = [];
-  for (const [concept, filters] of Object.entries(conceptGroups)) {
-    if (filters.length > 1) {
-      conflicts.push({
-        concept: concept,
-        title: getConceptDisplayName(concept),
-        filters: filters
-      });
-    }
-  }
-  return conflicts;
-}
-
-function openConflictModal(conflicts) {
-  const container = document.getElementById('conflict-list-container');
-  let h = '';
-
-  conflicts.forEach(function(c, cIdx) {
-    h += '<div class="conflict-item-card">' +
-      '<div class="conflict-title">⚠️ ' + c.title + '（请选择保留其中一个）</div>';
-
-    c.filters.forEach(function(f, fIdx) {
-      const isCustom = f.isCustom || (f.groupName && f.groupName.includes('新导入'));
-      const labelBadge = isCustom ? '【新导入版】' : '【系统默认版】';
-      const checkedStr = fIdx === 0 ? 'checked' : '';
-      const imgUrl = getBadgeUrl(f.imageURL);
-
-      h += '<label class="conflict-option">' +
-        '<input type="radio" name="conflict_' + cIdx + '" value="' + f.id + '" ' + checkedStr + '>' +
-        '<span><b>' + labelBadge + '</b> ' + f.name + '</span>' +
-        '<img src="' + imgUrl + '" style="height:16px;margin-left:auto">' +
-        '</label>';
-    });
-
-    h += '</div>';
-  });
-
-  container.innerHTML = h;
-  document.getElementById('conflict-modal').classList.add('open');
-}
-
-function resolveConflictsAndSync() {
-  const conflicts = findSelectedConflicts();
-
-  conflicts.forEach(function(c, cIdx) {
-    const radios = document.getElementsByName('conflict_' + cIdx);
-    let chosenId = null;
-    for (let i = 0; i < radios.length; i++) {
-      if (radios[i].checked) {
-        chosenId = radios[i].value;
-        break;
-      }
-    }
-
-    c.filters.forEach(function(f) {
-      if (f.id !== chosenId) {
-        activeFilterIds.delete(f.id);
-      }
-    });
-  });
-
-  closeConflictModal();
-  renderBadgeManager();
-  executeGitHubSync();
+  throw new Error('访问仓库错误 HTTP ' + res.status);
 }
 
 async function confirmAndSyncToGitHub() {
-  upd();
-
-  const conflicts = findSelectedConflicts();
-  if (conflicts.length > 0) {
-    openConflictModal(conflicts);
-    return;
-  }
-
-  await executeGitHubSync();
-}
-
-async function executeGitHubSync() {
   const token = getCleanToken();
   const username = localStorage.getItem('epx_gh_username') || getDefaultOwner();
   const repoName = localStorage.getItem('epx_gh_reponame') || 'EplayerX-TagStyler';
@@ -722,162 +788,41 @@ async function executeGitHubSync() {
 
   if (!token) {
     openSettingsModal();
-    showToast('💡 请先在弹窗中验证并绑定您的 Token，即可开启一键自动同步！');
+    showToast('💡 请先在弹窗中验证并绑定您的 Token！');
     return;
   }
 
-  showToast('⏳ 正在校验并自动初始化仓库...');
-
+  showToast('⏳ 正在同步到 GitHub...');
   try {
     await ensureRepoExists(token, username, repoName);
-
     const j = gen();
-    const jsonString = JSON.stringify(j, null, 2);
-
-    showToast('⏳ 正在提交更新到您的 GitHub 仓库...');
+    const contentBase64 = utf8ToBase64(JSON.stringify(j, null, 2));
 
     const getRes = await fetch('https://api.github.com/repos/' + fullRepo + '/contents/' + path + '?ref=main', {
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Accept': 'application/vnd.github.v3+json'
-      }
+      headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github.v3+json' }
     });
-
     let sha = '';
     if (getRes.ok) {
-      const fileData = await getRes.json();
-      sha = fileData.sha;
+      const fd = await getRes.json();
+      sha = fd.sha;
     }
-
-    const contentBase64 = utf8ToBase64(jsonString);
 
     const putRes = await fetch('https://api.github.com/repos/' + fullRepo + '/contents/' + path, {
       method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json',
-        'Accept': 'application/vnd.github.v3+json'
-      },
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        message: 'Auto update fusion-tags.json via EplayerX TagStyler UI',
+        message: 'Update fusion-tags.json',
         content: contentBase64,
         sha: sha || undefined,
         branch: 'main'
       })
     });
-
-    if (!putRes.ok) {
-      const errData = await putRes.json().catch(function() { return {}; });
-      throw new Error(errData.message || ('HTTP ' + putRes.status));
-    }
-
-    showToast('🎉 成功！已自动提交更新至仓库: ' + fullRepo);
-  } catch (err) {
-    alert('自动同步失败：' + err.message);
-  }
-}
-
-async function fetchJsonWithFallback(url) {
-  try {
-    const res = await fetch(url);
-    if (res.ok) return await res.text();
-  } catch (e) { console.warn('Direct fetch blocked, trying proxy 1...', e); }
-
-  try {
-    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
-    const res = await fetch(proxyUrl);
-    if (res.ok) return await res.text();
-  } catch (e) { console.warn('Proxy 1 failed, trying proxy 2...', e); }
-
-  try {
-    const proxyUrl2 = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
-    const res = await fetch(proxyUrl2);
-    if (res.ok) return await res.text();
+    if (!putRes.ok) throw new Error('提交失败');
+    showToast('🎉 成功更新至仓库: ' + fullRepo);
   } catch (e) {
-    throw new Error('网络抓取被目标服务器 CORS 跨域拦截，请手动打开该链接复制 JSON 代码粘贴！');
+    alert('同步失败: ' + e.message);
   }
 }
-
-async function loadCustomJson() {
-  let text = document.getElementById('custom-json-input').value.trim();
-  if (!text) { alert('请先输入或粘贴 JSON 代码 / URL 网址！'); return; }
-
-  if (text.startsWith('http://') || text.startsWith('https://')) {
-    showToast('⏳ 正在跨域抓取该网址的内容...');
-    try { text = await fetchJsonWithFallback(text); } catch(err) { alert('拉取失败：' + err.message); return; }
-  }
-
-  try {
-    const data = JSON.parse(text);
-    let rawList = [];
-
-    if (Array.isArray(data)) rawList = data;
-    else if (data && typeof data === 'object') rawList = data.filters || data.badges || data.rules || data.items || data.data || [];
-
-    if (!Array.isArray(rawList) || rawList.length === 0) {
-      alert('解析失败：未找到有效的徽章数组列表。');
-      return;
-    }
-
-    const importedList = rawList.map(function (f, idx) {
-      const img = f.imageURL || f.imageUrl || f.url || f.image || f.icon || '';
-      const name = f.name || f.label || f.title || f.id || ('Badge-' + (idx + 1));
-      const pat = f.pattern || f.regex || f.match || f.query || '';
-      const id = 'custom_' + (f.id || name) + '_' + idx;
-      
-      const tempObj = { id: id, name: name, pattern: pat, imageURL: img };
-      const categoryName = getCategoryNameForFilter(tempObj);
-
-      return {
-        id: id,
-        name: name + ' (新导入)',
-        pattern: pat,
-        imageURL: img,
-        gid: f.groupId || 'gcustom',
-        groupName: categoryName,
-        isCustom: true,
-        tagStyle: f.tagStyle || 'filled',
-        borderColor: f.borderColor || '#00000000',
-        tagColor: f.tagColor || '#00000000',
-        textColor: f.textColor || '#FFFFFF',
-        type: 'filter'
-      };
-    }).filter(function (f) { return f.imageURL; });
-
-    if (importedList.length === 0) {
-      alert('未找到任何包含有效图片地址的徽章！');
-      return;
-    }
-
-    customFilters = customFilters.concat(importedList);
-    importedList.forEach(function (f) { activeFilterIds.add(f.id); });
-    
-    renderBadgeManager();
-    upd();
-    showToast('成功导入 ' + importedList.length + ' 个自定义徽章！已自动精密归类至各技术分组。');
-  } catch (e) {
-    alert('JSON 解析失败：' + e.message);
-  }
-}
-
-function clearCustomJson() {
-  document.getElementById('custom-json-input').value = '';
-  customFilters.forEach(function (f) { activeFilterIds.delete(f.id); });
-  customFilters = [];
-  renderBadgeManager();
-  upd();
-  showToast('已清空导入的自定义徽章！');
-}
-
-const PREFERRED_GROUP_ORDER = [
-  'Source (来源)',
-  'Resolution (分辨率)',
-  'Visual & Codecs (画质编码)',
-  'Audio & Tech (音视频)',
-  'Channels (声道)',
-  'Language (语言)',
-  'Other Custom Badges (其他自定义徽章)'
-];
 
 function renderBadgeManager() {
   const container = document.getElementById('badge-manager-container');
@@ -885,7 +830,7 @@ function renderBadgeManager() {
 
   const groupsMap = {};
   allList.forEach(function (f) {
-    const gName = f.groupName || 'Other Custom Badges (其他自定义徽章)';
+    const gName = f.groupName || 'Other Custom Badges';
     if (!groupsMap[gName]) groupsMap[gName] = [];
     groupsMap[gName].push(f);
   });
@@ -905,8 +850,8 @@ function renderBadgeManager() {
     h += '<div class="badge-group-header">' +
       '<span class="badge-group-title-text">' + gName + '</span>' +
       '<div style="display:flex;gap:.3rem">' +
-      '<button class="mini-btn" onclick="toggleGroupFilters(\'' + safeGName + '\', true)">全选本组</button>' +
-      '<button class="mini-btn" onclick="toggleGroupFilters(\'' + safeGName + '\', false)">清空本组</button>' +
+      '<button class="mini-btn" onclick="toggleGroupFilters(\'' + safeGName + '\', true)">全选</button>' +
+      '<button class="mini-btn" onclick="toggleGroupFilters(\'' + safeGName + '\', false)">全不选</button>' +
       '</div></div><div class="opts">';
 
     filters.forEach(function (f) {
@@ -923,35 +868,38 @@ function renderBadgeManager() {
 function toggleGroupFilters(gName, enable) {
   const allList = [...SYSTEM_FILTERS, ...customFilters];
   allList.forEach(function (f) {
-    if ((f.groupName || 'Other Custom Badges (其他自定义徽章)') === gName) {
+    if ((f.groupName || 'Other Custom Badges') === gName) {
       if (enable) activeFilterIds.add(f.id);
       else activeFilterIds.delete(f.id);
     }
   });
   renderBadgeManager();
+  upd();
 }
 
 function toggleFilter(fid) {
   if (activeFilterIds.has(fid)) activeFilterIds.delete(fid);
   else activeFilterIds.add(fid);
   renderBadgeManager();
+  upd();
 }
 
 function toggleAllFilters(enable) {
   const allList = [...SYSTEM_FILTERS, ...customFilters];
-  if (enable) {
-    allList.forEach(function (f) { activeFilterIds.add(f.id); });
-  } else {
-    activeFilterIds.clear();
-  }
+  if (enable) allList.forEach(f => activeFilterIds.add(f.id));
+  else activeFilterIds.clear();
   renderBadgeManager();
+  upd();
 }
 
 function resetDefaultFilters() {
   activeFilterIds.clear();
-  SYSTEM_FILTERS.forEach(function (f) { activeFilterIds.add(f.id); });
+  SYSTEM_FILTERS.forEach(function (f) {
+    if (f.isEnabled) activeFilterIds.add(f.id);
+  });
   renderBadgeManager();
-  showToast('已重置为默认系统徽章！');
+  upd();
+  showToast('已重置为默认徽章！');
 }
 
 function showToast(msg) {
@@ -963,10 +911,9 @@ function showToast(msg) {
 
 function renderBadgeGallery(allFilters) {
   const container = document.getElementById('badge-gallery');
-
   const groupsMap = {};
   allFilters.forEach(function (f) {
-    const gName = f.groupName || 'Other Badges';
+    const gName = f.groupName || 'Badges';
     if (!groupsMap[gName]) groupsMap[gName] = [];
     groupsMap[gName].push(f);
   });
@@ -985,18 +932,14 @@ function renderBadgeGallery(allFilters) {
     h += '<div style="width:100%"><div class="badge-group-title-text" style="margin-top:.8rem">' + gName + '</div>' +
       '<div class="gallery-grid" style="gap:' + (C.gap || '5px') + '">';
 
-    const seenUrls = new Set();
     filters.forEach(function (f) {
-      if (f.imageURL && !seenUrls.has(f.imageURL)) {
-        seenUrls.add(f.imageURL);
-        const url = getBadgeUrl(f.imageURL);
+      if (f.imageURL) {
         h += '<div class="gallery-card">' +
-          '<img src="' + url + '" alt="' + f.name + '">' +
-          '<span>' + (f.name || f.id) + '</span>' +
+          '<img src="' + f.imageURL + '" alt="' + f.name + '">' +
+          '<span>' + f.name + '</span>' +
           '</div>';
       }
     });
-
     h += '</div></div>';
   });
 
@@ -1006,7 +949,7 @@ function renderBadgeGallery(allFilters) {
 function preview() {
   let h = '';
   const allList = [...SYSTEM_FILTERS, ...customFilters];
-  const activeFilters = allList.filter(function (f) { return activeFilterIds.has(f.id); });
+  const activeFilters = allList.filter(f => activeFilterIds.has(f.id));
 
   const galleryBox = document.getElementById('badge-gallery');
   const pvBox = document.getElementById('pv');
@@ -1019,24 +962,12 @@ function preview() {
   }
 
   for (const s of STREAMS) {
-    const st = (s.type || 'debrid'); const stCap = st === 'p2p' ? 'P2P' : st[0].toUpperCase() + st.slice(1);
-    const descTxt = C.desc === 'fn' ? s.fn : s.fn + '\n' + (s.svc || 'RD') + ' \xb7 ' + stCap + ' \xb7 ' + s.size;
-
-    h += '<div class="cd"><div class="cn">' + fmtName(s) + '</div><div class="cs">' + descTxt + '</div><div class="tr" style="gap:' + (C.gap || '5px') + '">';
-
-    const renderedConcepts = new Set();
+    const descTxt = C.desc === 'fn' ? s.fn : s.fn + '\nRD · ' + s.qual + ' · ' + s.size;
+    h += '<div class="cd"><div class="cn">' + s.qual + '</div><div class="cs">' + descTxt + '</div><div class="tr" style="gap:' + (C.gap || '5px') + '">';
 
     activeFilters.forEach(function (f) {
       if (f.pattern && f.imageURL && matchFilterPattern(f.pattern, s.fn)) {
-        if (C.hdr === 'nodv' && s.dv && (f.id === 'h+' || f.id === 'h1' || f.id === 'hh')) {
-          return;
-        }
-        
-        const concept = f.concept || getFilterConcept(f);
-        if (renderedConcepts.has(concept)) return;
-        renderedConcepts.add(concept);
-
-        h += thtml(f.name || '', f.imageURL, ST.res);
+        h += '<span class="tg" style="border-color:#00000000;background:#00000000"><img src="' + f.imageURL + '"></span>';
       }
     });
 
@@ -1046,94 +977,56 @@ function preview() {
 }
 
 function gen() {
-  const T = [], G = [];
-  const dvN = '(?!.*(?i)\\b(?:dv|dovi|dolby[\\s._-]?vision)\\b)';
-
   const allList = [...SYSTEM_FILTERS, ...customFilters];
-  const activeFilters = allList.filter(function (f) { return activeFilterIds.has(f.id); });
-  const usedGroupIds = new Set();
-  const seenKeys = new Set();
-
-  activeFilters.forEach(function (f) {
-    let pat = f.pattern;
-    if (C.hdr === 'nodv' && (f.id === 'h+' || f.id === 'h1' || f.id === 'hh')) {
-      pat = '(?i)^' + dvN + pat.replace('(?i)', '');
-    }
-
-    const imgUrl = getBadgeUrl(f.imageURL);
-    const dedupeKey = pat + '_' + imgUrl;
-
-    if (seenKeys.has(dedupeKey)) return;
-    seenKeys.add(dedupeKey);
-
-    const gid = f.gid || f.groupId || 'gs';
-    usedGroupIds.add(gid);
-
-    T.push({
-      borderColor: f.borderColor || '#00000000',
-      groupId: gid,
+  
+  // 保持与你参考顺序严格对齐的 filters 列表
+  const filters = allList.map(function (f) {
+    return {
       id: f.id,
-      imageURL: imgUrl,
-      isEnabled: true,
+      groupId: f.groupId,
       name: f.name,
-      pattern: pat,
-      tagColor: f.tagColor || '#00000000',
-      tagStyle: 'filled',
-      textColor: f.textColor || '#FFFFFF',
-      type: 'filter'
-    });
+      pattern: f.pattern,
+      imageURL: f.imageURL,
+      tagColor: f.tagColor || "#00000000",
+      borderColor: f.borderColor || "#00000000",
+      textColor: f.textColor || "#00000000",
+      tagStyle: f.tagStyle || "filled and bordered",
+      isEnabled: activeFilterIds.has(f.id),
+      type: "filter",
+      groupName: f.groupName
+    };
   });
 
-  const ALL_GROUPS = [
-    { borderColor: '#00000000', color: '#27C04F', id: 'gs', isExpanded: true, name: 'Source' },
-    { borderColor: ST.res.bc, color: '#FFBE01', id: 'gr', isExpanded: true, name: 'Resolution' },
-    { borderColor: ST.res.bc, color: '#FF6B6B', id: 'gv', isExpanded: true, name: 'Visual' },
-    { borderColor: '#00000000', color: '#45B7D1', id: 'ga', isExpanded: true, name: 'Audio' },
-    { borderColor: '#00000000', color: '#FFD700', id: 'gc', isExpanded: true, name: 'Channels' },
-    { borderColor: '#00000000', color: '#4ECDC4', id: 'gl', isExpanded: true, name: 'Language' },
-    { borderColor: '#00000000', color: '#a855f7', id: 'gcustom', isExpanded: true, name: 'Custom Badges' }
-  ];
-
-  ALL_GROUPS.forEach(function (g) {
-    if (usedGroupIds.has(g.id)) {
-      G.push(g);
-    }
-  });
-
-  return { filters: T, groups: G };
-}
-
-function fmt() {
-  const d = C.desc === 'fn'
-    ? '{stream.filename::exists["{stream.filename}"||""]}'
-    : '{stream.filename::exists["{stream.filename}"||""]}\\n{service.shortName::exists["{service.shortName}"||""]}{stream.type::exists[" \xb7 {stream.type::title::replace(\'P2p\',\'P2P\')}"||""]}';
-  return { n: '{stream.quality::exists["{stream.quality::title}"||""]}', d: d };
+  return {
+    filters: filters.map(({ groupName, isCustom, ...rest }) => rest),
+    groups: ALL_SYSTEM_GROUPS
+  };
 }
 
 function upd() {
   const j = gen();
   preview();
-  renderBadgeGallery(j.filters);
+  renderBadgeGallery(SYSTEM_FILTERS.filter(f => activeFilterIds.has(f.id)));
 
   document.getElementById('oj').value = JSON.stringify(j, null, 2);
-  const f = fmt();
-  document.getElementById('on').value = f.n;
-  document.getElementById('od').value = f.d;
 
-  const currentRepo = localStorage.getItem('epx_gh_repo') || (getDefaultOwner() + '/EplayerX-TagStyler');
-  const url = 'https://raw.githubusercontent.com/' + currentRepo + '/main/fusion-tags.json';
-  document.getElementById('ou').value = url;
+  const currentRepo = (localStorage.getItem('epx_gh_username') || getDefaultOwner()) + '/' + (localStorage.getItem('epx_gh_reponame') || 'EplayerX-TagStyler');
+  document.getElementById('ou').value = 'https://raw.githubusercontent.com/' + currentRepo + '/main/fusion-tags.json';
 
   const g = document.getElementById('guide');
-  g.innerHTML = '<div class="note">您的自定义预设已完全基于文件名匹配，无需导入任何评分（Scoring）模板，享受超轻量化运行。</div>';
+  g.innerHTML = '<div class="note">全套 29 个徽章规则已完全对齐配置，支持杜比 Profile 5/7/8 自动识别及跨行多流精准隔离。</div>';
 }
 
-function cc(id) { navigator.clipboard.writeText(document.getElementById(id).value).then(function () { showToast('已复制到剪贴板！'); }); }
+function cc(id) {
+  navigator.clipboard.writeText(document.getElementById(id).value).then(function () {
+    showToast('已复制到剪贴板！');
+  });
+}
 
 document.querySelectorAll('.opts').forEach(function (g) {
   g.querySelectorAll('.o').forEach(function (o) {
     o.onclick = function () {
-      g.querySelectorAll('.o').forEach(function (x) { x.classList.remove('on'); });
+      g.querySelectorAll('.o').forEach(x => x.classList.remove('on'));
       o.classList.add('on');
       C[g.dataset.g] = o.dataset.v;
       upd();
