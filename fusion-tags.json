@@ -108,51 +108,12 @@
       "id": "dolby-vision",
       "groupId": "video-tech",
       "name": "Dolby Vision",
-      "pattern": "(?i)\\b(dolby[\\s._-]*vision|dovi|dv)\\b(?!.*?\\b(?:p(?:rofile)?[.\\s_-]?0?[5-8]|profile[.\\s_-]?0?[5-8])\\b)",
+      "pattern": "(?i)^(?!.*\\b(?:p(?:rofile)?[.\\s_-]?0?[5-8]|profile[.\\s_-]?0?[5-8])\\b).*?\\b(dolby[\\s._-]*vision|dovi|dv)\\b",
       "imageURL": "https://github.com/l3okuGmail/badges/raw/refs/heads/main/icons/DBV-a.svg",
       "tagColor": "#00000000",
       "borderColor": "#00000000",
       "textColor": "#00000000",
       "tagStyle": "filled and bordered",
-      "isEnabled": true,
-      "type": "filter"
-    },
-    {
-      "id": "custom_dolby-vision-p5",
-      "groupId": "video-tech",
-      "name": "Dolby Vision P5",
-      "pattern": "(?i)\\b(?:dovi|dv|dolby[\\s._-]*vision)[\\s._-]*(?:p(?:rofile)?[.\\s_-]?0?5|0?5)\\b|\\bprofile[.\\s_-]?0?5\\b",
-      "imageURL": "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/DV-P5.svg",
-      "tagColor": "#00000000",
-      "borderColor": "#00000000",
-      "textColor": "#00000000",
-      "tagStyle": "filled",
-      "isEnabled": true,
-      "type": "filter"
-    },
-    {
-      "id": "custom_dolby-vision-p7",
-      "groupId": "video-tech",
-      "name": "Dolby Vision P7",
-      "pattern": "(?i)\\b(?:dovi|dv|dolby[\\s._-]*vision)[\\s._-]*(?:p(?:rofile)?[.\\s_-]?0?7|0?7)\\b|\\bprofile[.\\s_-]?0?7\\b",
-      "imageURL": "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/DV-P7.svg",
-      "tagColor": "#00000000",
-      "borderColor": "#00000000",
-      "textColor": "#00000000",
-      "tagStyle": "filled",
-      "isEnabled": true,
-      "type": "filter"
-    },
-    {
-      "id": "custom_dolby-vision-p8",
-      "groupId": "video-tech",
-      "name": "Dolby Vision P8",
-      "pattern": "(?i)\\b(?:dovi|dv|dolby[\\s._-]*vision)[\\s._-]*(?:p(?:rofile)?[.\\s_-]?0?8|0?8)\\b|\\bprofile[.\\s_-]?0?8\\b",
-      "imageURL": "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/DV-P8.svg",
-      "tagColor": "#00000000",
-      "borderColor": "#00000000",
-      "textColor": "#00000000",
-      "tagStyle": "filled",
       "isEnabled": true,
       "type": "filter"
     },
@@ -365,6 +326,45 @@
       "type": "filter"
     },
     {
+      "id": "custom_dolby-vision-p5",
+      "groupId": "dv-profile",
+      "name": "Dolby Vision P5",
+      "pattern": "(?i)\\b(?:dovi|dv|dolby[\\s._-]*vision)[\\s._-]*(?:p(?:rofile)?[.\\s_-]?0?5|0?5)\\b|\\bprofile[.\\s_-]?0?5\\b",
+      "imageURL": "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/DV-P5.svg",
+      "tagColor": "#00000000",
+      "borderColor": "#00000000",
+      "textColor": "#00000000",
+      "tagStyle": "filled",
+      "isEnabled": true,
+      "type": "filter"
+    },
+    {
+      "id": "custom_dolby-vision-p7",
+      "groupId": "dv-profile",
+      "name": "Dolby Vision P7",
+      "pattern": "(?i)\\b(?:dovi|dv|dolby[\\s._-]*vision)[\\s._-]*(?:p(?:rofile)?[.\\s_-]?0?7|0?7)\\b|\\bprofile[.\\s_-]?0?7\\b",
+      "imageURL": "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/DV-P7.svg",
+      "tagColor": "#00000000",
+      "borderColor": "#00000000",
+      "textColor": "#00000000",
+      "tagStyle": "filled",
+      "isEnabled": true,
+      "type": "filter"
+    },
+    {
+      "id": "custom_dolby-vision-p8",
+      "groupId": "dv-profile",
+      "name": "Dolby Vision P8",
+      "pattern": "(?i)\\b(?:dovi|dv|dolby[\\s._-]*vision)[\\s._-]*(?:p(?:rofile)?[.\\s_-]?0?8|0?8)\\b|\\bprofile[.\\s_-]?0?8\\b",
+      "imageURL": "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/DV-P8.svg",
+      "tagColor": "#00000000",
+      "borderColor": "#00000000",
+      "textColor": "#00000000",
+      "tagStyle": "filled",
+      "isEnabled": true,
+      "type": "filter"
+    },
+    {
       "id": "10bit",
       "groupId": "bit-depth",
       "name": "10Bit",
@@ -449,6 +449,13 @@
     {
       "id": "audio-tech",
       "name": "Audio Tech",
+      "color": "#00000000",
+      "borderColor": "#00000000",
+      "isExpanded": true
+    },
+    {
+      "id": "dv-profile",
+      "name": "Profile",
       "color": "#00000000",
       "borderColor": "#00000000",
       "isExpanded": true
