@@ -94,50 +94,11 @@
     {
       "borderColor": "#00000000",
       "groupId": "video-tech",
-      "id": "custom_dolby-vision-p5",
-      "imageURL": "https://raw.githubusercontent.com/6otho/EplayerX-TagStyler/refs/heads/main/images/P5-b.svg",
-      "isEnabled": true,
-      "name": "Dolby Vision P5 (新导入)",
-      "pattern": "(?i)\\b(?:dovi|dv|dolby[\\s._-]*vision)[\\s._-]*(?:p(?:rofile)?[.\\s_-]?0?5|0?5)\\b|\\bprofile[.\\s_-]?0?5\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#00000000",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "video-tech",
-      "id": "custom_dolby-vision-p7",
-      "imageURL": "https://raw.githubusercontent.com/6otho/EplayerX-TagStyler/refs/heads/main/images/P7-b.svg",
-      "isEnabled": true,
-      "name": "Dolby Vision P7 (新导入)",
-      "pattern": "(?i)\\b(?:dovi|dv|dolby[\\s._-]*vision)[\\s._-]*(?:p(?:rofile)?[.\\s_-]?0?7|0?7)\\b|\\bprofile[.\\s_-]?0?7\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#00000000",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "video-tech",
-      "id": "custom_dolby-vision-p8",
-      "imageURL": "https://raw.githubusercontent.com/6otho/EplayerX-TagStyler/refs/heads/main/images/P8-b.svg",
-      "isEnabled": true,
-      "name": "Dolby Vision P8 (新导入)",
-      "pattern": "(?i)\\b(?:dovi|dv|dolby[\\s._-]*vision)[\\s._-]*(?:p(?:rofile)?[.\\s_-]?0?8|0?8)\\b|\\bprofile[.\\s_-]?0?8\\b",
-      "tagColor": "#00000000",
-      "tagStyle": "filled",
-      "textColor": "#00000000",
-      "type": "filter"
-    },
-    {
-      "borderColor": "#00000000",
-      "groupId": "video-tech",
       "id": "custom_dolby-vision_8",
       "imageURL": "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/dolby-vision-f.svg",
       "isEnabled": true,
       "name": "Dolby Vision (通用)",
-      "pattern": "(?i)\\b(dolby\\s*vision|dovi|dv)\\b",
+      "pattern": "(?i)^(?!.*(?:(?:dvhe|dvh1|dva1|dvav)\\.0?[5-8]|profile[.\\s:_ -]*0?[5-8]|p(?:rofile)?[.\\s_-]?0?[5-8])).*?\\b(dolby[\\s._-]*vision|dovi|dv)\\b",
       "tagColor": "#00000000",
       "tagStyle": "filled",
       "textColor": "#00000000",
@@ -353,6 +314,45 @@
     },
     {
       "borderColor": "#00000000",
+      "groupId": "dv-profile",
+      "id": "custom_dolby-vision-p5",
+      "imageURL": "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/dbv-p5.svg",
+      "isEnabled": true,
+      "name": "Dolby Vision P5",
+      "pattern": "(?i)\\b(?:dvhe|dvh1|dva1|dvav)\\.0?5\\b|\\bprofile[.\\s:_ -]*0?5\\b|\\b(?:dovi|dv|dolby[\\s._-]*vision)[\\s._-]*(?:p(?:rofile)?[.\\s_-]?0?5|0?5)\\b",
+      "tagColor": "#00000000",
+      "tagStyle": "filled",
+      "textColor": "#00000000",
+      "type": "filter"
+    },
+    {
+      "borderColor": "#00000000",
+      "groupId": "dv-profile",
+      "id": "custom_dolby-vision-p7",
+      "imageURL": "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/dbv-p7.svg",
+      "isEnabled": true,
+      "name": "Dolby Vision P7",
+      "pattern": "(?i)\\b(?:dvhe|dvh1|dva1|dvav)\\.0?7\\b|\\bprofile[.\\s:_ -]*0?7\\b|\\b(?:dovi|dv|dolby[\\s._-]*vision)[\\s._-]*(?:p(?:rofile)?[.\\s_-]?0?7|0?7)\\b",
+      "tagColor": "#00000000",
+      "tagStyle": "filled",
+      "textColor": "#00000000",
+      "type": "filter"
+    },
+    {
+      "borderColor": "#00000000",
+      "groupId": "dv-profile",
+      "id": "custom_dolby-vision-p8",
+      "imageURL": "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/dbv-p8.svg",
+      "isEnabled": true,
+      "name": "Dolby Vision P8",
+      "pattern": "(?i)\\b(?:dvhe|dvh1|dva1|dvav)\\.0?8\\b|\\bprofile[.\\s:_ -]*0?8\\b|\\b(?:dovi|dv|dolby[\\s._-]*vision)[\\s._-]*(?:p(?:rofile)?[.\\s_-]?0?8|0?8)\\b",
+      "tagColor": "#00000000",
+      "tagStyle": "filled",
+      "textColor": "#00000000",
+      "type": "filter"
+    },
+    {
+      "borderColor": "#00000000",
       "groupId": "bit-depth",
       "id": "custom_10bit_17",
       "imageURL": "https://raw.githubusercontent.com/6otho/Epx-Badge/main/Badges/10bit.png",
@@ -406,6 +406,13 @@
   ],
   "groups": [
     {
+      "borderColor": "#FF858283",
+      "color": "#FFBE01",
+      "id": "gr",
+      "isExpanded": true,
+      "name": "Resolution"
+    },
+    {
       "borderColor": "#00000000",
       "color": "#27C04F",
       "id": "gs",
@@ -413,11 +420,39 @@
       "name": "Source"
     },
     {
-      "borderColor": "#FF858283",
-      "color": "#FFBE01",
-      "id": "gr",
+      "borderColor": "#00000000",
+      "color": "#00000000",
+      "id": "video-tech",
       "isExpanded": true,
-      "name": "Resolution"
+      "name": "Video Tech"
+    },
+    {
+      "borderColor": "#00000000",
+      "color": "#00000000",
+      "id": "video-codec",
+      "isExpanded": true,
+      "name": "Video Codec"
+    },
+    {
+      "borderColor": "#00000000",
+      "color": "#00000000",
+      "id": "audio-tech",
+      "isExpanded": true,
+      "name": "Audio Tech"
+    },
+    {
+      "borderColor": "#00000000",
+      "color": "#00000000",
+      "id": "dv-profile",
+      "isExpanded": true,
+      "name": "Profile"
+    },
+    {
+      "borderColor": "#00000000",
+      "color": "#00000000",
+      "id": "bit-depth",
+      "isExpanded": true,
+      "name": "Bit Depth"
     },
     {
       "borderColor": "#00000000",
