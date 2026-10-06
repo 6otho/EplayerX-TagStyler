@@ -148,7 +148,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
 
 <div class="sec">
   <h2>4. Import Custom Badges JSON (导入自定义 JSON / 网址)</h2>
-  <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址或您的 JSON 代码，合并时会自动智能归类。</div>
+  <div class="sub" style="margin-bottom:.5rem">粘贴第三方 URL 网址或您的 JSON 代码，合并时会自动智能归类（前端以紫色标记，推送时自动保持干净文件名）。</div>
   <textarea id="custom-json-input" placeholder="输入或粘贴网址或 JSON 内容..." style="width:100%;height:75px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#4ade80;padding:.5rem;font-family:monospace;font-size:.65rem;resize:vertical"></textarea>
   <div style="display:flex;gap:.4rem;margin-top:.45rem">
     <button class="abtn" onclick="loadCustomJson()">解析并分类归入下方面板</button>
@@ -165,7 +165,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#ff
       <button class="abtn" style="padding:.2rem .5rem;font-size:.65rem;color:#60a5fa" onclick="resetDefaultFilters()">重置为默认</button>
     </div>
   </div>
-  <div class="sub" style="margin-bottom:.5rem">杜比全套图标与 Profile 5/7/8 已全量修正。点选可单独启用或关闭。</div>
+  <div class="sub" style="margin-bottom:.5rem">点选可单独启用或关闭。推送至 JSON 时已彻底屏蔽任何多余文字。</div>
   <div id="badge-manager-container"></div>
 </div>
 
@@ -215,7 +215,7 @@ function getCleanToken() {
 
 let C = { icon: 'colored', gap: '5px', desc: 'short' };
 
-// 完整对齐你指定的杜比地址版本体系
+// 纯净系统基础徽章集（已全面去除“新导入”文字，杜比地址已精准更新）
 const SYSTEM_FILTERS = [
   {
     borderColor: "#00000000",
@@ -321,7 +321,7 @@ const SYSTEM_FILTERS = [
     id: "custom_dolby-vision_8",
     imageURL: "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/dolby-vision-f.svg",
     isEnabled: true,
-    name: "Dolby Vision (通用)",
+    name: "Dolby Vision",
     pattern: "(?is)^(?!.*(?:profile[\\s:_ -]*0?[5-8]|p[.\\s_-]?0?[5-8]|dvhe\\.0?[5-8]|dvh1\\.0?[5-8]|dvp0?[5-8]|dbvp0?[5-8])).*?(dolby[\\s._-]*vision|dovi|dv|dbv)",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -335,7 +335,7 @@ const SYSTEM_FILTERS = [
     id: "custom_hdr10-plus_9",
     imageURL: "https://github.com/l3okuGmail/badges/raw/refs/heads/main/icons/hdr10p-c.svg",
     isEnabled: true,
-    name: "HDR10+ (新导入)",
+    name: "HDR10+",
     pattern: "(?i)\\b(hdr10\\+|hdr10\\s*plus\\b|hdr\\s*10\\s*\\+)",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -349,7 +349,7 @@ const SYSTEM_FILTERS = [
     id: "custom_hdr10_10",
     imageURL: "https://github.com/l3okuGmail/badges/raw/refs/heads/main/icons/hdr10-c.svg",
     isEnabled: true,
-    name: "HDR10 (新导入)",
+    name: "HDR10",
     pattern: "(?i)\\b(hdr10|hdr\\s*10)\\b(?!\\s*\\+|\\s*plus)",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -363,7 +363,7 @@ const SYSTEM_FILTERS = [
     id: "custom_hdr_11",
     imageURL: "https://github.com/l3okuGmail/badges/raw/refs/heads/main/icons/hdr-c.svg",
     isEnabled: true,
-    name: "HDR (新导入)",
+    name: "HDR",
     pattern: "(?i)\\bhdr\\b",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -377,7 +377,7 @@ const SYSTEM_FILTERS = [
     id: "custom_sdr_12",
     imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/sdr-a.svg",
     isEnabled: true,
-    name: "SDR (新导入)",
+    name: "SDR",
     pattern: "(?i)\\bsdr\\b",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -391,7 +391,7 @@ const SYSTEM_FILTERS = [
     id: "custom_imax-enhanced_13",
     imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/imax-e.svg",
     isEnabled: true,
-    name: "IMAX Enhanced (新导入)",
+    name: "IMAX Enhanced",
     pattern: "(?i)\\b(imax[\\s._-]*enhanced)\\b",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -405,7 +405,7 @@ const SYSTEM_FILTERS = [
     id: "custom_imax_14",
     imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/imax.svg",
     isEnabled: true,
-    name: "IMAX (新导入)",
+    name: "IMAX",
     pattern: "(?i)\\b(imax)\\b(?![\\s._-]*enhanced)",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -419,7 +419,7 @@ const SYSTEM_FILTERS = [
     id: "custom_hevc_15",
     imageURL: "https://raw.githubusercontent.com/6otho/Epx-Badge/main/Badges/hevc-1.svg",
     isEnabled: false,
-    name: "HEVC (新导入)",
+    name: "HEVC",
     pattern: "(?i)\\b(hevc|h[\\s._-]?265|x265)\\b",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -433,7 +433,7 @@ const SYSTEM_FILTERS = [
     id: "custom_avc_16",
     imageURL: "https://raw.githubusercontent.com/6otho/Epx-Badge/main/Badges/avc-1.svg",
     isEnabled: false,
-    name: "AVC (新导入)",
+    name: "AVC",
     pattern: "(?i)\\b(avc|h[\\s._-]?264|x264)\\b",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -447,7 +447,7 @@ const SYSTEM_FILTERS = [
     id: "custom_dolby-atmos_19",
     imageURL: "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/dolby-atmos-f.svg",
     isEnabled: true,
-    name: "Dolby Atmos (新导入)",
+    name: "Dolby Atmos",
     pattern: "(?i)\\b(dolby\\s*atmos|atmos)\\b",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -461,7 +461,7 @@ const SYSTEM_FILTERS = [
     id: "custom_truehd_20",
     imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/true-hd-1.svg",
     isEnabled: true,
-    name: "TrueHD (新导入)",
+    name: "TrueHD",
     pattern: "(?i)\\b(truehd|true\\s*hd|dolby\\s*truehd)\\b",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -475,7 +475,7 @@ const SYSTEM_FILTERS = [
     id: "custom_dolby-digital-plus_21",
     imageURL: "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/dolby-digitalplus-f.svg",
     isEnabled: true,
-    name: "Dolby Digital Plus (新导入)",
+    name: "Dolby Digital Plus",
     pattern: "(?i)\\b(ddp[\\s._-]*[0-9][\\s._-]*[0-9]|ddp|dd\\+|dolby[\\s._-]*digital[\\s._-]*plus|e-?ac-?3)(?![a-z])",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -489,7 +489,7 @@ const SYSTEM_FILTERS = [
     id: "custom_dolby-digital_22",
     imageURL: "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/dolby-digital-f.svg",
     isEnabled: true,
-    name: "Dolby Digital (新导入)",
+    name: "Dolby Digital",
     pattern: "(?i)\\b(dd[\\s._-]*[0-9][\\s._-]*[0-9]|dd|dolby[\\s._-]*digital|ac-?3)(?![\\s._-]*plus|\\+|p|[a-z])",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -503,7 +503,7 @@ const SYSTEM_FILTERS = [
     id: "custom_dts-x_23",
     imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/dts-x.svg",
     isEnabled: true,
-    name: "DTS:X (新导入)",
+    name: "DTS:X",
     pattern: "(?i)\\b(dts[:\\s._-]*x)\\b",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -517,7 +517,7 @@ const SYSTEM_FILTERS = [
     id: "custom_dts-hd-master-audio_24",
     imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/dts-hd-ma.svg",
     isEnabled: true,
-    name: "DTS-HD Master Audio (新导入)",
+    name: "DTS-HD Master Audio",
     pattern: "(?i)\\b(dts[\\s._-]*hd[\\s._-]*ma|dtshd\\s*ma|dts[\\s._-]*hd[\\s._-]*master)\\b",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -531,7 +531,7 @@ const SYSTEM_FILTERS = [
     id: "custom_dts-hd_25",
     imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/dts-hd.svg",
     isEnabled: true,
-    name: "DTS-HD (新导入)",
+    name: "DTS-HD",
     pattern: "(?i)\\b(dts[\\s._-]*hd|dtshd)(?![\\s._-]*(ma|master)|ma)\\b",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -545,7 +545,7 @@ const SYSTEM_FILTERS = [
     id: "custom_dts_26",
     imageURL: "https://github.com/6otho/Epx-Badge/raw/refs/heads/main/Badges/dts.svg",
     isEnabled: true,
-    name: "DTS (新导入)",
+    name: "DTS",
     pattern: "(?i)\\bdts\\b(?![\\s._:-]*(x|hd))",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -557,7 +557,7 @@ const SYSTEM_FILTERS = [
     borderColor: "#00000000",
     groupId: "dv-profile",
     id: "custom_dolby-vision-p5",
-    imageURL: "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/dbv-p5.svg",
+    imageURL: "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/dbv-p5x.svg",
     isEnabled: true,
     name: "Dolby Vision P5",
     pattern: "(?i)(?:profile|p)[\\s:_ -]*0?5(?:\\.0)?|(?:dvhe|dvh1|dva1|dvav)\\.0?5(?:\\.0)?|(?:dovi|dv|dbv|dolby[\\s._-]*vision)[.\\s_-]*(?:p(?:rofile)?[.\\s_-]?0?5|0?5)(?:\\.0)?|(?:dbv|dv|dovi)p0?5",
@@ -571,7 +571,7 @@ const SYSTEM_FILTERS = [
     borderColor: "#00000000",
     groupId: "dv-profile",
     id: "custom_dolby-vision-p7",
-    imageURL: "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/dbv-p7.svg",
+    imageURL: "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/dbv-p7y.svg",
     isEnabled: true,
     name: "Dolby Vision P7",
     pattern: "(?i)(?:profile|p)[\\s:_ -]*0?7(?:\\.0|\\.6)?|(?:dvhe|dvh1|dva1|dvav)\\.0?7|(?:dovi|dv|dbv|dolby[\\s._-]*vision)[.\\s_-]*(?:p(?:rofile)?[.\\s_-]?0?7|0?7)|(?:dbv|dv|dovi)p0?7",
@@ -585,7 +585,7 @@ const SYSTEM_FILTERS = [
     borderColor: "#00000000",
     groupId: "dv-profile",
     id: "custom_dolby-vision-p8",
-    imageURL: "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/dbv-p8.svg",
+    imageURL: "https://github.com/6otho/EplayerX-TagStyler/raw/refs/heads/main/images/dbv-p8z.svg",
     isEnabled: true,
     name: "Dolby Vision P8",
     pattern: "(?i)(?:profile|p)[\\s:_ -]*0?8(?:\\.1|\\.4|\\.0)?|(?:dvhe|dvh1|dva1|dvav)\\.0?8|(?:dovi|dv|dbv|dolby[\\s._-]*vision)[.\\s_-]*(?:p(?:rofile)?[.\\s_-]?0?8|0?8)|(?:dbv|dv|dovi)p0?8",
@@ -601,7 +601,7 @@ const SYSTEM_FILTERS = [
     id: "custom_10bit_17",
     imageURL: "https://raw.githubusercontent.com/6otho/Epx-Badge/main/Badges/10bit.png",
     isEnabled: true,
-    name: "10Bit (新导入)",
+    name: "10Bit",
     pattern: "(?i)\\b(10[\\s._-]?bit|10b|hi10p)\\b",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -615,7 +615,7 @@ const SYSTEM_FILTERS = [
     id: "custom_8bit_18",
     imageURL: "https://raw.githubusercontent.com/6otho/Epx-Badge/main/Badges/8bit.png",
     isEnabled: true,
-    name: "8Bit (新导入)",
+    name: "8Bit",
     pattern: "(?i)\\b(8[\\s._-]?bit|8b)\\b",
     tagColor: "#00000000",
     tagStyle: "filled",
@@ -810,6 +810,98 @@ async function confirmAndSyncToGitHub() {
   }
 }
 
+async function fetchJsonWithFallback(url) {
+  try {
+    const res = await fetch(url);
+    if (res.ok) return await res.text();
+  } catch (e) { console.warn('Direct fetch blocked, trying proxy 1...', e); }
+
+  try {
+    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
+    const res = await fetch(proxyUrl);
+    if (res.ok) return await res.text();
+  } catch (e) { console.warn('Proxy 1 failed, trying proxy 2...', e); }
+
+  try {
+    const proxyUrl2 = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+    const res = await fetch(proxyUrl2);
+    if (res.ok) return await res.text();
+  } catch (e) {
+    throw new Error('网络抓取被目标服务器 CORS 跨域拦截，请手动打开该链接复制 JSON 代码粘贴！');
+  }
+}
+
+async function loadCustomJson() {
+  let text = document.getElementById('custom-json-input').value.trim();
+  if (!text) { alert('请先输入或粘贴 JSON 代码 / URL 网址！'); return; }
+
+  if (text.startsWith('http://') || text.startsWith('https://')) {
+    showToast('⏳ 正在跨域抓取该网址的内容...');
+    try { text = await fetchJsonWithFallback(text); } catch(err) { alert('拉取失败：' + err.message); return; }
+  }
+
+  try {
+    const data = JSON.parse(text);
+    let rawList = [];
+
+    if (Array.isArray(data)) rawList = data;
+    else if (data && typeof data === 'object') rawList = data.filters || data.badges || data.rules || data.items || data.data || [];
+
+    if (!Array.isArray(rawList) || rawList.length === 0) {
+      alert('解析失败：未找到有效的徽章数组列表。');
+      return;
+    }
+
+    const importedList = rawList.map(function (f, idx) {
+      const img = f.imageURL || f.imageUrl || f.url || f.image || f.icon || '';
+      let rawName = f.name || f.label || f.title || f.id || ('Badge-' + (idx + 1));
+      // 清除导入原文本中可能自带的垃圾后缀，保持核心纯净
+      let cleanName = rawName.replace(/[\s\(_-]*新导入[\s\)]*/g, '').trim();
+      const pat = f.pattern || f.regex || f.match || f.query || '';
+      const id = 'custom_' + (f.id || cleanName) + '_' + idx;
+      
+      return {
+        id: id,
+        name: cleanName, // 保持绝对干净
+        displayName: cleanName + ' (新导入)', // 仅用于前端紫色列表展示
+        pattern: pat,
+        imageURL: img,
+        groupId: f.groupId || 'video-tech',
+        groupName: 'Other Custom Badges',
+        isCustom: true,
+        tagStyle: f.tagStyle || 'filled',
+        borderColor: f.borderColor || '#00000000',
+        tagColor: f.tagColor || '#00000000',
+        textColor: f.textColor || '#00000000',
+        type: 'filter'
+      };
+    }).filter(function (f) { return f.imageURL; });
+
+    if (importedList.length === 0) {
+      alert('未找到任何包含有效图片地址的徽章！');
+      return;
+    }
+
+    customFilters = customFilters.concat(importedList);
+    importedList.forEach(function (f) { activeFilterIds.add(f.id); });
+    
+    renderBadgeManager();
+    upd();
+    showToast('成功导入 ' + importedList.length + ' 个自定义徽章！已加入管理面板。');
+  } catch (e) {
+    alert('JSON 解析失败：' + e.message);
+  }
+}
+
+function clearCustomJson() {
+  document.getElementById('custom-json-input').value = '';
+  customFilters.forEach(function (f) { activeFilterIds.delete(f.id); });
+  customFilters = [];
+  renderBadgeManager();
+  upd();
+  showToast('已清空导入的自定义徽章！');
+}
+
 function renderBadgeManager() {
   const container = document.getElementById('badge-manager-container');
   const allList = [...SYSTEM_FILTERS, ...customFilters];
@@ -843,7 +935,9 @@ function renderBadgeManager() {
     filters.forEach(function (f) {
       const isOn = activeFilterIds.has(f.id);
       const customCls = f.isCustom ? ' custom-badge' : '';
-      h += '<div class="o ' + (isOn ? 'on' : '') + customCls + '" onclick="toggleFilter(\'' + f.id + '\')">' + f.name + '</div>';
+      // 前端显示用 displayName（若有），否则用 name
+      const showName = f.displayName || f.name;
+      h += '<div class="o ' + (isOn ? 'on' : '') + customCls + '" onclick="toggleFilter(\'' + f.id + '\')">' + showName + '</div>';
     });
     h += '</div>';
   });
@@ -965,25 +1059,26 @@ function preview() {
 function gen() {
   const allList = [...SYSTEM_FILTERS, ...customFilters];
   
+  // 生成 JSON：自动过滤掉任何 (新导入) 尾巴，保证推送内容纯净
   const filters = allList.map(function (f) {
+    const cleanName = (f.name || '').replace(/[\s\(_-]*新导入[\s\)]*/g, '').trim();
     return {
       borderColor: f.borderColor || "#00000000",
       groupId: f.groupId,
       id: f.id,
       imageURL: f.imageURL,
       isEnabled: activeFilterIds.has(f.id),
-      name: f.name,
+      name: cleanName,
       pattern: f.pattern,
       tagColor: f.tagColor || "#00000000",
       tagStyle: f.tagStyle || "filled",
-      textColor: f.textColor || "#FFFFFF",
-      type: "filter",
-      groupName: f.groupName
+      textColor: f.textColor || "#00000000",
+      type: "filter"
     };
   });
 
   return {
-    filters: filters.map(({ groupName, isCustom, ...rest }) => rest),
+    filters: filters,
     groups: ALL_SYSTEM_GROUPS
   };
 }
@@ -999,7 +1094,7 @@ function upd() {
   document.getElementById('ou').value = 'https://raw.githubusercontent.com/' + currentRepo + '/main/fusion-tags.json';
 
   const g = document.getElementById('guide');
-  g.innerHTML = '<div class="note">全套规则已更新对齐，dbv-p5/p7/p8与专属杜比地址均已全量就绪。</div>';
+  g.innerHTML = '<div class="note">已彻底规范化：推送到 GitHub 的 JSON 完全移除所有临时后缀，保持纯净文件名。</div>';
 }
 
 function cc(id) {
