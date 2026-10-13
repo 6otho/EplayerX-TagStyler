@@ -381,7 +381,7 @@
       "borderColor": "#00000000",
       "groupId": "gc",
       "id": "c7",
-      "imageURL": "https://raw.githubusercontent.com/6otho/EplayerX-TagStyler/refs/heads/main/images/7.1x.svg",
+      "imageURL": "https://raw.githubusercontent.com/6otho/EplayerX-TagStyler/refs/heads/main/images/7.1a.svg",
       "isEnabled": true,
       "name": "7.1 Audio",
       "pattern": "[^0-9][7-8][ ._-][0-1](?![0-9])",
