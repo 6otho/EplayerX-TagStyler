@@ -415,6 +415,58 @@
       "tagStyle": "filled",
       "textColor": "#FFFFFF",
       "type": "filter"
+    },
+    {
+      "borderColor": "#00000000",
+      "groupId": "fps",
+      "id": "custom_fps_120",
+      "imageURL": "https://raw.githubusercontent.com/6otho/EplayerX-TagStyler/refs/heads/main/images/120.svg",
+      "isEnabled": true,
+      "name": "120 FPS",
+      "pattern": "(?i)\\b(?:119\\.88|120(?:\\.000)?)\\s*fps\\b|\\b120p\\b|\\b(?:4k|2160p?|1080p?|720p?)120\\b",
+      "tagColor": "#00000000",
+      "tagStyle": "filled",
+      "textColor": "#00000000",
+      "type": "filter"
+    },
+    {
+      "borderColor": "#00000000",
+      "groupId": "fps",
+      "id": "custom_fps_60",
+      "imageURL": "https://raw.githubusercontent.com/6otho/EplayerX-TagStyler/refs/heads/main/images/60.svg",
+      "isEnabled": true,
+      "name": "60 FPS",
+      "pattern": "(?i)\\b(?:59\\.94|60(?:\\.000)?)\\s*fps\\b|\\b60p\\b|\\b(?:4k|2160p?|1080p?|720p?)60\\b",
+      "tagColor": "#00000000",
+      "tagStyle": "filled",
+      "textColor": "#00000000",
+      "type": "filter"
+    },
+    {
+      "borderColor": "#00000000",
+      "groupId": "fps",
+      "id": "custom_fps_25",
+      "imageURL": "https://raw.githubusercontent.com/6otho/EplayerX-TagStyler/refs/heads/main/images/25.svg",
+      "isEnabled": true,
+      "name": "25 FPS",
+      "pattern": "(?i)\\b(?:25(?:\\.000)?)\\s*fps\\b|\\b25p\\b|\\b(?:4k|2160p?|1080p?|720p?)25\\b",
+      "tagColor": "#00000000",
+      "tagStyle": "filled",
+      "textColor": "#00000000",
+      "type": "filter"
+    },
+    {
+      "borderColor": "#00000000",
+      "groupId": "fps",
+      "id": "custom_fps_24",
+      "imageURL": "https://raw.githubusercontent.com/6otho/EplayerX-TagStyler/refs/heads/main/images/24.svg",
+      "isEnabled": true,
+      "name": "24 FPS",
+      "pattern": "(?i)\\b(?:23\\.97[68]|24(?:\\.000)?)\\s*fps\\b|\\b24p\\b|\\b(?:4k|2160p?|1080p?|720p?)24\\b",
+      "tagColor": "#00000000",
+      "tagStyle": "filled",
+      "textColor": "#00000000",
+      "type": "filter"
     }
   ],
   "groups": [
@@ -480,6 +532,13 @@
       "id": "gc",
       "isExpanded": true,
       "name": "Channels"
+    },
+    {
+      "borderColor": "#00000000",
+      "color": "#00000000",
+      "id": "fps",
+      "isExpanded": true,
+      "name": "Frame Rate"
     }
   ]
 }
